@@ -1,7 +1,8 @@
+import {stockFlagsFileName} from "/stocks/helpers.js"
+
 /** @param {NS} ns */
 export async function main(ns) {
-	var dbFileName = "/stocks/stock-flags.txt";
-	var data = JSON.parse(ns.read(dbFileName));
+	var data = JSON.parse(ns.read(stockFlagsFileName));
 	data.allowPurchases = true;	
-	ns.write(dbFileName, JSON.stringify(data), "w");
+	ns.write(stockFlagsFileName, JSON.stringify(data), "w");
 }
