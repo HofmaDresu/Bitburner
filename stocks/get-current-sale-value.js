@@ -1,6 +1,7 @@
+import {portfolioFileName} from "/stocks/helpers.js"
+
 /** @param {NS} ns */
 export async function main(ns) {
-	var portfolioFileName = "/stocks/portfolio-database.txt";
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));
 	var currentSaleGain = Object.keys(portfolioData).map(stockSymbol => {
 		var ownedData = portfolioData[stockSymbol];
