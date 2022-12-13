@@ -1,15 +1,12 @@
+import {stockPriceFileName, portfolioFileName, stockFlagsFileName} from "/stocks/helpers.js"
+
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog('sleep');
-	var stockPriceFileName = "/stocks/stock-database.txt";
-	var stockPriceData = JSON.parse(ns.read(stockPriceFileName));
-	
+	var stockPriceData = JSON.parse(ns.read(stockPriceFileName));	
 	// {symbol: {amount, purchasePrice, pos}}
-	var portfolioFileName = "/stocks/portfolio-database.txt";
-	var portfolioData = JSON.parse(ns.read(portfolioFileName));
-	
-	var flagsFileName = "/stocks/stock-flags.txt";
-	var flagsData = JSON.parse(ns.read(flagsFileName));
+	var portfolioData = JSON.parse(ns.read(portfolioFileName));	
+	var flagsData = JSON.parse(ns.read(stockFlagsFileName));
 
 	var priceMultiplier = .25;
 
