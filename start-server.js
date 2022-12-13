@@ -7,6 +7,7 @@ export async function main(ns) {
 	servers.forEach(server => {
 		var hasRootAccess = ns.hasRootAccess(server);
 		if (!hasRootAccess) return;
+		ns.scp('helpers.js', server);
 		ns.scp(script, server);
 		var availableMemory = ns.getServerMaxRam(server);
 		var maxThreads = Math.floor(availableMemory / scriptRam);	
