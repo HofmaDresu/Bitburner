@@ -1,7 +1,8 @@
+import {stockPriceFileName, portfolioFileName, stockFlagsFileName} from "/stocks/helpers.js"
+
 /** @param {NS} ns */
 export async function main(ns) {
-	var dbFileName = "/stocks/stock-database.txt";
-	var data = JSON.parse(ns.read(dbFileName))
+	var data = JSON.parse(ns.read(stockPriceFileName))
 
 	while(true) {
 		
@@ -20,7 +21,7 @@ export async function main(ns) {
 		});
 
 
-		ns.write(dbFileName, JSON.stringify(data), "w");
+		ns.write(stockPriceFileName, JSON.stringify(data), "w");
 
         await ns.sleep(3000);
 	}
