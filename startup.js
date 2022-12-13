@@ -3,6 +3,7 @@ export async function main(ns) {
 	ns.run('run-money-maker.js');
 	ns.run('purchase-server.js')
 	ns.run('/stocks/stock-watcher.js');
+	ns.run('/stocks/activate-purchases.js')
 	ns.run('/stocks/play-the-market.js');
 	var bestServerForHacking = getBestServerForHacking(ns);
 	var startServerRam = ns.getScriptRam('start-server.js');
