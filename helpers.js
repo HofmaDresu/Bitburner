@@ -13,9 +13,9 @@ export function getStartableServers(ns, currentServer, myHackingLevel, previousS
 
 		if (!hasRootAccess && gainRootAccessIfPossible) {
 			let requiredHackingLevel = ns.getServerRequiredHackingLevel(s);
-			if (requiredHackingLevel > myHackingLevel) { return; }
+			if (requiredHackingLevel > myHackingLevel) { return []; }
 			let requiredPorts = ns.getServerNumPortsRequired(s);
-			if (requiredPorts > hackablePorts) { return; }
+			if (requiredPorts > hackablePorts) { return []; }
 			if (ns.fileExists('brutessh.exe')) ns.brutessh(s);
 			if (ns.fileExists('ftpcrack.exe')) ns.ftpcrack(s);
 			if (ns.fileExists('relaysmtp.exe')) ns.relaysmtp(s);
@@ -24,8 +24,8 @@ export function getStartableServers(ns, currentServer, myHackingLevel, previousS
 			ns.nuke(s);
 		}
 
-		return [s, ...getStartableServers(ns, s, myHackingLevel, currentServer)];
-	}).filter(s => s).filter(s => s !== 'darkweb')
+		return [s, ...getStartableServers(ns, s, myHackingLevel, currentServer, gainRootAccessIfPossible)];
+	}).filter(s => s).filter(s => ns.getServerMaxRam(s))
 	.sort((a, b) => ns.getServerMaxRam(b) - ns.getServerMaxRam(a));
 }
 
@@ -37,7 +37,7 @@ export function getStopableServers(ns, currentServer, previousServer) {
 
 		if (!hasRootAccess) { return };
 		return [s, ...getStopableServers(ns, s, currentServer)];
-	}).filter(s => s);
+	}).filter(s => s).filter(s => ns.getServerMaxRam(s));
 }
 
 /** @param {NS} ns */
@@ -47,8 +47,15 @@ export function getBestServersForHacking(ns, startableServers, myHackingLevel) {
 		return requiredHackingLevel < myHackingLevel / 3 && ns.getServerMaxMoney(server) > 0;
 	});
 
-	const numberOfServersToHack = Math.min(Math.ceil(startableServers.length / 10), eligibleServers.length);
+	const numberOfServersToHack = Math.min(Math.ceil(startableServers.length / 5), eligibleServers.length);
 
 	const orderedServers = eligibleServers.sort((a, b) => ns.getServerMaxMoney(b) - ns.getServerMaxMoney(a));
 	return orderedServers.slice(0, numberOfServersToHack - 1);
+}
+
+export async function weakenToMin(ns, server) {
+	const minSecurityLevel = ns.getServerMinSecurityLevel(server);
+	while (await ns.getServerSecurityLevel(server) > minSecurityLevel + 1) {
+		await ns.weaken(server);
+	}
 }
