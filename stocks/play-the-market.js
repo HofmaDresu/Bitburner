@@ -3,20 +3,21 @@ import {stockPriceFileName, portfolioFileName, stockFlagsFileName} from "/stocks
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog('sleep');
-	var stockPriceData = JSON.parse(ns.read(stockPriceFileName));	
 	// {symbol: {amount, purchasePrice, pos}}
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));	
-	var flagsData = JSON.parse(ns.read(stockFlagsFileName));
 
-	var priceMultiplier = .25;
+	var buyPriceMultiplier = .25;
+	var sellPriceMultiplier = .20;
 
 	while (true) {
+		var stockPriceData = JSON.parse(ns.read(stockPriceFileName));	
+		var flagsData = JSON.parse(ns.read(stockFlagsFileName));
 		Object.keys(stockPriceData).forEach(stockSymbol => {
 			var maxPriceDiffSeen = stockPriceData[stockSymbol].maxPrice - stockPriceData[stockSymbol].minPrice;
-			var maxLongPurchasePrice = stockPriceData[stockSymbol].minPrice + (maxPriceDiffSeen * priceMultiplier);
-			var maxShortSellPrice = stockPriceData[stockSymbol].minPrice + (maxPriceDiffSeen * priceMultiplier);
-			var minShortPurchasePrice = stockPriceData[stockSymbol].maxPrice - (maxPriceDiffSeen * priceMultiplier);
-			var minLongSellPrice = stockPriceData[stockSymbol].maxPrice - (maxPriceDiffSeen * priceMultiplier);
+			var maxLongPurchasePrice = stockPriceData[stockSymbol].minPrice + (maxPriceDiffSeen * buyPriceMultiplier);
+			var maxShortSellPrice = stockPriceData[stockSymbol].minPrice + (maxPriceDiffSeen * sellPriceMultiplier);
+			var minShortPurchasePrice = stockPriceData[stockSymbol].maxPrice - (maxPriceDiffSeen * buyPriceMultiplier);
+			var minLongSellPrice = stockPriceData[stockSymbol].maxPrice - (maxPriceDiffSeen * sellPriceMultiplier);
 			var askPrice = ns.stock.getAskPrice(stockSymbol);
 			var bidPrice = ns.stock.getBidPrice(stockSymbol);
 			if (portfolioData[stockSymbol]?.amount) {
@@ -79,10 +80,10 @@ export async function main(ns) {
 
 function calculateSharesForLong(ns, stockSymbol, buyPrice, sellPrice) {
 	const transactionFee = 100_000;
-	var maxShares = ns.stock.getMaxShares(stockSymbol);
+	var maxShares = ns.stock.getMaxShares(stockSymbol) * .5;
 	var myMoney = ns.getServerMoneyAvailable("home") * .80 - transactionFee;
 	var sharesToBuy = 0;
-	while (sharesToBuy * buyPrice <= myMoney && sharesToBuy < maxShares) {
+	while (sharesToBuy * buyPrice <= myMoney && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
 	
