@@ -1,24 +1,35 @@
-import {getStartableServers, getBestServersForHacking, weakenToMin} from "/helpers.js";
-import {stockToServers, shouldLowerValueForStock, shouldRaiseValueForStock} from "/stocks/helpers.js";
+import {weakenToMin, hackToTargetPercent, growToTargetPercent, crackServerIfNeededAndPossible} from "/helpers.js";
+import {shouldLowerValueForStock, shouldRaiseValueForStock} from "/stocks/helpers.js";
 
 /** @param {NS} ns */
 export async function main(ns) {
-	while(true) {			
-		let myHackingLevel = ns.getHackingLevel();
-		let startableServers = getStartableServers(ns, "home", myHackingLevel, null, true);
-		let bestServersForHacking = getBestServersForHacking(ns, startableServers, myHackingLevel);
-		const stockSymbols = Object.keys(stockToServers);
-		for (let i = 0; i < stockSymbols.length; i++) {
-			let stockSymbol = stockSymbols[i];
-			let targetServers = stockToServers[stockSymbol].filter(server => !bestServersForHacking.includes(server)).filter(server => ns.hasRootAccess(server));
-			for (let j = 0; j < targetServers.length; j++) {
-				const server = targetServers[j];
-				await weakenToMin(ns, server);
-				if (shouldLowerValueForStock(ns, stockSymbol)) ns.hack(server, {stock: true});
-				if (shouldRaiseValueForStock(ns, stockSymbol)) ns.grow(server, {stock: true});
-				ns.sleep(100);
-			}
+	while(true) {
+		const server = arguments[0].args[0];
+		const stockSymbol = arguments[0].args[1];
+		if (!ns.hasRootAccess(server)) {
+			crackServerIfNeededAndPossible(ns, server, ns.getHackingLevel());
+			await ns.sleep(60000);
+			continue;
 		}
-		ns.sleep(1000);
+		
+		const shouldLower = shouldLowerValueForStock(ns, stockSymbol);
+		const shouldRaise = shouldRaiseValueForStock(ns, stockSymbol);
+		ns.print(`${server}: Lower ${shouldLower}, Raise ${shouldRaise}`)
+		if (shouldLower || shouldRaise) await weakenToMin(ns, server);
+		if (shouldLower) await lowerValue(ns, server);
+		if (shouldRaise) await raiseValue(ns, server);
+		await ns.sleep(100);
 	}
+}
+
+/** @param {NS} ns */
+async function raiseValue(ns, server) {
+	await hackToTargetPercent(ns, server, .25, false);
+	await growToTargetPercent(ns, server, .75, true);
+}
+
+/** @param {NS} ns */
+async function lowerValue(ns, server) {
+	await growToTargetPercent(ns, server, .75, false);
+	await hackToTargetPercent(ns, server, .25, true);
 }
