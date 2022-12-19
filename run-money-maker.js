@@ -3,12 +3,15 @@ import {getStartableServers, getBestServersForHacking} from "/helpers.js";
 /** @param {NS} ns */
 export async function main(ns) {
 	let bestServersForHacking = [];
+	let startableServers = [];
 	while (true) {
 		let myHackingLevel = ns.getHackingLevel();
-		let startableServers = getStartableServers(ns, "home", myHackingLevel, null, true);
-		let newBestServersForHacking = getBestServersForHacking(ns, startableServers, myHackingLevel);
-		if (bestServersForHacking.toString() !== newBestServersForHacking.toString()) {
+		let newStartableServers = getStartableServers(ns, "home", myHackingLevel, null, true);
+		let newBestServersForHacking = getBestServersForHacking(ns, newStartableServers, myHackingLevel);
+		if (bestServersForHacking.toString() !== newBestServersForHacking.toString() ||
+				startableServers.toString() !== newStartableServers.toString()) {
 			bestServersForHacking = newBestServersForHacking;
+			startableServers = newStartableServers;
 			for (let index = 0; index < startableServers.length; index++) {
 				let server = startableServers[index];				
 				let serverToHack = bestServersForHacking[index % bestServersForHacking.length];
