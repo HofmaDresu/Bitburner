@@ -19,7 +19,7 @@ export const stockToServers = {
     "RHOC": ["rho-construction"], 
     "APHE": ["alpha-ent"], 
     "SYSC": ["syscore"], 
-    "CTK": ["comptek"], 
+    "CTK": ["computek"], 
     "NTLK": ["netlink"], 
     "OMGA": ["omega-net"], 
     "JGN": ["joesguns"], 
@@ -41,15 +41,14 @@ export const stockPriceFileName = "/stocks/stock-database.txt";
 export function shouldLowerValueForStock(ns, stockSymbol) {	
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));
 	var stockData = portfolioData[stockSymbol];
-	if (!stockData) return false; // Don't care
-	ns.tprint(`Will lower: ${stockData.pos === "S"}`);
-	return stockData.pos === "S" || stockData.ammount === 0; // Lower if we have no stock to prep for Long
+    // Lower if we have no stock or we have shorted stock
+	if (!stockData) return true; 
+	return stockData.pos === "S" || stockData.amount === 0;
 }
 
 export function shouldRaiseValueForStock(ns, stockSymbol) {	
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));
 	var stockData = portfolioData[stockSymbol];
-	if (!stockData || stockData.ammount === 0) return false; // Don't care
-	ns.tprint(`Will raise: ${stockData.pos === "L"}`);
+	if (!stockData || stockData.amount === 0) return false; // Don't care
 	return stockData.pos === "L";
 }
