@@ -1,19 +1,26 @@
 /** @param {NS} ns */
 export async function main(ns) {
+	ns.disableLog('getServerMoneyAvailable');
+	ns.disableLog('scp');
+	ns.disableLog('killall');
+	ns.disableLog('deleteServer');
 	let currentServers = ns.getPurchasedServers();
-    var ram = 8;
-	var currentRamRunning = false;
+    let ram = 8;
+	let currentRamRunning = false;
 	if (currentServers.length > 0) {
 		currentRamRunning = true;
 		ram = parseInt(currentServers[0].split("-")[2].split("g")[0]);
 	}
-	var maxRam = ns.getPurchasedServerMaxRam();
-
-    while (ram <= maxRam) {
+	// const maxRam = ns.getPurchasedServerMaxRam();
+	const maxRam = 131072;
+    while (ram < maxRam) {
+		ns.print(`Target Ram ${ram}`);
 		var maxServers = ns.getPurchasedServerLimit();
 		currentServers = ns.getPurchasedServers();
 		var costToUpgradeServers = ns.getPurchasedServerCost(ram * 2) * maxServers;
-		if (currentServers.length === maxServers &&  costToUpgradeServers < ns.getServerMoneyAvailable("home")) {
+		ns.print(`Currently have ${currentServers.length} with a max of ${maxServers}`);
+		ns.print(`It will cost ${costToUpgradeServers.toLocaleString('en-US')} to upgrade servers`);
+		if (costToUpgradeServers < ns.getServerMoneyAvailable("home")) {
 			for (var i = 0; i < currentServers.length; i++) {
 				ns.killall(currentServers[i]);
 				ns.deleteServer(currentServers[i]);
