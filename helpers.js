@@ -48,12 +48,43 @@ export function getStopableServers(ns, currentServer, previousServer) {
 }
 
 export const hackedServersDbFileName = "/hacked-servers-db.txt";
+
+/** @param {NS} ns */
+export function getHackableServers(ns, currentServer, previousServer) {
+	var servers = ns.scan(currentServer).filter(s => s != previousServer);
+	if (!servers || servers.length === 0) return [];
+	return servers.flatMap((s) => {
+		var hasRootAccess = ns.hasRootAccess(s);
+
+		if (!hasRootAccess) { return };
+		return [s, ...getHackableServers(ns, s, currentServer)];
+	}).filter(s => s).filter(s => ns.getServerMaxMoney(s));
+}
+
 /** @param {NS} ns */
 export function getBestServersForHacking(ns, startableServers, myHackingLevel) {	
 	const stockSymbols = Object.keys(stockToServers);
 	const stockServers = stockSymbols.flatMap(ss => stockToServers[ss]);
 
-	const eligibleServers = startableServers.filter(server => {
+	const eligibleServers = getHackableServers(ns, "home").filter(server => {
+		var requiredHackingLevel = ns.getServerRequiredHackingLevel(server);
+		return requiredHackingLevel <= Math.max(1, myHackingLevel / 3);
+	}).filter(server => !stockServers.includes(server));
+
+	const numberOfServersToHack = Math.min(Math.ceil(startableServers.length / 5), eligibleServers.length);
+
+	const orderedServers = eligibleServers.sort((a, b) => ns.getServerMaxMoney(b) - ns.getServerMaxMoney(a));
+	const serversToHack =  orderedServers.slice(0, numberOfServersToHack);
+	ns.write(hackedServersDbFileName, JSON.stringify(serversToHack), "w");
+	return serversToHack;
+}
+
+/** @param {NS} ns */
+export function getHackableServersOrderedByMaxMoney(ns, startableServers) {	
+	const stockSymbols = Object.keys(stockToServers);
+	const stockServers = stockSymbols.flatMap(ss => stockToServers[ss]);
+
+	const eligibleServers = getHackableServers.filter(server => {
 		var requiredHackingLevel = ns.getServerRequiredHackingLevel(server);
 		return requiredHackingLevel <= Math.max(1, myHackingLevel / 3) && ns.getServerMaxMoney(server) > 0;
 	}).filter(server => !stockServers.includes(server));
