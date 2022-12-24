@@ -67,10 +67,23 @@ export async function purchaseWseIfNeeded(ns) {
     }
 }
 
+/** @param {NS} ns */
 export async function purchaseTIXAPIAccessIfNeeded(ns) {
     while (!ns.stock.hasTIXAPIAccess()) {
         if (ns.getServerMoneyAvailable("home") > 5_000_000_000) {
             ns.stock.purchaseTixApi();
+        } else {            
+            await ns.sleep(60000);
+        }
+        continue;
+    }
+}
+
+/** @param {NS} ns */
+export async function purchase4sTIXAPIAccessIfNeeded(ns) {
+    while (!ns.stock.has4SDataTIXAPI()) {
+        if (ns.getServerMoneyAvailable("home") > 25_000_000_000) {
+            ns.stock.purchase4SMarketDataTixApi();
         } else {            
             await ns.sleep(60000);
         }
