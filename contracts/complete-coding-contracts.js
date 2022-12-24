@@ -18,8 +18,14 @@ export async function main(ns) {
 function completeContractsIfPossible(ns, server, files) {
     files.forEach(file => {
         switch(ns.codingcontract.getContractType(file, server)) {
+            case "Algorithmic Stock Trader II":
+                ns.run('/contracts/algorithmic-stock-trader-ii.js', 1, server, file);
+                break;
             case "Algorithmic Stock Trader III":
                 ns.run('/contracts/algorithmic-stock-trader-iii.js', 1, server, file);
+                break;
+            case "Algorithmic Stock Trader IV":
+                ns.run('/contracts/algorithmic-stock-trader-iv.js', 1, server, file);
                 break;
             case "Subarray with Maximum Sum":
                 ns.run('/contracts/subarray-with-maximum-sum.js', 1, server, file);
