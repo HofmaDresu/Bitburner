@@ -23,6 +23,7 @@ async function backdoorServersRecursive(ns, currentServer, previousServer) {
 	if (!servers || servers.length === 0) return;
 	for (let i = 0; i < servers.length; i++) {
 		await backdoorServersRecursive(ns, servers[i], currentServer);
+		ns.singularity.connect(currentServer);
 	}
 	ns.singularity.connect(currentServer);
 }
