@@ -30,6 +30,9 @@ function completeContractsIfPossible(ns, server, files) {
             case "Subarray with Maximum Sum":
                 ns.run('/contracts/subarray-with-maximum-sum.js', 1, server, file);
                 break;
+            case "Compression I: RLE Compression":
+                ns.run('/contracts/compression-i-rle-compression.js', 1, server, file);
+                break;
         }
 
     });
