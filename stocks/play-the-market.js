@@ -1,8 +1,10 @@
-import {stockPriceFileName, portfolioFileName, stockFlagsFileName} from "/stocks/helpers.js"
+import {stockPriceFileName, portfolioFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded} from "/stocks/helpers.js"
 
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog('sleep');
+	await purchaseWseIfNeeded(ns);
+	await purchaseTIXAPIAccessIfNeeded(ns);
 	// {symbol: {amount, purchasePrice, pos}}
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));	
 
@@ -80,14 +82,15 @@ export async function main(ns) {
 
 function calculateSharesForLong(ns, stockSymbol, buyPrice, sellPrice) {
 	const transactionFee = 100_000;
-	var maxShares = ns.stock.getMaxShares(stockSymbol) * .5;
+	var maxShares = ns.stock.getMaxShares(stockSymbol) * .75;
+	var minShares = ns.stock.getMaxShares(stockSymbol) * .25;
 	var myMoney = ns.getServerMoneyAvailable("home") * .80 - transactionFee;
 	var sharesToBuy = 0;
 	while (sharesToBuy * buyPrice <= myMoney && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
 	
-	if (((sharesToBuy * sellPrice) - (sharesToBuy * buyPrice)) > 1_000_000_000) {
+	if (((sharesToBuy * sellPrice) - (sharesToBuy * buyPrice)) > 1_000_000_000 && sharesToBuy >= minShares) {
 		return sharesToBuy;
 	}
 	else {
@@ -96,16 +99,17 @@ function calculateSharesForLong(ns, stockSymbol, buyPrice, sellPrice) {
 }
 
 function calculateSharesForShort(ns, stockSymbol, buyPrice, sellPrice) {
-	const transactionFee = 100000;
-	var maxShares = ns.stock.getMaxShares(stockSymbol) - transactionFee;
-	var myMoney = ns.getServerMoneyAvailable("home");
+	const transactionFee = 100_000;
+	var maxShares = ns.stock.getMaxShares(stockSymbol);
+	var minShares = ns.stock.getMaxShares(stockSymbol) * .5;
+	var myMoney = ns.getServerMoneyAvailable("home") * .8 - transactionFee;
 	var sharesToBuy = 0;
 	while (sharesToBuy * buyPrice <= myMoney && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
 	
 	// Buy - Sell because this is shorting so math is backwards
-	if (((sharesToBuy * buyPrice) - (sharesToBuy * sellPrice)) > transactionFee) {
+	if (((sharesToBuy * buyPrice) - (sharesToBuy * sellPrice)) > 1_000_000_000 && sharesToBuy >= minShares) {
 		return sharesToBuy;
 	}
 	else {
