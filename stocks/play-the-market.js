@@ -1,10 +1,11 @@
-import {stockPriceFileName, portfolioFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded} from "/stocks/helpers.js"
+import {stockPriceFileName, portfolioFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded} from "/stocks/helpers.js"
 
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog('sleep');
 	await purchaseWseIfNeeded(ns);
 	await purchaseTIXAPIAccessIfNeeded(ns);
+	await purchase4sTIXAPIAccessIfNeeded(ns);
 	// {symbol: {amount, purchasePrice, pos}}
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));	
 
