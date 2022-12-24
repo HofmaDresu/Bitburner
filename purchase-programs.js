@@ -1,14 +1,17 @@
 /** @param {NS} ns */
 export async function main(ns) {
-	// Requires Singularity API
-	//while (!ns.fileExists('sqlinject.exe')) {
-		const servers = ns.scan("home");
-		if (servers.includes("darkweb")) {
-			ns.tprint("woohoo!");
-			ns.exec("buy", "darkweb", 1, "BruteSSH.exe")
-		} else {
-			// TODO: eventually purchase TOR
-		}
-	//	await ns.sleep(60000);
-	//}
+	if (!ns.singularity) return;
+	while (!ns.singularity.purchaseTor()) {
+		await ns.sleep(60000);
+	}
+
+	while (!ns.fileExists("Formulas.exe")) {
+		ns.singularity.getDarkwebPrograms().forEach(program => {
+			if (!ns.fileExists(program) && ns.getServerMoneyAvailable("home") > ns.singularity.getDarkwebProgramCost(program)) {
+				ns.singularity.purchaseProgram(program);
+			}
+		});
+
+		await ns.sleep(60000);
+	}
 }
