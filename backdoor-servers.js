@@ -1,5 +1,10 @@
 /** @param {NS} ns */
 export async function main(ns) {
+	if (!ns.singularity) {
+		ns.tprint("Missing singularity");
+		return;
+	}
+
 	var servers = ns.scan("home");
 	for (let i = 0; i < servers.length; i++) {
 		await backdoorServersRecursive(ns, servers[i], "home");

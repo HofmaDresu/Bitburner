@@ -1,8 +1,6 @@
 
 * Should I hack all servers, no matter their hacking requirement? Currently only do it if 1/3 of my level. All servers with < X time to hack?
 
-* protect usages of singularity
-
 * Upgrade purchase-server to handle < max servers case
 ** purchase 1 at a time until max
 
