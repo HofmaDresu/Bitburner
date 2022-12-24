@@ -1,0 +1,27 @@
+
+* Figure out remote API
+
+* Should I hack all servers, no matter their hacking requirement? Currently only do it if 1/3 of my level. All servers with < X time to hack?
+
+* protect usages of singularity
+
+* Upgrade purchase-server to handle < max servers case
+** purchase 1 at a time until max
+
+* add stock helper to get all stock servers
+
+* Upgrade run-money-maker
+** For each hackable server that isn't stock
+*** Find ideal threadcount for most expensive of hack/grow
+*** Find servers with 100% hack chance?
+*** Find most powerful startable server with that many free threads
+*** run money-maker on that server
+
+* Build connect to server script
+** Given a server, find a path and connect
+
+* Upgrade startup to dynamically enable scripts based on memory rather than a static 1024
+
+* Figure out what b1t_flum3.exe is for
+
+* upgrade purchase-programs to only buy programs if they are currently useful (eg: buying the program would allow me to nuke a new server)
