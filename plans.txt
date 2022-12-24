@@ -22,6 +22,4 @@
 
 * Upgrade startup to dynamically enable scripts based on memory rather than a static 1024
 
-* Figure out what b1t_flum3.exe is for
-
 * upgrade purchase-programs to only buy programs if they are currently useful (eg: buying the program would allow me to nuke a new server)
