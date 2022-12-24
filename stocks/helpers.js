@@ -38,6 +38,7 @@ export const portfolioFileName = "/stocks/portfolio-database.txt";
 export const stockFlagsFileName = "/stocks/stock-flags.txt";
 export const stockPriceFileName = "/stocks/stock-database.txt";
 
+/** @param {NS} ns */
 export function shouldLowerValueForStock(ns, stockSymbol) {	
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));
 	var stockData = portfolioData[stockSymbol];
@@ -46,9 +47,33 @@ export function shouldLowerValueForStock(ns, stockSymbol) {
 	return stockData.pos === "S" || stockData.amount === 0;
 }
 
+/** @param {NS} ns */
 export function shouldRaiseValueForStock(ns, stockSymbol) {	
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));
 	var stockData = portfolioData[stockSymbol];
 	if (!stockData || stockData.amount === 0) return false; // Don't care
 	return stockData.pos === "L";
+}
+
+/** @param {NS} ns */
+export async function purchaseWseIfNeeded(ns) {
+    while (!ns.stock.hasWSEAccount()) {
+        if (ns.getServerMoneyAvailable("home") > 200_000_000) {
+            ns.stock.purchaseWseAccount();
+        } else {
+            await ns.sleep(60000);
+        }
+        continue;
+    }
+}
+
+export async function purchaseTIXAPIAccessIfNeeded(ns) {
+    while (!ns.stock.hasTIXAPIAccess()) {
+        if (ns.getServerMoneyAvailable("home") > 5_000_000_000) {
+            ns.stock.purchaseTixApi();
+        } else {            
+            await ns.sleep(60000);
+        }
+        continue;
+    }
 }
