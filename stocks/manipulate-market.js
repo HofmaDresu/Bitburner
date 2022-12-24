@@ -3,11 +3,13 @@ import {shouldLowerValueForStock, shouldRaiseValueForStock} from "/stocks/helper
 
 /** @param {NS} ns */
 export async function main(ns) {
+	ns.disableLog('getServerMinSecurityLevel');
+	ns.disableLog('getServerSecurityLevel');
 	while(true) {
 		const server = arguments[0].args[0];
 		const stockSymbol = arguments[0].args[1];
 		if (!ns.hasRootAccess(server)) {
-			crackServerIfNeededAndPossible(ns, server, ns.getHackingLevel());
+			await crackServerIfNeededAndPossible(ns, server, ns.getHackingLevel());
 			await ns.sleep(60000);
 			continue;
 		}
@@ -25,11 +27,11 @@ export async function main(ns) {
 /** @param {NS} ns */
 async function raiseValue(ns, server) {
 	await hackToTargetPercent(ns, server, .25, false);
-	await growToTargetPercent(ns, server, .75, true);
+	await growToTargetPercent(ns, server, 1, true);
 }
 
 /** @param {NS} ns */
 async function lowerValue(ns, server) {
-	await growToTargetPercent(ns, server, .75, false);
+	await growToTargetPercent(ns, server, 1, false);
 	await hackToTargetPercent(ns, server, .25, true);
 }
