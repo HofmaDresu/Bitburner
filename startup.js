@@ -3,11 +3,11 @@ import {getStartableServers, getBestServersForHacking} from "/helpers.js"
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.run('run-money-maker.js');
-	ns.run('purchase-server.js');
-	ns.run('purchase-programs.js');
-	ns.run('upgrade-home-server.js');
+	ns.run('/upgraders/purchase-server.js');
+	ns.run('/upgraders/purchase-programs.js');
+	ns.run('/upgraders/upgrade-home-server.js');
 	// Not worth it right now, re-enable when we have the right bitnode
-	//ns.run('purchase-hacknet-nodes.js') 
+	//ns.run('/upgraders/purchase-hacknet-nodes.js') 
 	if (ns.getServerMaxRam("home") >= 1024) {
 		ns.run('/stocks/stock-watcher.js');
 		ns.run('/stocks/activate-purchases.js');
