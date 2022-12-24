@@ -1,5 +1,6 @@
 /** @param {NS} ns */
 export async function main(ns) {
+    ns.disableLog("scan");
     const allServers = findAllServers(ns, "home");
     const homeFiles = ns.ls("home");
 
@@ -19,6 +20,9 @@ function completeContractsIfPossible(ns, server, files) {
         switch(ns.codingcontract.getContractType(file, server)) {
             case "Algorithmic Stock Trader III":
                 ns.run('/contracts/algorithmic-stock-trader-iii.js', 1, server, file);
+                break;
+            case "Subarray with Maximum Sum":
+                ns.run('/contracts/subarray-with-maximum-sum.js', 1, server, file);
                 break;
         }
 
