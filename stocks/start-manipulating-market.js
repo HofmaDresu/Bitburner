@@ -29,7 +29,7 @@ export async function main(ns) {
 /** @param {NS} ns */
 function getThreadsPerServer(ns, manipulateMarketScript, stockSymbols) {
 	const usableMemory = (ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) - 100; // reserve ~ 100 gb
-	var threadsPerServer = (usableMemory / (ns.getScriptRam(manipulateMarketScript))) * 
-		stockSymbols.flatMap(stockSymbol => stockToServers[stockSymbol]).filter(server => ns.getServerMaxMoney(server)).length;
+	var threadsPerServer = usableMemory / (ns.getScriptRam(manipulateMarketScript) * 
+		stockSymbols.flatMap(stockSymbol => stockToServers[stockSymbol]).filter(server => ns.getServerMaxMoney(server)).length);
 	return threadsPerServer;
 }
