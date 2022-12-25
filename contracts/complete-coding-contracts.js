@@ -39,6 +39,9 @@ function completeContractsIfPossible(ns, server, files) {
             case "Compression I: RLE Compression":
                 ns.run('/contracts/compression-i-rle-compression.js', 1, server, file);
                 break;
+            case "Compression II: LZ Decompression":
+                ns.run('/contracts/compression-ii-lz-decompression.js', 1, server, file);
+                break;
             case "Encryption I: Caesar Cipher":
                 ns.run('/contracts/encryption-i-caesar-cipher.js', 1, server, file);
                 break;
