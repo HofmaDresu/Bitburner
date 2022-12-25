@@ -30,6 +30,9 @@ function completeContractsIfPossible(ns, server, files) {
             case "Algorithmic Stock Trader IV":
                 ns.run('/contracts/algorithmic-stock-trader-iv.js', 1, server, file);
                 break;
+            case "Array Jumping Game":
+                ns.run('/contracts/array-jumping-game.js', 1, server, file);
+                break;
             case "Compression I: RLE Compression":
                 ns.run('/contracts/compression-i-rle-compression.js', 1, server, file);
                 break;
