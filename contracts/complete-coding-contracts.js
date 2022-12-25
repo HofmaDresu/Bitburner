@@ -11,7 +11,7 @@ export async function main(ns) {
                 completeContractsIfPossible(ns, server, files);
             }
         });
-        await ns.sleep(60 * 60 * 1000);
+        await ns.sleep(10 * 60 * 1000);
     }
 }
 
