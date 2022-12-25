@@ -48,6 +48,9 @@ function completeContractsIfPossible(ns, server, files) {
             case "Encryption II: Vigenère Cipher":
                 ns.run('/contracts/encryption-ii-vigenere-cipher.js', 1, server, file);
                 break;
+            case "Spiralize Matrix":
+                ns.run('/contracts/spiralize-matrix.js', 1, server, file);
+                break;
             case "Subarray with Maximum Sum":
                 ns.run('/contracts/subarray-with-maximum-sum.js', 1, server, file);
                 break;
