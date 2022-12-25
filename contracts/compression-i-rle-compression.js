@@ -25,6 +25,6 @@ export async function main(ns) {
     if (result) {
         ns.tprint(result);
     } else {
-        ns.alert(`Failed compres contract! ${targetServer} ${contractFileName}`);
+        ns.alert(`Failed compression I RLE contract! ${targetServer} ${contractFileName}`);
     }
 }
