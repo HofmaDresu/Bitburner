@@ -5,19 +5,22 @@ export async function main(ns) {
     const homeFiles = ns.ls("home");
 
     while(true) {
-        allServers.forEach(server => {
+        for (let i = 0; i < allServers.length; i++) {
+            const server = allServers[i];
             const files = ns.ls(server, ".cct").filter(file => !homeFiles.includes(file));
             if (files.length) {
-                completeContractsIfPossible(ns, server, files);
+                await completeContractsIfPossible(ns, server, files);
             }
-        });
+            await ns.sleep(50);
+        }
         await ns.sleep(10 * 60 * 1000);
     }
 }
 
-function completeContractsIfPossible(ns, server, files) {
-    files.forEach(file => {
-        switch(ns.codingcontract.getContractType(file, server)) {
+async function completeContractsIfPossible(ns, server, files) {
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        switch(await ns.codingcontract.getContractType(file, server)) {
             case "Algorithmic Stock Trader I":
                 ns.run('/contracts/algorithmic-stock-trader-i.js', 1, server, file);
                 break;
@@ -55,8 +58,8 @@ function completeContractsIfPossible(ns, server, files) {
                 ns.run('/contracts/subarray-with-maximum-sum.js', 1, server, file);
                 break;
         }
-
-    });
+        await ns.sleep(50);
+    };
 }
 
 /** @param {NS} ns */

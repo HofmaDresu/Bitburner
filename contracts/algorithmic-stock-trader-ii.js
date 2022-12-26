@@ -17,7 +17,8 @@ export async function main(ns) {
 
     potentialActions = potentialActions.filter(pp => pp.profit > 0).sort((a, b) => a.buyIndex - b.buyIndex);
 
-    const profit = getMaxProfit(ns, potentialActions);
+
+    const profit = await getMaxProfit(ns, potentialActions, 0);
 
     const result = ns.codingcontract.attempt(profit, contractFileName, targetServer, {returnReward: true});
     if (result) {
@@ -27,17 +28,17 @@ export async function main(ns) {
     }
 }
 
-function getMaxProfit(ns, potentialActions) {
+async function getMaxProfit(ns, potentialActions, currentDepth) {
     const potentialProfits = [];
     for (let profitIndex = 0; profitIndex < potentialActions.length; profitIndex++) {
         const currentSale = potentialActions[profitIndex];
         const additionalPotentialActions = potentialActions.slice(profitIndex).filter(pp => pp.buyIndex > currentSale.sellIndex);
-
         if (additionalPotentialActions.length) {
-            potentialProfits.push(currentSale.profit + getMaxProfit(ns, additionalPotentialActions));
+            potentialProfits.push(currentSale.profit + await getMaxProfit(ns, additionalPotentialActions, currentDepth + 1));
         } else {
             potentialProfits.push(currentSale.profit);
         }
+        await ns.sleep(5);
     }
     return potentialProfits.sort((a, b) => b - a)[0];
 }
