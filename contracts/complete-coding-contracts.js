@@ -1,10 +1,11 @@
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("scan");
-    const allServers = findAllServers(ns, "home");
-    const homeFiles = ns.ls("home");
 
     while(true) {
+        const allServers = findAllServers(ns, "home");
+        const homeFiles = ns.ls("home");
+        
         for (let i = 0; i < allServers.length; i++) {
             const server = allServers[i];
             const files = ns.ls(server, ".cct").filter(file => !homeFiles.includes(file));
