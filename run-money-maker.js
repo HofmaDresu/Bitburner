@@ -7,14 +7,14 @@ export async function main(ns) {
 	while (true) {
 		let myHackingLevel = ns.getHackingLevel();
 		let newStartableServers = getStartableServers(ns, "home", myHackingLevel, null, true);
-		let newBestServersForHacking = getBestServersForHacking(ns, newStartableServers, myHackingLevel);
+		let newBestServersForHacking = getBestServersForHacking(ns, myHackingLevel);
 		if (bestServersForHacking.toString() !== newBestServersForHacking.toString() ||
 				startableServers.toString() !== newStartableServers.toString()) {
 			bestServersForHacking = newBestServersForHacking;
 			startableServers = newStartableServers;
-			for (let index = 0; index < startableServers.length; index++) {
+			for (let index = 0; index < startableServers.length && index < bestServersForHacking.length; index++) {
 				let server = startableServers[index];				
-				let serverToHack = bestServersForHacking[index % bestServersForHacking.length];
+				let serverToHack = bestServersForHacking[index];
 				await stopServerIfRetargetNeeded(ns, server, serverToHack);
 				ns.run('start-server.js', 1, ...[serverToHack, server]);
 			};
