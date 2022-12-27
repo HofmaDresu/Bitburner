@@ -1,6 +1,6 @@
 import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin, growToTargetPercent, hackToTargetPercent} from "/helpers.js";
 
-const PADDING_TIME = 100;
+const PADDING_TIME = 200;
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -28,31 +28,32 @@ async function basicMakeMoneyFromServer(ns, server) {
 }
 
 async function advancedMakeMoneyFromServer(ns, server) {
-	// TODO: sleep by min possible amount
-	// TODO: make sure we fully grow before we hack
+	// TODO: sleep by min possible amount. can we stagger?
 	const player = ns.getPlayer();
 	const targetServer = ns.getServer(server);
-	const timeToGrow =  ns.formulas.hacking.growTime(targetServer, player) + PADDING_TIME;
-	const timeToHack = ns.formulas.hacking.hackTime(targetServer, player) + PADDING_TIME;
 
 	const hostname = ns.getServer().hostname;
-	var availableMemory = (ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname)) * .5;
+	var availableMemory = (ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname)) * .9;
 	var growRam = ns.getScriptRam('/money-maker/grow-server.js');
 	var maxGrowThreads = Math.max(Math.floor(availableMemory / growRam), 1);
 	var hackRam = ns.getScriptRam('/money-maker/hack-server.js');
 	var maxHackThreads = Math.max(Math.floor(availableMemory / hackRam), 1);
 
-	await weakenToMin(ns, targetServer, player, availableMemory);
-	const threadsNeededToGrow = calculateThreadsForGrowToTargetPercent(ns, server, 1, maxGrowThreads);
-	if (threadsNeededToGrow > 0) {
+	let threadsNeededToGrow = calculateThreadsForGrowToTargetPercent(ns, server, 1, maxGrowThreads);
+	while (threadsNeededToGrow > 0) {
+		await weakenToMin(ns, targetServer, player, availableMemory);
+		const timeToGrow =  ns.formulas.hacking.growTime(targetServer, player) + PADDING_TIME;
 		ns.run("/money-maker/grow-server.js", threadsNeededToGrow, server);
 		await ns.sleep(Math.max(timeToGrow, 10));
+		threadsNeededToGrow = calculateThreadsForGrowToTargetPercent(ns, server, 1, maxGrowThreads);
 	}
-	await weakenToMin(ns, targetServer, player, availableMemory);
-	const threadsNeededToHack = calculateThreadsForHackToTargetPercent(ns, server, .9, maxHackThreads);
-	if (threadsNeededToHack > 0) {
+	let threadsNeededToHack = calculateThreadsForHackToTargetPercent(ns, server, .5, maxHackThreads);
+	while (threadsNeededToHack > 0) {
+		await weakenToMin(ns, targetServer, player, availableMemory);
+		const timeToHack = ns.formulas.hacking.hackTime(targetServer, player) + PADDING_TIME;
 		ns.run("/money-maker/hack-server.js", threadsNeededToHack, server);
 		await ns.sleep(Math.max(timeToHack, 10));
+		threadsNeededToHack = calculateThreadsForHackToTargetPercent(ns, server, .5, maxHackThreads);
 	}
 }
 
