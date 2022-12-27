@@ -104,7 +104,7 @@ export async function growToTargetPercent(ns, host, targetPercent, impactStock) 
 	
 	let growthNeededToTarget = targetMoney / currentMoney;
 	while (currentMoney < targetMoney) {
-		const threadsToUse = Math.min(calculateThreadsForGrowToTargetPercent(ns, host, targetPercent), maxThreads);
+		const threadsToUse =calculateThreadsForGrowToTargetPercent(ns, host, targetPercent, maxThreads);
 		await weakenToMin(ns, host);
 		await ns.grow(host, {stock: impactStock, threads: threadsToUse});
 		currentMoney = ns.getServerMoneyAvailable(host);
@@ -113,7 +113,7 @@ export async function growToTargetPercent(ns, host, targetPercent, impactStock) 
 	}
 }
 
-export function calculateThreadsForGrowToTargetPercent(ns, host, targetPercent) {
+export function calculateThreadsForGrowToTargetPercent(ns, host, targetPercent, maxThreads) {
 	const maxMoney = ns.getServerMaxMoney(host);
 	const targetMoney = maxMoney * targetPercent * 1.0;
 	let currentMoney = ns.getServerMoneyAvailable(host);
@@ -123,7 +123,7 @@ export function calculateThreadsForGrowToTargetPercent(ns, host, targetPercent) 
 	const runningServer = ns.getServer();
 	
 	let growthNeededToTarget = targetMoney / currentMoney;
-	while (ns.formulas.hacking.growPercent(targetServer, threadsToUse, player, runningServer.cpuCores) < growthNeededToTarget) {
+	while (ns.formulas.hacking.growPercent(targetServer, threadsToUse, player, runningServer.cpuCores) < growthNeededToTarget && threadsToUse <= maxThreads) {
 		threadsToUse++;
 	}
 	return threadsToUse;
@@ -134,7 +134,6 @@ export async function hackToTargetPercent(ns, host, targetPercent, impactStock) 
 	const maxMoney = ns.getServerMaxMoney(host);
 	const targetMoney = maxMoney * targetPercent * 1.0;
 	let currentMoney = ns.getServerMoneyAvailable(host);
-
 	if (!ns.fileExists('Formulas.exe', 'home')) {
 		while (currentMoney > targetMoney) {
 			await weakenToMin(ns, host);
@@ -144,8 +143,10 @@ export async function hackToTargetPercent(ns, host, targetPercent, impactStock) 
 		return;
 	}
 
+	const maxThreads = ns.getRunningScript().threads;
+
 	while (currentMoney > targetMoney) {
-		const threadsToUse = calculateThreadsForHackToTargetPercent(ns, host, targetPercent);
+		const threadsToUse = calculateThreadsForHackToTargetPercent(ns, host, targetPercent, maxThreads);
 		await weakenToMin(ns, host);
 		await ns.hack(host, {stock: impactStock, threads: threadsToUse});
 		currentMoney = ns.getServerMoneyAvailable(host);
@@ -153,7 +154,7 @@ export async function hackToTargetPercent(ns, host, targetPercent, impactStock) 
 	}
 }
 
-export function calculateThreadsForHackToTargetPercent(ns, host, targetPercent) {
+export function calculateThreadsForHackToTargetPercent(ns, host, targetPercent, maxThreads) {
 	const maxMoney = ns.getServerMaxMoney(host);
 	const targetMoney = maxMoney * targetPercent * 1.0;
 	let currentMoney = ns.getServerMoneyAvailable(host);
@@ -161,12 +162,11 @@ export function calculateThreadsForHackToTargetPercent(ns, host, targetPercent) 
 	let threadsToUse = 1;
 	const player = ns.getPlayer();
 	const targetServer = ns.getServer(host);
-	const maxThreads = ns.getRunningScript().threads;
 	const hackPercent = ns.formulas.hacking.hackPercent(targetServer, player)
 	let hackNeededToTarget = 1 - (targetMoney / currentMoney);
 	let threadsNeededForHack = Math.ceil(hackNeededToTarget / hackPercent);
 	
-	while (threadsToUse < maxThreads && threadsToUse < threadsNeededForHack) {
+	while (threadsToUse <= maxThreads && threadsToUse < threadsNeededForHack) {
 		threadsToUse++;
 	}
 	return threadsToUse
