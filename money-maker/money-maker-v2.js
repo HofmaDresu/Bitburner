@@ -1,4 +1,4 @@
-import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin} from "/helpers.js";
+import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin, growToTargetPercent, hackToTargetPercent} from "/helpers.js";
 
 const PADDING_TIME = 100;
 
@@ -12,11 +12,22 @@ export async function main(ns) {
 	ns.disableLog("getServerUsedRam");
 	const server = arguments[0].args[0];
 	while(true) {
-		await makeMoneyFromServer(ns, server);
+		if (!ns.fileExists('Formulas.exe', 'home')) {
+			await basicMakeMoneyFromServer(ns, server);
+		} else {
+			await advancedMakeMoneyFromServer(ns, server);
+		}
 	}
 }
 
-async function makeMoneyFromServer(ns, server) {
+async function basicMakeMoneyFromServer(ns, server) {
+	while(true) {
+		await growToTargetPercent(ns, server, 1, false);
+		await hackToTargetPercent(ns, server, .50, false);
+	}
+}
+
+async function advancedMakeMoneyFromServer(ns, server) {
 	// TODO: sleep by min possible amount
 	// TODO: make sure we fully grow before we hack
 	const player = ns.getPlayer();
@@ -25,14 +36,13 @@ async function makeMoneyFromServer(ns, server) {
 	const timeToHack = ns.formulas.hacking.hackTime(targetServer, player) + PADDING_TIME;
 
 	const hostname = ns.getServer().hostname;
-	var availableMemory = (ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname)) * .9;
+	var availableMemory = (ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname)) * .5;
 	var growRam = ns.getScriptRam('/money-maker/grow-server.js');
 	var maxGrowThreads = Math.max(Math.floor(availableMemory / growRam), 1);
 	var hackRam = ns.getScriptRam('/money-maker/hack-server.js');
 	var maxHackThreads = Math.max(Math.floor(availableMemory / hackRam), 1);
 
 	await weakenToMin(ns, targetServer, player, availableMemory);
-	// Send grow if needed
 	const threadsNeededToGrow = calculateThreadsForGrowToTargetPercent(ns, server, 1, maxGrowThreads);
 	if (threadsNeededToGrow > 0) {
 		ns.run("/money-maker/grow-server.js", threadsNeededToGrow, server);
