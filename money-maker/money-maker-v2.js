@@ -63,11 +63,11 @@ async function actionServer(ns, player, targetServer, script, calcActionTime, ca
 	while (threadsNeededForAction > 0) {
 		let actionTime = calcActionTime();
 		let actionRam = ns.getScriptRam(script);
-		const timeToWeakenLastRun = (actionRam * threadsNeededForAction) + (weakenRam * threadsNeededToWeaken) < availableMemory ? timeToWeaken - actionTime + PADDING_TIME : timeToWeaken;
+		const timeToWeakenLastRun = (actionRam * threadsNeededForAction) + (weakenRam * threadsNeededToWeaken) < availableMemory * .9 ? timeToWeaken - actionTime + PADDING_TIME : timeToWeaken;
 		await weakenToMin(ns, numberOfWeakensNeeded, threadsNeededToWeaken, targetServer.hostname, timeToWeaken, timeToWeakenLastRun)
-		ns.run(script, threadsNeededForAction, targetServer.hostname);		
+		ns.run(script, threadsNeededForAction, targetServer.hostname);
+		await ns.sleep(actionTime);
 		threadsNeededForAction = calcActionThreads();
-		await ns.sleep(10);
 	}
 }
 
