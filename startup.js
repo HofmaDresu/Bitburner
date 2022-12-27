@@ -16,17 +16,4 @@ export async function main(ns) {
 		// Always call this last
 		ns.run('/stocks/start-manipulating-market.js');
 	}
-	/*
-	await ns.sleep(60000);
-	var myHackingLevel = ns.getHackingLevel();
-	var startableServers = await getStartableServers(ns, "home", myHackingLevel);
-	var bestServerForHacking = getBestServersForHacking(ns, startableServers, myHackingLevel)[0];
-
-	var startServerRam = ns.getScriptRam('start-server.js');
-	// SUPER inefficient
-	var availableMemory = ns.getServerMaxRam("home") - ns.getServerUsedRam("home") - (startServerRam * startableServers.length);
-	var moneyMakerRam = ns.getScriptRam('money-maker.js');
-	var maxThreads = Math.max(Math.floor(availableMemory / moneyMakerRam), 1);
-	 ns.run('money-maker.js', maxThreads, bestServerForHacking);
-	 */
 }
