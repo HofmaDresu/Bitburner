@@ -15,36 +15,41 @@ export async function main(ns) {
 	const maxRam = 131072;
     while (ram < maxRam) {
 		ns.print(`Target Ram ${ram}`);
-		var maxServers = ns.getPurchasedServerLimit();
+		const maxServers = ns.getPurchasedServerLimit();
 		currentServers = ns.getPurchasedServers();
-		var costToUpgradeServers = ns.getPurchasedServerCost(ram * 2) * maxServers;
+		const costToUpgradeServers = ns.getPurchasedServerCost(ram * 2) * maxServers;
 		ns.print(`Currently have ${currentServers.length} with a max of ${maxServers}`);
 		ns.print(`It will cost ${costToUpgradeServers.toLocaleString('en-US')} to upgrade servers`);
 		if (costToUpgradeServers < ns.getServerMoneyAvailable("home")) {
-			for (var i = 0; i < currentServers.length; i++) {
+			for (let i = 0; i < currentServers.length; i++) {
 				ns.killall(currentServers[i]);
 				ns.deleteServer(currentServers[i]);
 			};
 			ram = Math.min(ram * 2, maxRam);
 			currentRamRunning = false;
 		}
-		if (!currentRamRunning) {
-			purchaseServers(ns, maxServers, ram);
+		if (!currentRamRunning || currentServers < maxServers) {
+			await purchaseServers(ns, maxServers, ram);
 		}
 		currentRamRunning = true;
         await ns.sleep(60000);
     }
 }
 
-function purchaseServers(ns, maxServers, ram) {
-	for (var i = 0; i < maxServers; i++) {
-		var serverCost = ns.getPurchasedServerCost(ram); 
-		var hostname = `pserv-${i}-${ram}gb`;
+async function purchaseServers(ns, maxServers, ram) {
+	for (let i = 0; i < maxServers;) {
+		const serverCost = ns.getPurchasedServerCost(ram); 
+		const hostname = `pserv-${i}-${ram}gb`;
 
-		if (ns.serverExists(hostname)) continue;
+		if (ns.serverExists(hostname)) {
+			i++;
+			continue;
+		};
 		if (ns.getServerMoneyAvailable("home") > serverCost) {
 			ns.purchaseServer(hostname, ram);
 			ns.scp("money-maker.js", hostname);
+			i++;
 		}
+		await ns.sleep(1000);
 	}
 }
