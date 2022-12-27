@@ -33,7 +33,7 @@ async function advancedMakeMoneyFromServer(ns, server) {
 	const targetServer = ns.getServer(server);
 
 	const hostname = ns.getServer().hostname;
-	var availableMemory = (ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname)) * .9;
+	var availableMemory = (ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname));
 	var growRam = ns.getScriptRam('/money-maker/grow-server.js');
 	var maxGrowThreads = Math.max(Math.floor(availableMemory / growRam), 1);
 	var hackRam = ns.getScriptRam('/money-maker/hack-server.js');
