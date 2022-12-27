@@ -171,3 +171,17 @@ export function calculateThreadsForHackToTargetPercent(ns, host, targetPercent, 
 	}
 	return threadsToUse
 }
+
+
+export async function calculateThreadsToWeakenToMin(ns, host, maxThreads) {
+	const cores = ns.getServer().cpuCores;
+	const currentSecurity = await ns.getServerSecurityLevel(host);
+	const targetSecurity =  ns.getServerMinSecurityLevel(host);
+
+	let threadsToUse = 0;
+	
+	while (currentSecurity - ns.weakenAnalyze(threadsToUse, cores) > targetSecurity && threadsToUse < maxThreads) {
+		threadsToUse++;
+	}
+	return threadsToUse
+}
