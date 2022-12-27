@@ -7,6 +7,7 @@ export async function main(ns) {
 	var hasRootAccess = ns.hasRootAccess(server);
 	if (!hasRootAccess) return;
 	ns.scp('helpers.js', server);
+	ns.scp('/stocks/helpers.js', server);
 	ns.scp(script, server);		
 	ns.scp('/money-maker/grow-server.js', server);
 	ns.scp('/money-maker/hack-server.js', server);
