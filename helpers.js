@@ -164,9 +164,7 @@ export function calculateThreadsForHackToTargetPercent(ns, host, targetPercent) 
 	const maxThreads = ns.getRunningScript().threads;
 	const hackPercent = ns.formulas.hacking.hackPercent(targetServer, player)
 	let hackNeededToTarget = 1 - (targetMoney / currentMoney);
-	ns.print(`${hackNeededToTarget} ${hackPercent}`)
 	let threadsNeededForHack = Math.ceil(hackNeededToTarget / hackPercent);
-	ns.print(`threads needed: ${threadsNeededForHack}`)
 	
 	while (threadsToUse < maxThreads && threadsToUse < threadsNeededForHack) {
 		threadsToUse++;
