@@ -117,7 +117,7 @@ export function calculateThreadsForGrowToTargetPercent(ns, host, targetPercent, 
 	const maxMoney = ns.getServerMaxMoney(host);
 	const targetMoney = maxMoney * targetPercent * 1.0;
 	let currentMoney = ns.getServerMoneyAvailable(host);
-	let threadsToUse = 1;
+	let threadsToUse = 0;
 	const player = ns.getPlayer();
 	const targetServer = ns.getServer(host);
 	const runningServer = ns.getServer();
@@ -159,7 +159,7 @@ export function calculateThreadsForHackToTargetPercent(ns, host, targetPercent, 
 	const targetMoney = maxMoney * targetPercent * 1.0;
 	let currentMoney = ns.getServerMoneyAvailable(host);
 
-	let threadsToUse = 1;
+	let threadsToUse = 0;
 	const player = ns.getPlayer();
 	const targetServer = ns.getServer(host);
 	const hackPercent = ns.formulas.hacking.hackPercent(targetServer, player)
