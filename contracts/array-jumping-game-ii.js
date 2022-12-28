@@ -1,4 +1,6 @@
 
+// 4,2,3,4,1,5,1,2,3,0,4
+
 /** @param {NS} ns */
 export async function main(ns) {
 	const targetServer = arguments[0].args[0];
@@ -19,11 +21,17 @@ export async function main(ns) {
 function tryToReachEnd(ns, data, currentIndex, targetIndex, currentDepth) {
     if (currentIndex === targetIndex) return currentDepth;
     if (currentIndex > targetIndex) return 0;
+    if (data[currentIndex] === 0) return 0;
 
     const possibleMoves = data[currentIndex];
     let minDepth = 0;
-    for (let i = 1; i <= possibleMoves; i++) {
-        const potentialDepth = tryToReachEnd(ns, data, currentIndex + i, targetIndex, currentDepth + 1);
+    for (let i = 1; i <= possibleMoves && i + currentIndex <= targetIndex; i++) {
+        let potentialDepth = 0;
+        if (i + currentIndex === targetIndex) {
+            potentialDepth = currentDepth;
+        } else {
+            potentialDepth = tryToReachEnd(ns, data, currentIndex + i, targetIndex, currentDepth + 1);
+        }
         if (potentialDepth > 0) {
             minDepth = minDepth === 0 ? potentialDepth : Math.min(minDepth, potentialDepth);
         }
