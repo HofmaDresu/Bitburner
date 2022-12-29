@@ -1,3 +1,10 @@
+* More efficient server use
+** When staring up
+*** Kill all obsolete servers
+** When starting money-maker-v2
+*** Start X number where X is Math.max(Math.floor((20_000 * X) / maxMemory), 1)
+**** Each for a different target server
+
 * Manipulate market on foreign servers
 ** If sufficient servers after regular hacking, start manipulate market on them
 ** If insufficient, start on home server
@@ -7,13 +14,6 @@
 ** purchase 1 at a time until max
 
 * add stock helper to get all stock servers
-
-* Upgrade run-money-maker
-** For each hackable server that isn't stock
-*** Find ideal threadcount for most expensive of hack/grow
-*** Find servers with 100% hack chance?
-*** Find most powerful startable server with that many free threads
-*** run money-maker on that server
 
 * Build connect to server script
 ** Given a server, find a path and connect
