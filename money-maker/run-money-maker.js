@@ -16,7 +16,7 @@ export async function main(ns) {
 				let server = startableServers[index];				
 				let serverToHack = bestServersForHacking[index];
 				await stopServerIfRetargetNeeded(ns, server, serverToHack);
-				ns.run('start-server.js', 1, ...[serverToHack, server]);
+				ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
 			};
 		}
 		await ns.sleep(60000);
@@ -24,7 +24,7 @@ export async function main(ns) {
 }
 
 async function stopServerIfRetargetNeeded(ns, server, bestServerForHacking) {
-	let moneyMakerProcess = await ns.ps(server).filter(process => process.filename === 'money-maker-v2.js');
+	let moneyMakerProcess = await ns.ps(server).filter(process => process.filename === 'money-maker-v2.js' || process.filename === 'money-maker.js');
 	if (!moneyMakerProcess || moneyMakerProcess.length === 0) return;
 	if (moneyMakerProcess[0].args.includes(bestServerForHacking)) return;
 	await ns.killall(server);

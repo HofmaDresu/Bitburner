@@ -2,7 +2,7 @@ import {getStartableServers, getBestServersForHacking} from "/helpers.js"
 
 /** @param {NS} ns */
 export async function main(ns) {
-	ns.run('run-money-maker.js');
+	ns.run('/money-maker/run-money-maker.js');
 	ns.run('/upgraders/purchase-server.js');
 	ns.run('/upgraders/purchase-programs.js');
 	ns.run('/upgraders/upgrade-home-server.js');
