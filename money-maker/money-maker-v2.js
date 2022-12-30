@@ -1,4 +1,4 @@
-import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin, growToTargetPercent, hackToTargetPercent} from "/helpers.js";
+import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin} from "/helpers.js";
 
 const PADDING_TIME = 200;
 
@@ -12,19 +12,8 @@ export async function main(ns) {
 	ns.disableLog("getServerUsedRam");
 	const server = arguments[0].args[0];
 	while(true) {
-		if (!ns.fileExists('Formulas.exe', 'home')) {
-			await basicMakeMoneyFromServer(ns, server);
-		} else {
-			await advancedMakeMoneyFromServer(ns, server);
-		}
+		await advancedMakeMoneyFromServer(ns, server);
 		await ns.sleep(50);
-	}
-}
-
-async function basicMakeMoneyFromServer(ns, server) {
-	while(true) {
-		await growToTargetPercent(ns, server, 1, false);
-		await hackToTargetPercent(ns, server, .50, false);
 	}
 }
 
