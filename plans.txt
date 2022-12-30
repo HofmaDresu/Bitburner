@@ -23,6 +23,4 @@
 
 * fix array jumping II
 
-* Auto university on startup
-
 * Get all crimes info (name, money/sec, stat/sec, success-rate, karma/sec, kills/sec)

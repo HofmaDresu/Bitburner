@@ -16,4 +16,8 @@ export async function main(ns) {
 		// Always call this last
 		ns.run('/stocks/start-manipulating-market.js');
 	}
+
+	if (!ns.singularity.isBusy()) {
+		ns.singularity.universityCourse("Rothman University", "Study Computer Science", true);
+	}
 }
