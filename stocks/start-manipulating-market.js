@@ -5,8 +5,6 @@ export async function main(ns) {
 	ns.disableLog('getServerMaxMoney');
 	await purchaseWseIfNeeded(ns);
 	await purchaseTIXAPIAccessIfNeeded(ns);
-	//TODO read portfolio for real data
-	ns.write(portfolioFileName,"{}", "w");
 	const manipulateMarketScript = '/stocks/manipulate-market.js';
 	ns.scriptKill(manipulateMarketScript, "home");
 	const stockSymbols = Object.keys(stockToServers);
