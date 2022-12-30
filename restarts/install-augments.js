@@ -1,3 +1,4 @@
+import {portfolioFileName} from "/stocks/helpers.js"
 
 /** @param {NS} ns */
 export async function main(ns) {
