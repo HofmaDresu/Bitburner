@@ -18,8 +18,7 @@ export async function main(ns) {
 	}
 
 	stockSymbols.forEach(stockSymbol => {
-		stockToServers[stockSymbol].filter(s => s).filter(server => ns.getServerMaxMoney(server)).forEach(server => {
-
+		stockToServers[stockSymbol].filter(s => s).filter(server => ns.getServerMaxMoney(server)).sort((a, b) => ns.getServerRequiredHackingLevel(a) - ns.getServerRequiredHackingLevel(b)).forEach(server => {
 			ns.run(manipulateMarketScript, threadsPerServer, server, stockSymbol);
 		});
 	});

@@ -4,10 +4,10 @@
 ** When starting money-maker-v2
 *** Start X number where X is Math.max(Math.floor((20_000 * X) / maxMemory), 1)
 **** Each for a different target server
+** Remove non-Formulas code from v2
 
 * Upgrade manipulateMarket
 ** Should stagger hack/grow and weaken like money-maker-v2 when formulas exists
-** Should start easiest-to-hack first
 
 * Upgrade purchase-server to handle < max servers case
 ** purchase 1 at a time until max
