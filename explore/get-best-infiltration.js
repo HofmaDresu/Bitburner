@@ -8,6 +8,6 @@ export async function main(ns) {
 			difficulty: info.difficulty, 
 			reward: info.reward.tradeRep,
 		};
-	}).filter(i => i.difficulty < 1.5).sort((a, b) => b.reward - a.reward));
+	}).filter(i => i.difficulty < 1.5).sort((a, b) => b.reward - a.reward).slice(0, 5));
 
 }
