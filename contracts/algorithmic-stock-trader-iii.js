@@ -32,7 +32,7 @@ export async function main(ns) {
         }
     }
 
-    const profit = possibleCombinations.sort((a, b) => b.totalProfit - a.totalProfit)[0].totalProfit;
+    const profit = possibleCombinations.sort((a, b) => b.totalProfit - a.totalProfit)[0]?.totalProfit || 0;
 
     const result = ns.codingcontract.attempt(profit, contractFileName, targetServer, {returnReward: true});
     if (result) {
