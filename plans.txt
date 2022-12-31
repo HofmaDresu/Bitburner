@@ -21,3 +21,5 @@
 * fix array jumping II
 
 * Get all crimes info (name, money/sec, stat/sec, success-rate, karma/sec, kills/sec)
+
+* Automate infiltration
