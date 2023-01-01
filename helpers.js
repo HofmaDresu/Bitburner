@@ -7,6 +7,9 @@ export function getStartableServers(ns, currentServer, myHackingLevel, previousS
 	return servers.flatMap((s) => {
 		if (gainRootAccessIfPossible) crackServerIfNeededAndPossible(ns, s, myHackingLevel);
 
+		
+		if (!ns.hasRootAccess(s)) { return []; }
+
 		return [s, ...getStartableServers(ns, s, myHackingLevel, currentServer, gainRootAccessIfPossible)];
 	}).filter(s => s).filter(s => ns.getServerMaxRam(s))
 	.sort((a, b) => ns.getServerMaxRam(b) - ns.getServerMaxRam(a));
@@ -24,9 +27,9 @@ export function crackServerIfNeededAndPossible(ns, server, myHackingLevel) {
 
 	if (!hasRootAccess) {
 		let requiredHackingLevel = ns.getServerRequiredHackingLevel(server);
-		if (requiredHackingLevel > myHackingLevel) { return []; }
+		if (requiredHackingLevel > myHackingLevel) { return; }
 		let requiredPorts = ns.getServerNumPortsRequired(server);
-		if (requiredPorts > hackablePorts) { return []; }
+		if (requiredPorts > hackablePorts) { return; }
 		if (ns.fileExists('brutessh.exe')) ns.brutessh(server);
 		if (ns.fileExists('ftpcrack.exe')) ns.ftpcrack(server);
 		if (ns.fileExists('relaysmtp.exe')) ns.relaysmtp(server);
