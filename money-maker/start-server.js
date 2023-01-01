@@ -31,9 +31,8 @@ function startBestScript(ns, targetServer, server) {
 		scriptToRunRam = scriptMemoryMap[0].ram;
 	}
 	
-	// Without Formulas, run our most basic script and max power
-	if (!ns.fileExists('Formulas.exe', 'home')) {
-		scriptToRun = '/money-maker/money-maker.js';
+	// Most basic script should be run at max power
+	if (scriptToRun === '/money-maker/money-maker.js') {
 		scriptToRunRam = ns.getScriptRam(scriptToRun);
 		idealThreads = Math.floor(availableMemory / scriptToRunRam);	
 	}

@@ -2,11 +2,6 @@ const maxNodes = 20;
 /** @param {NS} ns */
 export async function main(ns) {	
 	for (let nodeIndex = 0; nodeIndex <= maxNodes; nodeIndex++) {
-		if (!ns.fileExists('formulas.exe')) {
-			await ns.sleep(60000);
-			continue;
-		}
-
 		if (nodeIndex >=  ns.hacknet.numNodes()) {
 			while(getSpendableMoney(ns) <= ns.hacknet.getPurchaseNodeCost()) {
 				await ns.sleep(60000);

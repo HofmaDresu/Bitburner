@@ -94,15 +94,6 @@ export async function growToTargetPercent(ns, host, targetPercent, impactStock) 
 	const targetMoney = maxMoney * targetPercent * 1.0;
 	let currentMoney = ns.getServerMoneyAvailable(host);
 
-	if (!ns.fileExists('Formulas.exe', 'home')) {
-		while (currentMoney < targetMoney) {
-			await weakenToMin(ns, host);
-			await ns.grow(host, {stock: impactStock});		
-			currentMoney = ns.getServerMoneyAvailable(host);
-		}
-		return;
-	}
-
 	const maxThreads = ns.getRunningScript().threads;
 	
 	let growthNeededToTarget = targetMoney / currentMoney;
@@ -137,14 +128,6 @@ export async function hackToTargetPercent(ns, host, targetPercent, impactStock) 
 	const maxMoney = ns.getServerMaxMoney(host);
 	const targetMoney = maxMoney * targetPercent * 1.0;
 	let currentMoney = ns.getServerMoneyAvailable(host);
-	if (!ns.fileExists('Formulas.exe', 'home')) {
-		while (currentMoney > targetMoney) {
-			await weakenToMin(ns, host);
-			await ns.hack(host, {stock: impactStock});			
-			currentMoney = ns.getServerMoneyAvailable(host);
-		}
-		return;
-	}
 
 	const maxThreads = ns.getRunningScript().threads;
 
