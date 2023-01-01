@@ -27,7 +27,7 @@ export async function main(ns) {
 }
 
 async function stopServerIfRetargetNeeded(ns, server, bestServerForHacking) {
-	let moneyMakerProcess = await ns.ps(server).filter(process => process.filename === 'money-maker-v2.js' || process.filename === 'money-maker.js');
+	let moneyMakerProcess = await ns.ps(server).filter(process => process.filename === '/money-maker/money-maker-v2.js' || process.filename === '/money-maker/money-maker.js');
 	if (!moneyMakerProcess || moneyMakerProcess.length === 0) return;
 	if (bestServerForHacking && moneyMakerProcess[0].args.includes(bestServerForHacking)) return;
 	await ns.killall(server);
