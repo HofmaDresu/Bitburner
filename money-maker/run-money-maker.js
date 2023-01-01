@@ -19,7 +19,7 @@ export async function main(ns) {
 				ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
 			};
 			for (let index = bestServersForHacking.length; index < startableServers.length; index++) {
-				stopServerIfRetargetNeeded(ns, startableServers[index]);
+				await stopServerIfRetargetNeeded(ns, startableServers[index]);
 			}
 		}
 		await ns.sleep(60000);
