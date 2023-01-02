@@ -1,5 +1,8 @@
+import {typeItBackward} from "infiltration/type-it-backward";
+
 /** @param {NS} ns */
 export async function main(ns) {
+    ns.disableLog("sleep")
 	while(true) {
         let inInfiltrationMode = false;
         const potentialInfiltrationGameWindows = document.getElementsByClassName("jss1 MuiBox-root css-0");
@@ -21,9 +24,10 @@ export async function main(ns) {
 
             const potentialGameNames = infiltrationGameWindow.getElementsByClassName("MuiTypography-root MuiTypography-h4 css-qan7cn");
             for (let i = 0; i < potentialGameNames.length; i++) {
-                ns.print(potentialGameNames[i].innerHTML);
+                //ns.print(potentialGameNames[i].innerHTML);
                 switch(potentialGameNames[i].innerHTML) {
                     case "Type it backward":
+                        await typeItBackward(ns, infiltrationGameWindow);
                         break;
                     case "Slash when his guard is down!":
                         break;
