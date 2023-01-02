@@ -23,3 +23,29 @@
 * Get all crimes info (name, money/sec, stat/sec, success-rate, karma/sec, kills/sec)
 
 * Automate infiltration
+** Figure out how to get my events to work (something with isTrusted)
+
+
+
+
+document.dispatchEvent(new KeyboardEvent("keypress", {
+    key: "t",
+    keyCode: 116,
+    altKey: true,
+    bubbles: true,
+}));
+
+
+
+document._addEventListener = document._addEventListener || Element.prototype.addEventListener;
+document.addEventListener = function () {
+    let args = [...arguments]
+    let temp = args[1];
+    args[1] = function () {
+        let args2 = [...arguments];
+        args2[0] = Object.assign({}, args2[0])
+        args2[0].isTrusted = true;
+        return temp(...args2);
+    }
+    return this._addEventListener(...args);
+}
