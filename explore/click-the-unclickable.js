@@ -5,6 +5,8 @@ export async function main(ns) {
 
     const originalOnClick = unclickable.onclick;
 
+    unclickable.removeEventListener("click", originalOnClick);
+
     unclickable.addEventListener("click", originalOnClick);
 
     var clickEvent = new MouseEvent("click", {
@@ -22,6 +24,11 @@ export async function main(ns) {
     await ns.sleep(2000);
 
     unwrapEventListeners(ns, unclickable);
+
+    unclickable.removeEventListener("click", originalOnClick);
+
+    unclickable.addEventListener("click", originalOnClick);
+
 }
 
 // Adapted from https://pastebin.com/7DuFYDpJ
