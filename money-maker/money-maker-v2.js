@@ -28,14 +28,14 @@ async function advancedMakeMoneyFromServer(ns, server) {
 	const growScript = '/money-maker/grow-server.js';
 	var growRam = ns.getScriptRam(growScript);
 	var maxGrowThreads = Math.max(Math.floor(availableMemory / growRam), 1);
-	const calcGrowTime = () => ns.formulas.hacking.growTime(targetServer, player) + PADDING_TIME;
+	const calcGrowTime = () => ns.formulas.hacking.growTime(targetServer, player);
 	const calcGrowThreads = () => calculateThreadsForGrowToTargetPercent(ns, server, 1, maxGrowThreads);
 	await actionServer(ns, player, targetServer, growScript, calcGrowTime, calcGrowThreads)
 
 	const hackScript = '/money-maker/hack-server.js';
 	var hackRam = ns.getScriptRam(hackScript);
 	var maxHackThreads = Math.max(Math.floor(availableMemory / hackRam), 1);
-	const calcHackTime = () => ns.formulas.hacking.hackTime(targetServer, player) + PADDING_TIME;
+	const calcHackTime = () => ns.formulas.hacking.hackTime(targetServer, player);
 	const calcHackThreads = () => calculateThreadsForHackToTargetPercent(ns, server, .5, maxHackThreads);
 	await actionServer(ns, player, targetServer, hackScript, calcHackTime, calcHackThreads)
 }
@@ -46,10 +46,7 @@ async function actionServer(ns, player, targetServer, script, calcActionTime, ca
 	
 	let threadsNeededForAction = calcActionThreads();
 	while (threadsNeededForAction > 0) {
-		let actionTime = calcActionTime();
-		await weakenToMin(ns, targetServer, player, hostname, script)
-		// Recalculate after weakening
-		actionTime = calcActionTime();
+		const actionTime = await weakenToMin(ns, targetServer, player, hostname, script, threadsNeededForAction, calcActionTime);
 		ns.run(script, threadsNeededForAction, targetServer.hostname, threadsNeededForAction);
 		await ns.sleep(actionTime);
 		threadsNeededForAction = calcActionThreads();
@@ -57,7 +54,7 @@ async function actionServer(ns, player, targetServer, script, calcActionTime, ca
 }
 
 /** @param {NS} ns */
-async function weakenToMin(ns, targetServer, player, hostname, script, threadsNeededForAction) {
+async function weakenToMin(ns, targetServer, player, hostname, script, threadsNeededForAction, calcActionTime) {
 	const availableMemory = (ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname));
 	const actionRam = ns.getScriptRam(script);
 	const weakenRam = ns.getScriptRam('/money-maker/weaken-server.js');
@@ -67,7 +64,7 @@ async function weakenToMin(ns, targetServer, player, hostname, script, threadsNe
 
 	for (let i = 0; i < numberOfWeakensNeeded; i++) {
 		const timeToWeaken = ns.formulas.hacking.weakenTime(targetServer, player) + PADDING_TIME;
-		const timeToWeakenLastRun = (actionRam * threadsNeededForAction) + (weakenRam * threadsNeededToWeaken) < availableMemory * .9 ? timeToWeaken - actionTime + PADDING_TIME : timeToWeaken;
+		const timeToWeakenLastRun = (actionRam * threadsNeededForAction) + (weakenRam * threadsNeededToWeaken) < availableMemory * .9 ? timeToWeaken - calcActionTime() + PADDING_TIME : timeToWeaken;
 		ns.run("/money-maker/weaken-server.js", threadsNeededToWeaken, targetServer.hostname);
 		const sleepTime = i < numberOfWeakensNeeded - 1 ? timeToWeaken : timeToWeakenLastRun;
 		await ns.sleep(Math.max(sleepTime, 10));
