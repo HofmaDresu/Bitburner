@@ -61,12 +61,16 @@ async function weakenToMin(ns, targetServer, player, hostname, script, threadsNe
 	const maxWeakenThreads = Math.max(Math.floor(availableMemory / weakenRam), 1);
 	const threadsNeededToWeaken = await calculateThreadsToWeakenToMin(ns, targetServer.hostname, maxWeakenThreads);
 	const numberOfWeakensNeeded = Math.ceil((threadsNeededToWeaken * 1.0) / maxWeakenThreads);
+	let actionTime = calcActionTime();
 
 	for (let i = 0; i < numberOfWeakensNeeded; i++) {
 		const timeToWeaken = ns.formulas.hacking.weakenTime(targetServer, player) + PADDING_TIME;
-		const timeToWeakenLastRun = (actionRam * threadsNeededForAction) + (weakenRam * threadsNeededToWeaken) < availableMemory * .9 ? timeToWeaken - calcActionTime() + PADDING_TIME : timeToWeaken;
+		const timeToWeakenLastRun = (actionRam * threadsNeededForAction) + (weakenRam * threadsNeededToWeaken) < availableMemory * .9 ? timeToWeaken - actionTime + PADDING_TIME : timeToWeaken;
 		ns.run("/money-maker/weaken-server.js", threadsNeededToWeaken, targetServer.hostname);
 		const sleepTime = i < numberOfWeakensNeeded - 1 ? timeToWeaken : timeToWeakenLastRun;
 		await ns.sleep(Math.max(sleepTime, 10));
+		actionTime = calcActionTime();
 	}
+
+	return actionTime + PADDING_TIME;
 }
