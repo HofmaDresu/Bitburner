@@ -31,3 +31,8 @@
 
 * Intelligence
 ** terminal hack all 0 money servers with any free servers?
+
+* Node automation
+** Have servers backdoor themselves
+*** Install and run an extra script on each hackable server once?
+** How to track augments?
