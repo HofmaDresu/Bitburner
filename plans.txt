@@ -6,46 +6,28 @@
 * Upgrade manipulateMarket
 ** Should stagger hack/grow and weaken like money-maker-v2 when formulas exists
 
+* Money-maker-v3
+** Do everything V2 does
+** Add stock manipulation
+*** Use TIX API instead of custom DB for should raise/lower
+*** Check raise/lower for every grow/hack
+*** Upgrade grow/hack to raise/lower
+
 * Upgrade purchase-server to handle < max servers case
 ** purchase 1 at a time until max
-
-* add stock helper to get all stock servers
-
-* Build connect to server script
-** Given a server, find a path and connect
 
 * Upgrade startup to dynamically enable scripts based on memory rather than a static 1024
 
 * upgrade purchase-programs to only buy programs if they are currently useful (eg: buying the program would allow me to nuke a new server)
 
-* fix array jumping II
+* fix array jumping II, algorithmic stock trader IV
 
 * Get all crimes info (name, money/sec, stat/sec, success-rate, karma/sec, kills/sec)
 
 * Automate infiltration
-** Figure out how to get my events to work (something with isTrusted)
+** Figure out why isTrusted override causes damage on keypress. Likely something wrong in type-it-backward.js
 
+* Upgrade purcahse-server to only purchase Min(hackable-servers, max-servers);
 
-
-
-document.dispatchEvent(new KeyboardEvent("keypress", {
-    key: "t",
-    keyCode: 116,
-    altKey: true,
-    bubbles: true,
-}));
-
-
-
-document._addEventListener = document._addEventListener || Element.prototype.addEventListener;
-document.addEventListener = function () {
-    let args = [...arguments]
-    let temp = args[1];
-    args[1] = function () {
-        let args2 = [...arguments];
-        args2[0] = Object.assign({}, args2[0])
-        args2[0].isTrusted = true;
-        return temp(...args2);
-    }
-    return this._addEventListener(...args);
-}
+* Intelligence
+** terminal hack all 0 money servers with any free servers?
