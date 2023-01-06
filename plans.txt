@@ -20,7 +20,7 @@
 
 * upgrade purchase-programs to only buy programs if they are currently useful (eg: buying the program would allow me to nuke a new server)
 
-* fix array jumping II, algorithmic stock trader IV
+* algorithmic stock trader IV
 
 * Get all crimes info (name, money/sec, stat/sec, success-rate, karma/sec, kills/sec)
 
