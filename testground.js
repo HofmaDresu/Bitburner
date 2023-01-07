@@ -1,11 +1,12 @@
-import * as helpers from "helpers.js"
+//import * as helpers from "helpers.js"
 
 /** @param {NS} ns */
 export async function main(ns) {
+	ns.tprint(ns.getBitNodeMultipliers())
 }
 
-
 /** @param {NS} ns */
+/*
 async function hackOnHomeServer(ns) {
 		var myHackingLevel = ns.getHackingLevel();
 	var startableServers = await helpers.getStartableServers(ns, "home", myHackingLevel);
@@ -19,3 +20,4 @@ async function hackOnHomeServer(ns) {
 	var maxThreads = Math.max(Math.floor(availableMemory / moneyMakerRam), 1);
 	 ns.run('money-maker.js', maxThreads, bestServerForHacking);
 }
+*/
