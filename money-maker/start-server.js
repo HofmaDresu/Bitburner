@@ -11,6 +11,7 @@ export async function main(ns) {
 	ns.scp('/money-maker/grow-server.js', server);
 	ns.scp('/money-maker/hack-server.js', server);
 	ns.scp('/money-maker/weaken-server.js', server);
+	ns.scp('/experience/gain-hack-experience.js', server);
 	MONEY_MAKER_SCRIPTS.forEach(s => ns.scp(s, server));
 	startBestScript(ns, targetServer, server);
 }

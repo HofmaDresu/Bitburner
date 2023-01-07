@@ -21,7 +21,14 @@ export async function main(ns) {
 				}
 			};
 			for (let index = bestServersForHacking.length; index < startableServers.length; index++) {
-				await stopServerIfRetargetNeeded(ns, startableServers[index]);
+				const server = startableServers[index]
+				await stopServerIfRetargetNeeded(ns, server);
+				const experienceProcesses = await ns.ps(server).filter(process => process.filename === '/experience/gain-hack-experience.js');
+				if(!experienceProcesses || experienceProcesses.length === 0) {
+					ns.scp('/money-maker/weaken-server.js', server);
+					ns.scp('/experience/gain-hack-experience.js', server);
+					ns.exec('/experience/gain-hack-experience.js', server, 1);
+				}
 			}
 		}
 		await ns.sleep(60000);
