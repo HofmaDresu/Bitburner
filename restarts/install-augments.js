@@ -42,12 +42,14 @@ function purchaseNueroFluxGovernor(ns) {
     const factionsWithReputation = player.factions.map(f => ({faction: f, reputation: ns.singularity.getFactionRep(f)})).sort((a, b) => b.reputation - a.reputation);
     if (factionsWithReputation.length === 0) return;
     const mostReputedFaction = factionsWithReputation[0];
-    let [rep, cost] = ns.singularity.getAugmentationCost("NeuroFlux Governor");
+    let rep = ns.singularity.getAugmentationRepReq("NeuroFlux Governor");
+    let cost = ns.singularity.getAugmentationPrice("NeuroFlux Governor");
     let availableMonies = ns.getServerMoneyAvailable("home");
 
     while (availableMonies >= cost && mostReputedFaction.reputation >= rep) {
         ns.singularity.purchaseAugmentation(mostReputedFaction.faction, "NeuroFlux Governor");
-        [rep, cost] = ns.singularity.getAugmentationCost("NeuroFlux Governor");
+        rep = ns.singularity.getAugmentationRepReq("NeuroFlux Governor");
+        cost = ns.singularity.getAugmentationPrice("NeuroFlux Governor");
         availableMonies = ns.getServerMoneyAvailable("home");
     }
 }
