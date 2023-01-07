@@ -20,14 +20,24 @@ export async function main(ns) {
 					ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
 				}
 			};
-			for (let index = bestServersForHacking.length; index < startableServers.length; index++) {
+			for (let index = bestServersForHacking.length; index < startableServers.length && index < bestServersForHacking.length * 2; index++) {
+				let server = startableServers[index];	
+				let serverToHack = bestServersForHacking[index - bestServersForHacking.length];			
+				const experienceProcesses = await ns.ps(server).filter(process => process.filename === '/experience/gain-hack-experience.js');
+				if(!experienceProcesses || experienceProcesses.length === 0) {
+					ns.scp('/money-maker/weaken-server.js', server);
+					ns.scp('/experience/gain-hack-experience.js', server);
+					ns.exec('/experience/gain-hack-experience.js', server, 1, serverToHack);
+				}
+			};
+			for (let index = bestServersForHacking.length * 2; index < startableServers.length; index++) {
 				const server = startableServers[index]
 				await stopServerIfRetargetNeeded(ns, server);
 				const experienceProcesses = await ns.ps(server).filter(process => process.filename === '/experience/gain-hack-experience.js');
 				if(!experienceProcesses || experienceProcesses.length === 0) {
 					ns.scp('/money-maker/weaken-server.js', server);
 					ns.scp('/experience/gain-hack-experience.js', server);
-					ns.exec('/experience/gain-hack-experience.js', server, 1);
+					ns.exec('/experience/gain-hack-experience.js', server, 1, "n00dles");
 				}
 			}
 		}

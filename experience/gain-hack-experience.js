@@ -6,6 +6,7 @@ export async function main(ns) {
 	ns.disableLog("getServerMoneyAvailable");
 	ns.disableLog("getServerMaxRam");
 	ns.disableLog("getServerUsedRam");
+	const server = arguments[0].args[0];
 
 	const hostname = ns.getServer().hostname;
 
@@ -14,10 +15,10 @@ export async function main(ns) {
 	const maxWeakenThreads = Math.max(Math.floor(availableMemory / weakenRam), 1);
 
 	while (true) {
-		let targetServer = ns.getServer("n00dles");
+		let targetServer = ns.getServer(server);
 		const player = ns.getPlayer();
 		const timeToWeaken = ns.formulas.hacking.weakenTime(targetServer, player);
-		ns.run("/money-maker/weaken-server.js", maxWeakenThreads, "n00dles");
+		ns.run("/money-maker/weaken-server.js", maxWeakenThreads, server);
 		await ns.sleep(timeToWeaken + 50);
 	}
 }
