@@ -15,8 +15,10 @@ export async function main(ns) {
 			for (let index = 0; index < startableServers.length && index < bestServersForHacking.length; index++) {
 				let server = startableServers[index];				
 				let serverToHack = bestServersForHacking[index];
-				await stopServerIfRetargetNeeded(ns, server, serverToHack);
-				ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
+				const scriptIsStillRunning = await stopServerIfRetargetNeeded(ns, server, serverToHack);
+				if (!scriptIsStillRunning) {
+					ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
+				}
 			};
 			for (let index = bestServersForHacking.length; index < startableServers.length; index++) {
 				await stopServerIfRetargetNeeded(ns, startableServers[index]);
@@ -28,7 +30,8 @@ export async function main(ns) {
 
 async function stopServerIfRetargetNeeded(ns, server, bestServerForHacking) {
 	let moneyMakerProcess = await ns.ps(server).filter(process => process.filename === '/money-maker/money-maker-v2.js' || process.filename === '/money-maker/money-maker.js');
-	if (!moneyMakerProcess || moneyMakerProcess.length === 0) return;
-	if (bestServerForHacking && moneyMakerProcess[0].args.includes(bestServerForHacking)) return;
+	if (!moneyMakerProcess || moneyMakerProcess.length === 0) return false;
+	if (bestServerForHacking && moneyMakerProcess[0].args.includes(bestServerForHacking)) return true;
 	await ns.killall(server);
+	return false
 }
