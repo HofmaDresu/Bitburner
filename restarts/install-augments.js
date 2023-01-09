@@ -8,7 +8,8 @@ export async function main(ns) {
     ns.singularity.installAugmentations("startup.js")
 }
 
-function sellStocks(ns) {    
+function sellStocks(ns) {
+    if (!ns.stock.hasTIXAPIAccess()) return;
 	var portfolioData = JSON.parse(ns.read(portfolioFileName));
 	Object.keys(portfolioData).forEach(stockSymbol => {
 		var ownedData = portfolioData[stockSymbol];
