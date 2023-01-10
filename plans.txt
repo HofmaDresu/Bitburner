@@ -6,10 +6,6 @@
 * Upgrade manipulateMarket
 ** Should stagger hack/grow and weaken like money-maker-v2 when formulas exists
 
-* Hack experience optimization
-** Create way to tell money-maker to use max threads on hack/grow even if they're not needed
-*** Maybe based on max server money vs home money?
-
 * Money-maker-v3
 ** Do everything V2 does
 ** Add stock manipulation
@@ -19,14 +15,12 @@
 
 * Upgrade startup to dynamically enable scripts based on memory rather than a static 1024
 
-* fix algorithmic stock trader IV
+* fix algorithmic stock trader IV, array jumping II
 
 * Get all crimes info (name, money/sec, stat/sec, success-rate, karma/sec, kills/sec)
 
 * Automate infiltration
 ** Figure out why isTrusted override causes damage on keypress. Likely something wrong in type-it-backward.js
-
-* Upgrade purcahse-server to only purchase Min(hackable-servers, max-servers);
 
 * Intelligence
 ** terminal hack all 0 money servers with any free servers?

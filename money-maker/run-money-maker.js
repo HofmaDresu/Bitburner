@@ -12,7 +12,9 @@ export async function main(ns) {
 				startableServers.toString() !== newStartableServers.toString()) {
 			bestServersForHacking = newBestServersForHacking;
 			startableServers = newStartableServers;
-			for (let index = 0; index < startableServers.length && index < bestServersForHacking.length; index++) {
+			let index = 0;
+			// Hack servers
+			for (; index < startableServers.length && index < bestServersForHacking.length; index++) {
 				let server = startableServers[index];				
 				let serverToHack = bestServersForHacking[index];
 				const scriptIsStillRunning = await stopServerIfRetargetNeeded(ns, server, serverToHack);
@@ -20,35 +22,47 @@ export async function main(ns) {
 					ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
 				}
 			};
-			for (let index = bestServersForHacking.length; index < startableServers.length && index < bestServersForHacking.length * 2; index++) {
+			// Bash money servers with weaken
+			for (; index < startableServers.length && index < bestServersForHacking.length * 2; index++) {
 				let server = startableServers[index];	
 				let serverToHack = bestServersForHacking[index - bestServersForHacking.length];			
-				const experienceProcesses = await ns.ps(server).filter(process => process.filename === '/experience/gain-hack-experience.js');
+				const experienceProcesses = ns.ps(server).filter(process => process.filename === '/experience/gain-hack-experience.js');
 				if(!experienceProcesses || experienceProcesses.length === 0) {
 					ns.scp('/money-maker/weaken-server.js', server);
 					ns.scp('/experience/gain-hack-experience.js', server);
 					ns.exec('/experience/gain-hack-experience.js', server, 1, serverToHack);
 				}
 			};
-			for (let index = bestServersForHacking.length * 2; index < startableServers.length; index++) {
+			/*
+			const halfRemainingServers = Math.ceil((startableServers.length - index) / 2.0);
+			const serversToGainExperience = index + halfRemainingServers;
+			*/
+			// Bash n00dles with weaken for exp
+			for (; index < startableServers.length; index++) {
 				const server = startableServers[index]
-				await stopServerIfRetargetNeeded(ns, server);
-				const experienceProcesses = await ns.ps(server).filter(process => process.filename === '/experience/gain-hack-experience.js');
-				if(!experienceProcesses || experienceProcesses.length === 0) {
-					ns.scp('/money-maker/weaken-server.js', server);
-					ns.scp('/experience/gain-hack-experience.js', server);
-					ns.exec('/experience/gain-hack-experience.js', server, 1, "n00dles");
-				}
-			}
+				ns.killall(server);
+				ns.scp('/money-maker/weaken-server.js', server);
+				ns.scp('/experience/gain-hack-experience.js', server);
+				ns.exec('/experience/gain-hack-experience.js', server, 1, "n00dles");
+			}/*
+			// Run actions to gain intelligence
+			for (; index < startableServers.length; index++) {
+				const server = startableServers[index]
+				ns.killall(server);
+				ns.scp('/experience/manual-hack-self.js', server);
+				ns.scp('/experience/gain-intelligence.js', server);
+				ns.exec('/experience/gain-intelligence.js', server);
+			}*/
 		}
 		await ns.sleep(60000);
 	}
 }
 
+/** @param {NS} ns */
 async function stopServerIfRetargetNeeded(ns, server, bestServerForHacking) {
-	let moneyMakerProcess = await ns.ps(server).filter(process => process.filename === '/money-maker/money-maker-v2.js' || process.filename === '/money-maker/money-maker.js');
+	let moneyMakerProcess = ns.ps(server).filter(process => process.filename === '/money-maker/money-maker-v2.js' || process.filename === '/money-maker/money-maker.js');
 	if (!moneyMakerProcess || moneyMakerProcess.length === 0) return false;
 	if (bestServerForHacking && moneyMakerProcess[0].args.includes(bestServerForHacking)) return true;
-	await ns.killall(server);
+	ns.killall(server);
 	return false
 }
