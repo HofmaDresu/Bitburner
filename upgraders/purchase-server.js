@@ -5,7 +5,7 @@ export async function main(ns) {
 	ns.disableLog('killall');
 	ns.disableLog('deleteServer');
 	let currentServers = ns.getPurchasedServers();
-    let ram = 32;
+    let ram = 16;
 	let currentRamRunning = false;
 	if (currentServers.length > 0) {
 		currentRamRunning = true;
