@@ -1,5 +1,3 @@
-import {stockToServers} from "/stocks/helpers.js";
-
 /** @param {NS} ns */
 export function getStartableServers(ns, currentServer, myHackingLevel, previousServer, gainRootAccessIfPossible = false) {
 	const servers = ns.scan(currentServer).filter(s => s != previousServer);
@@ -84,25 +82,6 @@ export async function weakenToMin(ns, server) {
 	}
 }
 
-/** @param {NS} ns */
-export async function growToTargetPercent(ns, host, targetPercent, impactStock) {
-	const maxMoney = ns.getServerMaxMoney(host);
-	const targetMoney = maxMoney * targetPercent * 1.0;
-	let currentMoney = ns.getServerMoneyAvailable(host);
-
-	const maxThreads = ns.getRunningScript().threads;
-	
-	let growthNeededToTarget = targetMoney / currentMoney;
-	while (currentMoney < targetMoney) {
-		const threadsToUse =calculateThreadsForGrowToTargetPercent(ns, host, targetPercent, maxThreads);
-		await weakenToMin(ns, host);
-		await ns.grow(host, {stock: impactStock, threads: threadsToUse});
-		currentMoney = ns.getServerMoneyAvailable(host);
-		growthNeededToTarget = targetMoney / currentMoney;
-		await ns.sleep(50);
-	}
-}
-
 export function calculateThreadsForGrowToTargetPercent(ns, host, targetPercent, maxThreads) {
 	const maxMoney = ns.getServerMaxMoney(host);
 	const targetMoney = maxMoney * targetPercent * 1.0;
@@ -117,23 +96,6 @@ export function calculateThreadsForGrowToTargetPercent(ns, host, targetPercent, 
 		threadsToUse++;
 	}
 	return threadsToUse;
-}
-
-/** @param {NS} ns */
-export async function hackToTargetPercent(ns, host, targetPercent, impactStock) {	
-	const maxMoney = ns.getServerMaxMoney(host);
-	const targetMoney = maxMoney * targetPercent * 1.0;
-	let currentMoney = ns.getServerMoneyAvailable(host);
-
-	const maxThreads = ns.getRunningScript().threads;
-
-	while (currentMoney > targetMoney) {
-		const threadsToUse = calculateThreadsForHackToTargetPercent(ns, host, targetPercent, maxThreads);
-		await weakenToMin(ns, host);
-		await ns.hack(host, {stock: impactStock, threads: threadsToUse});
-		currentMoney = ns.getServerMoneyAvailable(host);
-		await ns.sleep(50);
-	}
 }
 
 export function calculateThreadsForHackToTargetPercent(ns, host, targetPercent, maxThreads) {
@@ -153,7 +115,6 @@ export function calculateThreadsForHackToTargetPercent(ns, host, targetPercent, 
 	}
 	return threadsToUse
 }
-
 
 export async function calculateThreadsToWeakenToMin(ns, host, maxThreads) {
 	const cores = ns.getServer().cpuCores;
