@@ -3,7 +3,7 @@ export async function main(ns) {
 
 	while (true) {
 		const server = ns.getServer(); //TODO: this is getting home because that's where this script runs. Can we get "current connected server"? Do we need to run multiple threads?
-		var availableMemory = (ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) * .5;
+		var availableMemory = (ns.getServerMaxRam("home") - ns.getServerUsedRam("home")) * .8;
 		const manualHackRam = ns.getScriptRam('/experience/manual-hack-self.js');
 		const hackThreads = Math.floor(availableMemory / manualHackRam);
 		const player = ns.getPlayer();
