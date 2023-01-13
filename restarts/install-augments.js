@@ -1,4 +1,4 @@
-import {portfolioFileName} from "/stocks/helpers.js"
+import {stockToServers} from "/stocks/helpers.js"
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -10,14 +10,15 @@ export async function main(ns) {
 
 function sellStocks(ns) {
     if (!ns.stock.hasTIXAPIAccess()) return;
-	var portfolioData = JSON.parse(ns.read(portfolioFileName));
-	Object.keys(portfolioData).forEach(stockSymbol => {
-		var ownedData = portfolioData[stockSymbol];
-		if (ownedData?.amount) {
-            ns.stock.sellStock(stockSymbol, ownedData.amount);
+	Object.keys(stockToServers).forEach(stockSymbol => {
+		const [longShares, _longPx, shortShares, _shortPx] = ns.stock.getPosition(stockSymbol);
+		if (longShares) {
+            ns.stock.sellStock(stockSymbol, longShares);
+        }
+        if (shortShares) {
+            ns.stock.sellShort(stockSymbol, shortShares);
         }
 	});
-	ns.write(portfolioFileName,"{}", "w");
 }
 
 function upgradeHomeServer(ns) {

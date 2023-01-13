@@ -1,4 +1,4 @@
-import {stockPriceFileName, portfolioFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded} from "/stocks/helpers.js"
+import {stockPriceFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded} from "/stocks/helpers.js"
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -6,8 +6,6 @@ export async function main(ns) {
 	await purchaseWseIfNeeded(ns);
 	await purchaseTIXAPIAccessIfNeeded(ns);
 	await purchase4sTIXAPIAccessIfNeeded(ns);
-	// {symbol: {amount, purchasePrice, pos}}
-	var portfolioData = JSON.parse(ns.read(portfolioFileName));	
 
 	var buyPriceMultiplier = .25;
 	var sellPriceMultiplier = .20;
@@ -16,6 +14,7 @@ export async function main(ns) {
 		var stockPriceData = JSON.parse(ns.read(stockPriceFileName));	
 		var flagsData = JSON.parse(ns.read(stockFlagsFileName));
 		Object.keys(stockPriceData).forEach(stockSymbol => {
+			const [longShares, _longPx, shortShares, _shortPx] = ns.stock.getPosition(stockSymbol);
 			var maxPriceDiffSeen = stockPriceData[stockSymbol].maxPrice - stockPriceData[stockSymbol].minPrice;
 			var maxLongPurchasePrice = stockPriceData[stockSymbol].minPrice + (maxPriceDiffSeen * buyPriceMultiplier);
 			var maxShortSellPrice = stockPriceData[stockSymbol].minPrice + (maxPriceDiffSeen * sellPriceMultiplier);
@@ -23,32 +22,14 @@ export async function main(ns) {
 			var minLongSellPrice = stockPriceData[stockSymbol].maxPrice - (maxPriceDiffSeen * sellPriceMultiplier);
 			var askPrice = ns.stock.getAskPrice(stockSymbol);
 			var bidPrice = ns.stock.getBidPrice(stockSymbol);
-			if (portfolioData[stockSymbol]?.amount) {
+			if (longShares || shortShares) {
 				// We have some of this stock
-				var ownedData = portfolioData[stockSymbol];
-				if (!ownedData?.amount) return;
-				switch (ownedData.pos) {
-					case "L":
-						if (bidPrice > minLongSellPrice) {
-							ns.stock.sellStock(stockSymbol, ownedData.amount);
-							portfolioData[stockSymbol] = {
-								amount: 0,
-								purchasePrice: 0,
-								pos: ""
-							};
-						}
-						break;
-					case "S":
-						if (askPrice < maxShortSellPrice) {
-							ns.stock.sellShort(stockSymbol, ownedData.amount);
-							portfolioData[stockSymbol] = {
-								amount: 0,
-								purchasePrice: 0,
-								pos: ""
-							};
-						}
-						break
-				}				
+				if (longShares && bidPrice > minLongSellPrice) {
+					ns.stock.sellStock(stockSymbol, longShares);
+				}
+				if (shortShares && askPrice < maxShortSellPrice) {
+					ns.stock.sellShort(stockSymbol, ownedData.amount);
+				}	
 			} else if (flagsData.allowPurchases) {
 				// We have none of this stock
 				var forcast = ns.stock.getForecast(stockSymbol)
@@ -56,27 +37,14 @@ export async function main(ns) {
 					var sharesToBuy = calculateSharesForLong(ns, stockSymbol, askPrice, minLongSellPrice);
 					if (sharesToBuy === 0) return;
 					ns.stock.buyStock(stockSymbol, sharesToBuy);
-
-					portfolioData[stockSymbol] = {
-						amount: sharesToBuy,
-						purchasePrice: askPrice,
-						pos: "L"
-					};
 				} else if (minShortPurchasePrice < bidPrice && forcast < .5 && flagsData.allowShorts) {
 					var sharesToBuy = calculateSharesForShort(ns, stockSymbol, bidPrice, maxShortSellPrice);
 					if (sharesToBuy === 0) return;
 					ns.stock.buyShort(stockSymbol, sharesToBuy);
-
-					portfolioData[stockSymbol] = {
-						amount: sharesToBuy,
-						purchasePrice: askPrice,
-						pos: "S"
-					};
 				}
 			}
 		});
 		
-		ns.write(portfolioFileName, JSON.stringify(portfolioData), "w");
 		await ns.sleep(60000);
 	}
 }

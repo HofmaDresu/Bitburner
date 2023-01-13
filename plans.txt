@@ -9,7 +9,6 @@
 * Money-maker-v3
 ** Do everything V2 does
 ** Add stock manipulation
-*** Use TIX API instead of custom DB for should raise/lower
 *** Check raise/lower for every grow/hack
 *** Upgrade grow/hack to raise/lower
 
@@ -25,9 +24,6 @@
 
 * Automate infiltration
 ** Figure out why isTrusted override causes damage on keypress. Likely something wrong in type-it-backward.js
-
-* Intelligence
-** terminal hack all 0 money servers with any free servers?
 
 * Node automation
 ** Have servers backdoor themselves

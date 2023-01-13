@@ -34,19 +34,18 @@ export const stockToServers = {
     "FNS": ["foodnstuff"] 
 };
 
-export const portfolioFileName = "/stocks/portfolio-database.txt";
 export const stockFlagsFileName = "/stocks/stock-flags.txt";
 export const stockPriceFileName = "/stocks/stock-database.txt";
 
 /** @param {NS} ns */
 export function shouldLowerValueForStock(ns, stockSymbol) {	
-	const [longShares, _longPx, _shortShares, _shortPx] = ns.stock.getPosition(stockSymbol)
+	const [longShares, _longPx, _shortShares, _shortPx] = ns.stock.getPosition(stockSymbol);
 	return longShares === 0;
 }
 
 /** @param {NS} ns */
 export function shouldRaiseValueForStock(ns, stockSymbol) {	
-	const [longShares, _longPx, shortShares, _shortPx] = ns.stock.getPosition(stockSymbol)
+	const [longShares, _longPx, shortShares, _shortPx] = ns.stock.getPosition(stockSymbol);
 	if (longShares === 0 && shortShares === 0) return false; // Don't care
 	return longShares > 0;
 }
