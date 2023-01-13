@@ -6,12 +6,6 @@
 * Upgrade manipulateMarket
 ** Should stagger hack/grow and weaken like money-maker-v2 when formulas exists
 
-* Money-maker-v3
-** Do everything V2 does
-** Add stock manipulation
-*** Check raise/lower for every grow/hack
-*** Upgrade grow/hack to raise/lower
-
 * Upgrade startup to dynamically enable scripts based on memory rather than a static 1024
 
 * fix algorithmic stock trader IV, array jumping II, algorithmic stock trader II (never completes with)

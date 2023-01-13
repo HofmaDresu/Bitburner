@@ -1,4 +1,4 @@
-const MONEY_MAKER_SCRIPTS = ['/money-maker/money-maker.js', '/money-maker/money-maker-v2.js'];
+const MONEY_MAKER_SCRIPTS = ['/money-maker/money-maker.js', '/money-maker/money-maker-v2.js', '/money-maker/money-maker-v3.js'];
 
 /** @param {NS} ns */
 export async function main(ns) {

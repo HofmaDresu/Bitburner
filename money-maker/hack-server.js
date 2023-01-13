@@ -1,5 +1,6 @@
 /** @param {NS} ns */
 export async function main(ns) {
 	const server = arguments[0].args[0];
-    await ns.hack(server);	
+	const shouldManipulateMarket = arguments[0].args[1] || false;
+    await ns.hack(server, {stock: shouldManipulateMarket});	
 }

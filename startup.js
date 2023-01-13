@@ -17,7 +17,7 @@ export async function main(ns) {
 		ns.run('/stocks/activate-purchases.js');
 		ns.run('/stocks/play-the-market.js');
 		// Always call these last
-		ns.run('/stocks/start-manipulating-market.js');
+		//ns.run('/stocks/start-manipulating-market.js');
 		ns.spawn('/experience/gain-intelligence.js');
 	}
 }

@@ -65,15 +65,11 @@ export function getHackableServers(ns, currentServer, previousServer) {
 }
 
 /** @param {NS} ns */
-export function getBestServersForHacking(ns, myHackingLevel) {	
-	const stockSymbols = Object.keys(stockToServers);
-	const stockServers = stockSymbols.flatMap(ss => stockToServers[ss]);
-
+export function getBestServersForHacking(ns, myHackingLevel) {
 	const eligibleServers = getHackableServers(ns, "home").filter(server => {
 		var requiredHackingLevel = ns.getServerRequiredHackingLevel(server);
 		return requiredHackingLevel <= Math.max(1, myHackingLevel);
-	}).filter(server => !stockServers.includes(server));
-
+	});
 
 	const orderedServers = eligibleServers.sort((a, b) => ns.getServerMaxMoney(b) - ns.getServerMaxMoney(a));
 	
