@@ -39,7 +39,7 @@ async function getMaxProfit(ns, potentialActions, currentDepth, maxDepth) {
         const additionalPotentialActions = potentialActions.slice(profitIndex).filter(pp => pp.buyIndex > currentSale.sellIndex);
 
         if (additionalPotentialActions.length) {
-            potentialProfits.push(currentSale.profit + getMaxProfit(ns, additionalPotentialActions, currentDepth + 1, maxDepth));
+            potentialProfits.push(currentSale.profit + await getMaxProfit(ns, additionalPotentialActions, currentDepth + 1, maxDepth));
         } else {
             potentialProfits.push(currentSale.profit);
         }

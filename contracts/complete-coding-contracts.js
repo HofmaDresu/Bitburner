@@ -34,7 +34,7 @@ async function completeContractsIfPossible(ns, server, files) {
                 filename = '/contracts/algorithmic-stock-trader-iii.js';
                 break;
             case "Algorithmic Stock Trader IV":
-                //filename = '/contracts/algorithmic-stock-trader-iv.js';
+                filename = '/contracts/algorithmic-stock-trader-iv.js';
                 break;
             case "Array Jumping Game":
                 filename = '/contracts/array-jumping-game.js';
