@@ -2,6 +2,9 @@ import {getStartableServers, getBestServersForHacking} from "/helpers.js"
 
 /** @param {NS} ns */
 export async function main(ns) {
+	if (!ns.singularity.isBusy()) {
+		ns.singularity.universityCourse("Rothman University", "Study Computer Science", true);
+	}
 	ns.run('/money-maker/run-money-maker.js');
 	ns.run('/upgraders/purchase-server.js');
 	ns.run('/upgraders/purchase-programs.js');
@@ -15,10 +18,6 @@ export async function main(ns) {
 		ns.run('/stocks/play-the-market.js');
 		// Always call these last
 		ns.run('/stocks/start-manipulating-market.js');
-		ns.run('/experience/gain-intelligence.js');
-	}
-
-	if (!ns.singularity.isBusy()) {
-		ns.singularity.universityCourse("Rothman University", "Study Computer Science", true);
+		ns.spawn('/experience/gain-intelligence.js');
 	}
 }
