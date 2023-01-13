@@ -7,16 +7,18 @@ export async function main(ns) {
     let potentialActions = [];
     for (let buyIndex = 0; buyIndex < data.length; buyIndex++) {
         for (let sellIndex = buyIndex; sellIndex < data.length; sellIndex++) {
-            potentialActions.push({
-                buyIndex: buyIndex,
-                sellIndex: sellIndex,
-                profit: data[sellIndex] - data[buyIndex]
-            });
+            const profit = data[sellIndex] - data[buyIndex];
+            if (profit > 0) {
+                potentialActions.push({
+                    buyIndex: buyIndex,
+                    sellIndex: sellIndex,
+                    profit
+                });
+            }
         }
     }
 
-    potentialActions = potentialActions.filter(pp => pp.profit > 0).sort((a, b) => a.buyIndex - b.buyIndex);
-
+    potentialActions = potentialActions.sort((a, b) => a.buyIndex - b.buyIndex);
 
     const profit = await getMaxProfit(ns, potentialActions, 0);
 
@@ -38,7 +40,6 @@ async function getMaxProfit(ns, potentialActions, currentDepth) {
         } else {
             potentialProfits.push(currentSale.profit);
         }
-        await ns.sleep(5);
     }
     return potentialProfits.sort((a, b) => b - a)[0];
 }
