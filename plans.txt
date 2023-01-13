@@ -3,9 +3,6 @@
 *** Start X number where X is Math.max(Math.floor((20_000 * X) / maxMemory), 1)
 **** Each for a different target server
 
-* Upgrade manipulateMarket
-** Should stagger hack/grow and weaken like money-maker-v2 when formulas exists
-
 * Upgrade startup to dynamically enable scripts based on memory rather than a static 1024
 
 * fix algorithmic stock trader IV, array jumping II, algorithmic stock trader II (never completes with)
@@ -25,5 +22,5 @@
 ** How to track augments?
 
 * Replace purchace programs with obtain programs
-** buy if sufficient money and cannot crate (too low level or busy)
+** buy if sufficient money and cannot create (too low level or busy)
 ** create if possible
