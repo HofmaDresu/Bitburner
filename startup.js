@@ -13,8 +13,9 @@ export async function main(ns) {
 		ns.run('/stocks/stock-watcher.js');
 		ns.run('/stocks/activate-purchases.js');
 		ns.run('/stocks/play-the-market.js');
-		// Always call this last
+		// Always call these last
 		ns.run('/stocks/start-manipulating-market.js');
+		ns.run('/experience/gain-intelligence.js');
 	}
 
 	if (!ns.singularity.isBusy()) {
