@@ -1,5 +1,6 @@
 /** @param {NS} ns */
 export async function main(ns) {
+    ns.disableLog("sleep");
 	const targetServer = arguments[0].args[0];
 	const contractFileName = arguments[0].args[1];
     const data = ns.codingcontract.getData(contractFileName, targetServer);
@@ -31,6 +32,7 @@ export async function main(ns) {
 }
 
 async function getMaxProfit(ns, potentialActions, currentDepth) {
+    await ns.sleep(1);
     const potentialProfits = [];
     for (let profitIndex = 0; profitIndex < potentialActions.length; profitIndex++) {
         const currentSale = potentialActions[profitIndex];

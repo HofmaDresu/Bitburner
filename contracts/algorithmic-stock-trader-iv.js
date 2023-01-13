@@ -1,5 +1,6 @@
 /** @param {NS} ns */
 export async function main(ns) {
+    ns.disableLog("sleep");
 	const targetServer = arguments[0].args[0];
 	const contractFileName = arguments[0].args[1];
     const data = ns.codingcontract.getData(contractFileName, targetServer);
@@ -19,7 +20,7 @@ export async function main(ns) {
 
     potentialActions = potentialActions.filter(pp => pp.profit > 0).sort((a, b) => a.buyIndex - b.buyIndex);
 
-    const profit = getMaxProfit(ns, potentialActions, 0, maxDepth);
+    const profit = await getMaxProfit(ns, potentialActions, 0, maxDepth);
 
     const result = ns.codingcontract.attempt(profit, contractFileName, targetServer, {returnReward: true});
     if (result) {
@@ -29,7 +30,8 @@ export async function main(ns) {
     }
 }
 
-function getMaxProfit(ns, potentialActions, currentDepth, maxDepth) {
+async function getMaxProfit(ns, potentialActions, currentDepth, maxDepth) {
+    await ns.sleep(1);
     if (currentDepth === maxDepth) return 0;
     const potentialProfits = [];
     for (let profitIndex = 0; profitIndex < potentialActions.length; profitIndex++) {

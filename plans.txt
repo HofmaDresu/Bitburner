@@ -15,7 +15,11 @@
 
 * Upgrade startup to dynamically enable scripts based on memory rather than a static 1024
 
-* fix algorithmic stock trader IV, array jumping II
+* fix algorithmic stock trader IV, array jumping II, algorithmic stock trader II (never completes with)
+** Algo II and IV:
+*** _very_ inefficient. Tend to take forever
+** Array II:
+*** incorrect
 
 * Get all crimes info (name, money/sec, stat/sec, success-rate, karma/sec, kills/sec)
 
@@ -29,3 +33,7 @@
 ** Have servers backdoor themselves
 *** Install and run an extra script on each hackable server once?
 ** How to track augments?
+
+* Replace purchace programs with obtain programs
+** buy if sufficient money and cannot crate (too low level or busy)
+** create if possible
