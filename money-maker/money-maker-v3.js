@@ -22,7 +22,7 @@ export async function main(ns) {
 async function advancedMakeMoneyFromServer(ns, server) {
 
 	const hostname = ns.getServer().hostname;
-	var availableMemory = (ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname));
+	var availableMemory = Math.min(ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname), 8_192);
 
 	const growScript = '/money-maker/grow-server.js';
 	var growRam = ns.getScriptRam(growScript);

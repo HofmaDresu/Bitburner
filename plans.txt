@@ -1,8 +1,3 @@
-* More efficient server use
-** When starting money-maker-v2
-*** Start X number where X is Math.max(Math.floor((20_000 * X) / maxMemory), 1)
-**** Each for a different target server
-
 * Upgrade startup to dynamically enable scripts based on memory rather than a static 1024
 
 * fix algorithmic stock trader IV, array jumping II, algorithmic stock trader II (never completes with)
