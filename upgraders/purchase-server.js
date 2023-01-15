@@ -49,7 +49,7 @@ async function purchaseServers(ns, maxServers, ram) {
 		};
 		if (ns.getServerMoneyAvailable("home") > serverCost) {
 			ns.purchaseServer(hostname, ram);
-			copyFilesToServer(ns, server);
+			copyFilesToServer(ns, hostname);
 			i++;
 		}
 		await ns.sleep(1000);
