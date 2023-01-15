@@ -1,3 +1,5 @@
+const MONEY_MAKER_SCRIPTS = ['/money-maker/money-maker.js', '/money-maker/money-maker-v2.js', '/money-maker/money-maker-v3.js'];
+
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog('getServerMoneyAvailable');
@@ -47,7 +49,13 @@ async function purchaseServers(ns, maxServers, ram) {
 		};
 		if (ns.getServerMoneyAvailable("home") > serverCost) {
 			ns.purchaseServer(hostname, ram);
-			ns.scp("money-maker.js", hostname);
+			ns.scp('helpers.js', server);
+			ns.scp('/stocks/helpers.js', server);
+			ns.scp('/money-maker/grow-server.js', server);
+			ns.scp('/money-maker/hack-server.js', server);
+			ns.scp('/money-maker/weaken-server.js', server);
+			ns.scp('/experience/gain-hack-experience.js', server);
+			MONEY_MAKER_SCRIPTS.forEach(s => ns.scp(s, server));
 			i++;
 		}
 		await ns.sleep(1000);
