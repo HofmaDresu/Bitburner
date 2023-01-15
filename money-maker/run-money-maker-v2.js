@@ -29,7 +29,7 @@ export async function main(ns) {
 				const server = startableServers[startableIndex];				
                 const maxMemory = ns.getServerMaxRam(server);
                 const maxRunning = Math.max(Math.floor(maxMemory / 8_192), 1);
-                for (let i = 0; i < maxRunning; i++) {
+                for (let i = 0; i < maxRunning && hackIndex < bestServersForHacking.length; i++) {
                     const serverToHack = bestServersForHacking[hackIndex];
 					ns.print(`Start hacking ${serverToHack} on ${server} for monies`)
 					ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
