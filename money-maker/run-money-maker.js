@@ -1,4 +1,4 @@
-import {getStartableServers, getBestServersForHacking} from "/helpers.js";
+import {getStartableServers, getBestServersForHacking, copyFilesToServer} from "/helpers.js";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -26,6 +26,7 @@ export async function main(ns) {
 				let serverToHack = bestServersForHacking[index];
 				const scriptIsStillRunning = await stopServerIfRetargetNeeded(ns, server, serverToHack);
 				if (!scriptIsStillRunning) {
+					copyFilesToServer(ns, server);
 					ns.print(`Start hacking ${serverToHack} for monies`)
 					ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
 				}
@@ -38,8 +39,7 @@ export async function main(ns) {
 				const experienceProcesses = ns.ps(server).filter(process => process.filename === '/experience/gain-hack-experience.js');
 				if(!experienceProcesses || experienceProcesses.length === 0) {
 					ns.print(`Start hacking ${serverToHack} for exp 1`)
-					ns.scp('/money-maker/weaken-server.js', server);
-					ns.scp('/experience/gain-hack-experience.js', server);
+					copyFilesToServer(ns, server);
 					ns.exec('/experience/gain-hack-experience.js', server, 1, serverToHack);
 				}
 			};
@@ -47,8 +47,7 @@ export async function main(ns) {
 				ns.print(`Start hacking n00dles for exp 2`)
 				const server = startableServers[index];
 				ns.killall(server);
-				ns.scp('/money-maker/weaken-server.js', server);
-				ns.scp('/experience/gain-hack-experience.js', server);
+                copyFilesToServer(ns, server);
 				ns.exec('/experience/gain-hack-experience.js', server, 1, "n00dles");
 			}
 		}

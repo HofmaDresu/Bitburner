@@ -1,4 +1,4 @@
-const MONEY_MAKER_SCRIPTS = ['/money-maker/money-maker.js', '/money-maker/money-maker-v2.js', '/money-maker/money-maker-v3.js'];
+import {copyFilesToServer} from 'helpers';
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -13,8 +13,8 @@ export async function main(ns) {
 		currentRamRunning = true;
 		ram = parseInt(currentServers[0].split("-")[2].split("g")[0]);
 	}
-	// const maxRam = ns.getPurchasedServerMaxRam();
-	const maxRam = 131072;
+	const maxRam = ns.getPurchasedServerMaxRam();
+	//const maxRam = 131072;
     while (ram < maxRam) {
 		ns.print(`Target Ram ${ram}`);
 		const maxServers = ns.getPurchasedServerLimit();
@@ -49,13 +49,7 @@ async function purchaseServers(ns, maxServers, ram) {
 		};
 		if (ns.getServerMoneyAvailable("home") > serverCost) {
 			ns.purchaseServer(hostname, ram);
-			ns.scp('helpers.js', server);
-			ns.scp('/stocks/helpers.js', server);
-			ns.scp('/money-maker/grow-server.js', server);
-			ns.scp('/money-maker/hack-server.js', server);
-			ns.scp('/money-maker/weaken-server.js', server);
-			ns.scp('/experience/gain-hack-experience.js', server);
-			MONEY_MAKER_SCRIPTS.forEach(s => ns.scp(s, server));
+			copyFilesToServer(ns, server);
 			i++;
 		}
 		await ns.sleep(1000);

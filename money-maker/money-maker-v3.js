@@ -1,4 +1,4 @@
-import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin} from "/helpers.js";
+import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin, MAX_SINGLE_PROGRAM_RAM} from "/helpers.js";
 import {shouldLowerValueForStock, shouldRaiseValueForStock, getStockForServer} from "/stocks/helpers.js";
 
 const PADDING_TIME = 200;
@@ -22,7 +22,7 @@ export async function main(ns) {
 async function advancedMakeMoneyFromServer(ns, server) {
 
 	const hostname = ns.getServer().hostname;
-	var availableMemory = Math.min(ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname), 8_192);
+	var availableMemory = Math.min(ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname), MAX_SINGLE_PROGRAM_RAM);
 
 	const growScript = '/money-maker/grow-server.js';
 	var growRam = ns.getScriptRam(growScript);

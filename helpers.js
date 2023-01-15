@@ -1,3 +1,5 @@
+export const MAX_SINGLE_PROGRAM_RAM = 8_192;
+
 /** @param {NS} ns */
 export function getStartableServers(ns, currentServer, myHackingLevel, previousServer, gainRootAccessIfPossible = false) {
 	const servers = ns.scan(currentServer).filter(s => s != previousServer);
@@ -127,4 +129,18 @@ export async function calculateThreadsToWeakenToMin(ns, host, maxThreads) {
 		threadsToUse++;
 	}
 	return threadsToUse
+}
+
+export const MONEY_MAKER_SCRIPTS = ['/money-maker/money-maker.js', '/money-maker/money-maker-v2.js', '/money-maker/money-maker-v3.js'];
+
+export function copyFilesToServer(ns, hostname) {
+	ns.scp('helpers.js', hostname);
+	ns.scp('/stocks/helpers.js', hostname);
+	ns.scp('/money-maker/grow-server.js', hostname);
+	ns.scp('/money-maker/hack-server.js', hostname);
+	ns.scp('/money-maker/weaken-server.js', hostname);
+	ns.scp('/experience/gain-hack-experience.js', hostname);
+	ns.scp('/experience/weaken-server.js', hostname);
+	MONEY_MAKER_SCRIPTS.forEach(s => ns.scp(s, hostname));
+
 }

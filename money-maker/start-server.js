@@ -1,4 +1,4 @@
-const MONEY_MAKER_SCRIPTS = ['/money-maker/money-maker.js', '/money-maker/money-maker-v2.js', '/money-maker/money-maker-v3.js'];
+import {copyFilesToServer, MONEY_MAKER_SCRIPTS} from 'helpers';
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -6,13 +6,7 @@ export async function main(ns) {
 	var server = arguments[0].args[1];
 	var hasRootAccess = ns.hasRootAccess(server);
 	if (!hasRootAccess) return;
-	ns.scp('helpers.js', server);
-	ns.scp('/stocks/helpers.js', server);
-	ns.scp('/money-maker/grow-server.js', server);
-	ns.scp('/money-maker/hack-server.js', server);
-	ns.scp('/money-maker/weaken-server.js', server);
-	ns.scp('/experience/gain-hack-experience.js', server);
-	MONEY_MAKER_SCRIPTS.forEach(s => ns.scp(s, server));
+	copyFilesToServer(ns, server);
 	startBestScript(ns, targetServer, server);
 }
 

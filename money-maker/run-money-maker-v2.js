@@ -1,4 +1,4 @@
-import {getStartableServers, getBestServersForHacking} from "/helpers.js";
+import {getStartableServers, getBestServersForHacking, MAX_SINGLE_PROGRAM_RAM, copyFilesToServer} from "/helpers.js";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -28,7 +28,8 @@ export async function main(ns) {
 			while (startableIndex < startableServers.length && hackIndex < bestServersForHacking.length) {
 				const server = startableServers[startableIndex];				
                 const maxMemory = ns.getServerMaxRam(server);
-                const maxRunning = Math.max(Math.floor(maxMemory / 8_192), 1);
+                const maxRunning = Math.max(Math.floor(maxMemory / MAX_SINGLE_PROGRAM_RAM), 1);
+                copyFilesToServer(ns, server);
                 for (let i = 0; i < maxRunning && hackIndex < bestServersForHacking.length; i++) {
                     const serverToHack = bestServersForHacking[hackIndex];
 					ns.print(`Start hacking ${serverToHack} on ${server} for monies`)
@@ -42,10 +43,14 @@ export async function main(ns) {
 			while (startableIndex < startableServers.length && hackIndex < bestServersForHacking.length) {
 				const server = startableServers[startableIndex];				
                 const maxMemory = ns.getServerMaxRam(server);
-                const serverToHack = bestServersForHacking[hackIndex];
-                ns.print(`Start hacking ${serverToHack} on ${server} for exp 1`)
-                ns.exec('/experience/gain-hack-experience.js', server, 1, serverToHack);
-                hackIndex++;
+                const maxRunning = Math.max(Math.floor(maxMemory / MAX_SINGLE_PROGRAM_RAM), 1);
+                copyFilesToServer(ns, server);
+                for (let i = 0; i < maxRunning && hackIndex < bestServersForHacking.length; i++) {
+                    const serverToHack = bestServersForHacking[hackIndex];
+                    ns.print(`Start hacking ${serverToHack} on ${server} for exp 1`)
+                    ns.exec('/experience/weaken-server.js', server, 1, serverToHack);
+                    hackIndex++;
+                }
                 startableIndex++;
 			};
             // Bash n00dles with weaken
@@ -53,6 +58,7 @@ export async function main(ns) {
 				ns.print(`Start hacking n00dles for exp 2`)
 				const server = startableServers[startableIndex];
 				ns.killall(server);
+                copyFilesToServer(ns, server);
 				ns.exec('/experience/gain-hack-experience.js', server, 1, "n00dles");
 			}
 		}
