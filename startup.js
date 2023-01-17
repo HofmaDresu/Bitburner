@@ -10,8 +10,8 @@ export async function main(ns) {
 	ns.run('/upgraders/purchase-programs.js');
 	ns.run('/upgraders/upgrade-home-server.js');
 	ns.run('/contracts/complete-coding-contracts.js');
-	// Not worth it right now, re-enable when we have the right bitnode
-	//ns.run('/upgraders/purchase-hacknet-nodes.js') 
+	ns.run('/gang/run-gang.js');
+	ns.run('/upgraders/purchase-hacknet-nodes.js') 
 	if (ns.getServerMaxRam("home") >= 1024) {
 		ns.run('/stocks/stock-watcher.js');
 		ns.run('/stocks/activate-purchases.js');
