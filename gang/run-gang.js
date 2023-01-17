@@ -8,8 +8,7 @@ export async function main(ns) {
         const gangInfo = ns.gang.getGangInformation();
 
         if (ns.gang.canRecruitMember()) {
-            const currentMemberCount = ns.gang.getMemberNames().length;
-            const newMemberName = `${currentMemberCount+1}`
+            const newMemberName = crypto.randomUUID();
             ns.gang.recruitMember(newMemberName);
 
             ns.gang.setMemberTask(newMemberName, "Train Combat");
@@ -18,7 +17,7 @@ export async function main(ns) {
         const currentMembers = ns.gang.getMemberNames();
         currentMembers.forEach(member => {
             const memberStats = ns.gang.getMemberInformation(member);
-            chooseJob(ns, gangInfo, memberStats);
+            chooseJob(ns, gangInfo, currentMembers.length, memberStats);
             purchaseGear(ns, memberStats);
         });
 
@@ -27,8 +26,8 @@ export async function main(ns) {
 }
 
 /** @param {NS} ns */
-function chooseJob(ns, gangInfo, memberStats) {
-    if (memberStats.str >= 15 && memberStats.task == "Train Combat") {
+function chooseJob(ns, gangInfo, numberOfMembers, memberStats) {
+    if (memberStats.str >= 15 && memberStats.task === "Train Combat") {
         if (gangInfo.wantedLevelGainRate <= 0) {
             ns.gang.setMemberTask(memberStats.name, "Mug People");
         } else {
