@@ -34,7 +34,7 @@ function chooseJob(ns, gangInfo, numberOfMembers, memberStats) {
     if (memberStats.str >= 15) {
         const bestTaskForReputation = getBestReputationTaskForGangMember(ns, gangInfo, memberStats);
         const wantedLevelGainRate = ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, bestTaskForReputation);
-        ns.print(`${bestTaskForReputation.name}: ${wantedLevelGainRate}`);
+        //ns.print(`${bestTaskForReputation.name}: ${wantedLevelGainRate} ${gangInfo.wantedLevelGainRate + wantedLevelGainRate}`);
         if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
             ns.gang.setMemberTask(memberStats.name, bestTaskForReputation.name);
         } else {
