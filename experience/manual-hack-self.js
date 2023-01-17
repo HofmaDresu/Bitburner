@@ -1,7 +1,12 @@
 /** @param {NS} ns */
 export async function main(ns) {
     while(true) {
-        await ns.weaken(ns.getHostname());
-        await ns.singularity.manualHack();
+        const server = ns.singularity.getCurrentServer();
+        if (ns.hasRootAccess(server)) {
+            await ns.weaken(ns.getHostname());
+            await ns.singularity.manualHack();
+        } else {
+            await ns.sleep(10);
+        }
     }
 }
