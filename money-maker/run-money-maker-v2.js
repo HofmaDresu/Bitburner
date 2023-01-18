@@ -26,14 +26,17 @@ export async function main(ns) {
 			let hackIndex = 0;
 			// Hack servers
 			while (startableIndex < startableServers.length && hackIndex < bestServersForHacking.length) {
-				const server = startableServers[startableIndex];				
+				const server = startableServers[startableIndex];	
+				ns.print(`Server ${server}`)			;
                 const maxMemory = ns.getServerMaxRam(server);
                 const maxRunning = Math.max(Math.floor(maxMemory / MAX_SINGLE_PROGRAM_RAM), 1);
                 copyFilesToServer(ns, server);
+				ns.killall(server);
                 for (let i = 0; i < maxRunning && hackIndex < bestServersForHacking.length; i++) {
                     const serverToHack = bestServersForHacking[hackIndex];
 					ns.print(`Start hacking ${serverToHack} on ${server} for monies`)
 					ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
+					await ns.sleep(200);
                     hackIndex++;
                 }
                 startableIndex++;
@@ -45,6 +48,7 @@ export async function main(ns) {
                 const maxMemory = ns.getServerMaxRam(server);
                 const maxRunning = Math.max(Math.floor(maxMemory / MAX_SINGLE_PROGRAM_RAM), 1);
                 copyFilesToServer(ns, server);
+				ns.killall(server);
                 for (let i = 0; i < maxRunning && hackIndex < bestServersForHacking.length; i++) {
                     const serverToHack = bestServersForHacking[hackIndex];
                     ns.print(`Start hacking ${serverToHack} on ${server} for exp 1`)
