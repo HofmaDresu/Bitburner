@@ -51,9 +51,9 @@ function chooseJob(ns, gangInfo, numberOfMembers, memberStats, memberNumber) {
         const bestTaskForReputation = getBestReputationTaskForGangMember(ns, gangInfo, memberStats);
         const wantedLevelGainRate = ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, bestTaskForReputation);
         //ns.print(`${bestTaskForReputation.name}: ${wantedLevelGainRate} ${gangInfo.wantedLevelGainRate + wantedLevelGainRate}`);
-        if (memberNumber % 5 === 0) {
+        /*if (memberNumber % 5 === 0) {
             changeJob(ns, memberStats, "Territory Warfare");
-        } else if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
+        } else*/ if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
             changeJob(ns, memberStats, bestTaskForReputation.name);
         } else {
             changeJob(ns, memberStats, "Vigilante Justice");
