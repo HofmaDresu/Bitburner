@@ -24,7 +24,7 @@ export async function main(ns) {
             await ns.sleep(2000);
         };
 
-        await ns.sleep(10000)
+        await ns.sleep(60000)
     }
 }
 
@@ -49,12 +49,19 @@ function chooseJob(ns, gangInfo, numberOfMembers, memberStats) {
         const wantedLevelGainRate = ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, bestTaskForReputation);
         //ns.print(`${bestTaskForReputation.name}: ${wantedLevelGainRate} ${gangInfo.wantedLevelGainRate + wantedLevelGainRate}`);
         if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
-            ns.gang.setMemberTask(memberStats.name, bestTaskForReputation.name);
+            changeJob(ns, memberStats, bestTaskForReputation.name);
         } else {
-            ns.gang.setMemberTask(memberStats.name, "Vigilante Justice");
+            changeJob(ns, memberStats, "Vigilante Justice");
         }
     } else if (memberStats.str < 15) {
-        ns.gang.setMemberTask(memberStats.name, "Train Combat");
+        changeJob(ns, memberStats, "Train Combat");
+    }
+}
+
+/** @param {NS} ns */
+function changeJob(ns, memberStats, newJob) {
+    if (memberStats.task !== newJob) {
+        ns.gang.setMemberTask(memberStats.name, newJob);
     }
 }
 
