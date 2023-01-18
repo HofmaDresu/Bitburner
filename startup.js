@@ -10,7 +10,9 @@ export async function main(ns) {
 	ns.run('/upgraders/purchase-programs.js');
 	ns.run('/upgraders/upgrade-home-server.js');
 	ns.run('/contracts/complete-coding-contracts.js');
-	ns.run('/gang/run-gang.js');
+	if (ns.gang.inGang()) {
+		ns.run('/gang/run-gang.js');
+	}
 	ns.run('/upgraders/purchase-hacknet-nodes.js') 
 	if (ns.getServerMaxRam("home") >= 1024) {
 		ns.run('/stocks/stock-watcher.js');
