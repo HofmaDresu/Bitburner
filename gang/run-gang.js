@@ -11,15 +11,14 @@ export async function main(ns) {
         if (ns.gang.canRecruitMember()) {
             const newMemberName = crypto.randomUUID();
             ns.gang.recruitMember(newMemberName);
-
-            ns.gang.setMemberTask(newMemberName, "Train Combat");
         }
 
         const currentMembers = ns.gang.getMemberNames();
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
             const member = currentMembers[i];
-            const memberStats = ns.gang.getMemberInformation(member);
+            let memberStats = ns.gang.getMemberInformation(member);
+            memberStats = ascendIfProper(ns, memberStats);
             chooseJob(ns, gangInfo, currentMembers.length, memberStats);
             purchaseGear(ns, memberStats);
             await ns.sleep(2000);
@@ -27,6 +26,20 @@ export async function main(ns) {
 
         await ns.sleep(10000)
     }
+}
+
+/** @param {NS} ns */
+function ascendIfProper(ns, memberStats) {    
+    // Probably want something smarter
+    const ascentionInfo = ns.gang.getAscensionResult(memberStats.name);
+    if (ascentionInfo) {
+        if(ascentionInfo.str >= memberStats.str_asc_mult * 2) {
+            ns.tprint(ascentionInfo);
+            ns.tprint("ascending member");
+            ns.gang.ascendMember(memberStats.name);
+        }
+    }
+    return ns.gang.getMemberInformation(memberStats.name);
 }
 
 /** @param {NS} ns */
@@ -40,6 +53,8 @@ function chooseJob(ns, gangInfo, numberOfMembers, memberStats) {
         } else {
             ns.gang.setMemberTask(memberStats.name, "Vigilante Justice");
         }
+    } else if (memberStats.str < 15) {
+        ns.gang.setMemberTask(memberStats.name, "Train Combat");
     }
 }
 
