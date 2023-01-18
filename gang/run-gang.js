@@ -1,3 +1,4 @@
+import { getWarPrepStatus } from "gang/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -19,7 +20,7 @@ export async function main(ns) {
             const member = currentMembers[i];
             let memberStats = ns.gang.getMemberInformation(member);
             memberStats = ascendIfProper(ns, memberStats);
-            chooseJob(ns, gangInfo, currentMembers.length, memberStats);
+            chooseJob(ns, gangInfo, currentMembers.length, memberStats, i);
             purchaseGear(ns, memberStats);
             await ns.sleep(2000);
         };
@@ -43,12 +44,16 @@ function ascendIfProper(ns, memberStats) {
 }
 
 /** @param {NS} ns */
-function chooseJob(ns, gangInfo, numberOfMembers, memberStats) {
-    if (memberStats.str >= 15) {
+function chooseJob(ns, gangInfo, numberOfMembers, memberStats, memberNumber) {
+    if (getWarPrepStatus(ns)) {
+        changeJob(ns, memberStats, "Territory Warfare");
+    } else if (memberStats.str >= 15) {
         const bestTaskForReputation = getBestReputationTaskForGangMember(ns, gangInfo, memberStats);
         const wantedLevelGainRate = ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, bestTaskForReputation);
         //ns.print(`${bestTaskForReputation.name}: ${wantedLevelGainRate} ${gangInfo.wantedLevelGainRate + wantedLevelGainRate}`);
-        if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
+        if (memberNumber % 5 === 0) {
+            changeJob(ns, memberStats, "Territory Warfare");
+        } else if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
             changeJob(ns, memberStats, bestTaskForReputation.name);
         } else {
             changeJob(ns, memberStats, "Vigilante Justice");
