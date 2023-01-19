@@ -23,7 +23,7 @@ export async function main(ns) {
             if (memberStats.str_asc_mult <= 20 && memberStats.def_asc_mult <= 20) {
                 memberStats = ascendIfProper(ns, memberStats);
             }
-            chooseJob(ns, gangInfo, memberStats, prepareForWar);
+            chooseJob(ns, gangInfo, memberStats, prepareForWar, currentMembers.length === 12);
             purchaseGear(ns, memberStats);
             await ns.sleep(2000);
         };
@@ -51,14 +51,26 @@ function ascendIfProper(ns, memberStats) {
 }
 
 /** @param {NS} ns */
-function chooseJob(ns, gangInfo, memberStats, prepareForWar) {
+function chooseJob(ns, gangInfo, memberStats, prepareForWar, haveMaxMembers) {
     if (getWarPrepStatus(ns) || prepareForWar) {
         if((new Date).getMinutes() % 5 === 0) {
             changeJob(ns, memberStats, "Train Combat");
         } else {
             changeJob(ns, memberStats, "Territory Warfare");
         }
-    } else if (memberStats.str >= 15) {
+    } else if (haveMaxMembers && memberStats.str >= 15) {
+        const bestTaskForMoney = getBestMoneyTaskForGangMember(ns, gangInfo, memberStats);
+        const wantedLevelGainRate = ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, bestTaskForMoney);
+        //ns.print(`${bestTaskForMoney.name}: ${wantedLevelGainRate} ${gangInfo.wantedLevelGainRate + wantedLevelGainRate}`);
+
+        if((new Date).getMinutes() % 5 === 0) {
+            changeJob(ns, memberStats, "Train Combat");
+        } else if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
+            changeJob(ns, memberStats, bestTaskForMoney.name);
+        } else {
+            changeJob(ns, memberStats, "Vigilante Justice");
+        }
+    }  else if (memberStats.str >= 15) {
         const bestTaskForReputation = getBestReputationTaskForGangMember(ns, gangInfo, memberStats);
         const wantedLevelGainRate = ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, bestTaskForReputation);
         //ns.print(`${bestTaskForReputation.name}: ${wantedLevelGainRate} ${gangInfo.wantedLevelGainRate + wantedLevelGainRate}`);
@@ -92,6 +104,15 @@ function purchaseGear(ns, memberStats) {
     if (purchasableEquipment.length > 0) {
         ns.gang.purchaseEquipment(memberStats.name, purchasableEquipment[0]);
     }
+}
+
+/** @param {NS} ns */
+function getBestMoneyTaskForGangMember(ns, gangInfo, memberStats) {
+    const gangTasks = getGangTasks(ns, gangInfo);
+    const vigilanteJusticeStats = ns.gang.getTaskStats("Vigilante Justice");
+    return gangTasks
+        .filter(t => ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, t) <= Math.abs(ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, vigilanteJusticeStats)))
+        .sort((a, b) => ns.formulas.gang.moneyGain(gangInfo, memberStats, b) - ns.formulas.gang.moneyGain(gangInfo, memberStats, a))[0];
 }
 
 /** @param {NS} ns */
