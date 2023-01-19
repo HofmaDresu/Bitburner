@@ -14,16 +14,23 @@ export async function main(ns) {
             ns.gang.recruitMember(newMemberName);
         }
 
-        const currentMembers = ns.gang.getMemberNames();
+        const currentMembers = ns.gang.getMemberNames().map(ns.gang.getMemberInformation);
+        const prepareForWar = currentMembers.every(m => m.str_asc_mult > 20 && m.def_asc_mult > 20);
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
-            const member = currentMembers[i];
-            let memberStats = ns.gang.getMemberInformation(member);
-            memberStats = ascendIfProper(ns, memberStats);
-            chooseJob(ns, gangInfo, currentMembers.length, memberStats, i);
+            let memberStats = currentMembers[i];
+            if (memberStats.str_asc_mult <= 20 && memberStats.def_asc_mult <= 20) {
+                memberStats = ascendIfProper(ns, memberStats);
+            }
+            chooseJob(ns, gangInfo, memberStats, prepareForWar);
             purchaseGear(ns, memberStats);
             await ns.sleep(2000);
         };
+
+        
+	    const otherGangInfo = ns.gang.getOtherGangInformation();
+        const shouldGoToWar = gangInfo.power > Math.max(...Object.keys(otherGangInfo).map(k => otherGangInfo[k].power)) * 2;
+        ns.gang.setTerritoryWarfare(shouldGoToWar);
 
         await ns.sleep(60000)
     }
@@ -42,8 +49,8 @@ function ascendIfProper(ns, memberStats) {
 }
 
 /** @param {NS} ns */
-function chooseJob(ns, gangInfo, numberOfMembers, memberStats, memberNumber) {
-    if (getWarPrepStatus(ns)) {
+function chooseJob(ns, gangInfo, memberStats, prepareForWar) {
+    if (getWarPrepStatus(ns) || prepareForWar) {
         changeJob(ns, memberStats, "Territory Warfare");
     } else if (memberStats.str >= 15) {
         const bestTaskForReputation = getBestReputationTaskForGangMember(ns, gangInfo, memberStats);
