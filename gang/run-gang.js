@@ -16,7 +16,9 @@ export async function main(ns) {
 
         const currentMembers = ns.gang.getMemberNames().map(ns.gang.getMemberInformation);
         const anyPurposeForWar = gangInfo.territory < 1;
-        const prepareForWar = anyPurposeForWar && currentMembers.every(m => m.str_asc_mult > 20 && m.def_asc_mult > 20);
+        const allMembersHaveWarAscentions = currentMembers.every(m => m.str_asc_mult > 20 && m.def_asc_mult > 20);
+        const allMembersHaveAllGear = currentMembers.every(m => !ns.gang.getEquipmentNames().some(e => !(m.upgrades.some(me => me === e) || m.augmentations.some(me => me === e))));
+        const prepareForWar = anyPurposeForWar && allMembersHaveWarAscentions && allMembersHaveAllGear;
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
             let memberStats = currentMembers[i];
