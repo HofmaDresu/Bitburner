@@ -56,9 +56,8 @@ function chooseJob(ns, gangInfo, memberStats, prepareForWar) {
         const bestTaskForReputation = getBestReputationTaskForGangMember(ns, gangInfo, memberStats);
         const wantedLevelGainRate = ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, bestTaskForReputation);
         //ns.print(`${bestTaskForReputation.name}: ${wantedLevelGainRate} ${gangInfo.wantedLevelGainRate + wantedLevelGainRate}`);
-        /*if (memberNumber % 5 === 0) {
-            changeJob(ns, memberStats, "Territory Warfare");
-        } else*/ if((new Date).getMinutes() % 5 === 0) {
+
+        if((new Date).getMinutes() % 5 === 0) {
             changeJob(ns, memberStats, "Train Combat");
         } else if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
             changeJob(ns, memberStats, bestTaskForReputation.name);
@@ -91,7 +90,6 @@ function purchaseGear(ns, memberStats) {
 
 /** @param {NS} ns */
 function getBestReputationTaskForGangMember(ns, gangInfo, memberStats) {
-    //TODO: If there are none, Train Combat
     const gangTasks = getGangTasks(ns, gangInfo);
     const vigilanteJusticeStats = ns.gang.getTaskStats("Vigilante Justice");
     return gangTasks
