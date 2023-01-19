@@ -15,7 +15,8 @@ export async function main(ns) {
         }
 
         const currentMembers = ns.gang.getMemberNames().map(ns.gang.getMemberInformation);
-        const prepareForWar = currentMembers.every(m => m.str_asc_mult > 20 && m.def_asc_mult > 20);
+        const anyPurposeForWar = gangInfo.territory < 1;
+        const prepareForWar = anyPurposeForWar && currentMembers.every(m => m.str_asc_mult > 20 && m.def_asc_mult > 20);
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
             let memberStats = currentMembers[i];
@@ -29,7 +30,8 @@ export async function main(ns) {
 
         
 	    const otherGangInfo = ns.gang.getOtherGangInformation();
-        const shouldGoToWar = gangInfo.power > Math.max(...Object.keys(otherGangInfo).map(k => otherGangInfo[k].power)) * 4;
+        const sufficientPowerForWar = gangInfo.power > Math.max(...Object.keys(otherGangInfo).map(k => otherGangInfo[k].power)) * 4;
+        const shouldGoToWar = sufficientPowerForWar && anyPurposeForWar;
         ns.gang.setTerritoryWarfare(shouldGoToWar);
 
         await ns.sleep(60000)
