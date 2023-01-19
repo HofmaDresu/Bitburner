@@ -51,7 +51,11 @@ function ascendIfProper(ns, memberStats) {
 /** @param {NS} ns */
 function chooseJob(ns, gangInfo, memberStats, prepareForWar) {
     if (getWarPrepStatus(ns) || prepareForWar) {
-        changeJob(ns, memberStats, "Territory Warfare");
+        if((new Date).getMinutes() % 5 === 0) {
+            changeJob(ns, memberStats, "Train Combat");
+        } else {
+            changeJob(ns, memberStats, "Territory Warfare");
+        }
     } else if (memberStats.str >= 15) {
         const bestTaskForReputation = getBestReputationTaskForGangMember(ns, gangInfo, memberStats);
         const wantedLevelGainRate = ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, bestTaskForReputation);
