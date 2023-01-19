@@ -51,7 +51,9 @@ function chooseJob(ns, gangInfo, numberOfMembers, memberStats, memberNumber) {
         //ns.print(`${bestTaskForReputation.name}: ${wantedLevelGainRate} ${gangInfo.wantedLevelGainRate + wantedLevelGainRate}`);
         /*if (memberNumber % 5 === 0) {
             changeJob(ns, memberStats, "Territory Warfare");
-        } else*/ if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
+        } else*/ if((new Date).getMinutes() % 5 === 0) {
+            changeJob(ns, memberStats, "Train Combat");
+        } else if (gangInfo.wantedLevelGainRate + wantedLevelGainRate <= 0) {
             changeJob(ns, memberStats, bestTaskForReputation.name);
         } else {
             changeJob(ns, memberStats, "Vigilante Justice");
