@@ -43,7 +43,7 @@ function ascendIfProper(ns, memberStats) {
     // Probably want something smarter
     const ascentionInfo = ns.gang.getAscensionResult(memberStats.name);
     if (ascentionInfo) {
-        if(ascentionInfo.str >= memberStats.str_asc_mult * 2) {
+        if(ascentionInfo.str >= 2 && ascentionInfo.def >= 2) {
             ns.gang.ascendMember(memberStats.name);
         }
     }
