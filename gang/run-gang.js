@@ -1,5 +1,7 @@
 import { getWarPrepStatus } from "gang/helpers";
 
+const TARGET_ASC_MULT = 20.0;
+
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("getServerMoneyAvailable");
@@ -16,13 +18,13 @@ export async function main(ns) {
 
         const currentMembers = ns.gang.getMemberNames().map(ns.gang.getMemberInformation);
         const anyPurposeForWar = gangInfo.territory < 1;
-        const allMembersHaveWarAscentions = currentMembers.every(m => m.str_asc_mult > 20 && m.def_asc_mult > 20);
+        const allMembersHaveWarAscentions = currentMembers.every(m => m.str_asc_mult > TARGET_ASC_MULT && m.def_asc_mult > TARGET_ASC_MULT);
         const allMembersHaveAllGear = currentMembers.every(m => !ns.gang.getEquipmentNames().some(e => !(m.upgrades.some(me => me === e) || m.augmentations.some(me => me === e))));
         const prepareForWar = anyPurposeForWar && allMembersHaveWarAscentions && allMembersHaveAllGear;
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
             let memberStats = currentMembers[i];
-            if (memberStats.str_asc_mult <= 20 && memberStats.def_asc_mult <= 20) {
+            if (memberStats.str_asc_mult <= TARGET_ASC_MULT && memberStats.def_asc_mult <= TARGET_ASC_MULT) {
                 memberStats = ascendIfProper(ns, memberStats);
             }
             chooseJob(ns, gangInfo, memberStats, prepareForWar, currentMembers.length === 12);
@@ -41,11 +43,12 @@ export async function main(ns) {
 }
 
 /** @param {NS} ns */
-function ascendIfProper(ns, memberStats) {    
-    // Probably want something smarter
+function ascendIfProper(ns, memberStats) {
     const ascentionInfo = ns.gang.getAscensionResult(memberStats.name);
+    const ascentionStrMultiplier = Math.min(2, TARGET_ASC_MULT / memberStats.str_asc_mult);
+    const ascentionDefMultiplier = Math.min(2, TARGET_ASC_MULT / memberStats.def_asc_mult);
     if (ascentionInfo) {
-        if(ascentionInfo.str >= 2 && ascentionInfo.def >= 2) {
+        if(ascentionInfo.str >= ascentionStrMultiplier && ascentionInfo.def >= ascentionDefMultiplier) {
             ns.gang.ascendMember(memberStats.name);
         }
     }
