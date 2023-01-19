@@ -29,7 +29,7 @@ export async function main(ns) {
 
         
 	    const otherGangInfo = ns.gang.getOtherGangInformation();
-        const shouldGoToWar = gangInfo.power > Math.max(...Object.keys(otherGangInfo).map(k => otherGangInfo[k].power)) * 2;
+        const shouldGoToWar = gangInfo.power > Math.max(...Object.keys(otherGangInfo).map(k => otherGangInfo[k].power)) * 4;
         ns.gang.setTerritoryWarfare(shouldGoToWar);
 
         await ns.sleep(60000)
