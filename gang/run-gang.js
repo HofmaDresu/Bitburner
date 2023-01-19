@@ -97,7 +97,7 @@ function changeJob(ns, memberStats, newJob) {
 /** @param {NS} ns */
 function purchaseGear(ns, memberStats) {
     const potentialEquipment = ns.gang.getEquipmentNames()
-        .filter(e => !memberStats.upgrades.some(me => me === e));
+        .filter(e => !(memberStats.upgrades.some(me => me === e) || memberStats.augmentations.some(me => me === e)));
     const purchasableEquipment = potentialEquipment
         .filter(e => ns.gang.getEquipmentCost(e) < ns.getServerMoneyAvailable("home"))
         .sort((a, b) => ns.gang.getEquipmentCost(a) - ns.gang.getEquipmentCost(b));
