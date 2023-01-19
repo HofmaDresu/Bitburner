@@ -35,8 +35,6 @@ function ascendIfProper(ns, memberStats) {
     const ascentionInfo = ns.gang.getAscensionResult(memberStats.name);
     if (ascentionInfo) {
         if(ascentionInfo.str >= memberStats.str_asc_mult * 2) {
-            ns.tprint(ascentionInfo);
-            ns.tprint("ascending member");
             ns.gang.ascendMember(memberStats.name);
         }
     }
@@ -73,7 +71,6 @@ function changeJob(ns, memberStats, newJob) {
 /** @param {NS} ns */
 function purchaseGear(ns, memberStats) {
     const potentialEquipment = ns.gang.getEquipmentNames()
-        .filter(e => ["Weapon", "Armor", "Vehicle"].some(type => ns.gang.getEquipmentType(e) === type))
         .filter(e => !memberStats.upgrades.some(me => me === e));
     const purchasableEquipment = potentialEquipment
         .filter(e => ns.gang.getEquipmentCost(e) < ns.getServerMoneyAvailable("home"))
@@ -85,8 +82,12 @@ function purchaseGear(ns, memberStats) {
 
 /** @param {NS} ns */
 function getBestReputationTaskForGangMember(ns, gangInfo, memberStats) {
+    //TODO: If there are none, Train Combat
     const gangTasks = getGangTasks(ns, gangInfo);
-    return gangTasks.sort((a, b) => ns.formulas.gang.respectGain(gangInfo, memberStats, b) - ns.formulas.gang.respectGain(gangInfo, memberStats, a))[0];
+    const vigilanteJusticeStats = ns.gang.getTaskStats("Vigilante Justice");
+    return gangTasks
+        .filter(t => ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, t) <= Math.abs(ns.formulas.gang.wantedLevelGain(gangInfo, memberStats, vigilanteJusticeStats)))
+        .sort((a, b) => ns.formulas.gang.respectGain(gangInfo, memberStats, b) - ns.formulas.gang.respectGain(gangInfo, memberStats, a))[0];
 }
 
 /** @param {NS} ns */
