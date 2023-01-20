@@ -35,7 +35,7 @@ export async function main(ns) {
 
         
 	    const otherGangInfo = ns.gang.getOtherGangInformation();
-        const sufficientPowerForWar = gangInfo.power > Math.max(...Object.keys(otherGangInfo).map(k => otherGangInfo[k].power)) * 4;
+        const sufficientPowerForWar = gangInfo.power > Math.max(...Object.keys(otherGangInfo).filter(k => k !== gangInfo.faction).map(k => otherGangInfo[k].power)) * 4;
         const shouldGoToWar = sufficientPowerForWar && prepareForWar;
         ns.gang.setTerritoryWarfare(shouldGoToWar);
 
