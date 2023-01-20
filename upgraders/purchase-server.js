@@ -34,7 +34,7 @@ export async function main(ns) {
 			await purchaseServers(ns, maxServers, ram);
 		}
 		currentRamRunning = true;
-        await ns.sleep(60000);
+        await ns.sleep(10000);
     }
 }
 
