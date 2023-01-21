@@ -63,6 +63,9 @@ async function completeContractsIfPossible(ns, server, files) {
             case "Subarray with Maximum Sum":
                 filename = '/contracts/subarray-with-maximum-sum.js';
                 break;
+            case "Unique Paths in a Grid I":
+                filename = '/contracts/unique-paths-in-a-grid-i.js';
+                break;
         }
         
         if (filename !== '' && !ns.ps().some(ps => ps.filename === filename && ps.args.some(arg => arg === file))) {
