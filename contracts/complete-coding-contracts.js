@@ -54,6 +54,9 @@ async function completeContractsIfPossible(ns, server, files) {
             case "Encryption II: Vigenère Cipher":
                 filename = '/contracts/encryption-ii-vigenere-cipher.js';
                 break;
+            case "Shortest Path in a Grid":
+                filename = '/contracts/shortest-path-in-a-grid.js';
+                break;
             case "Spiralize Matrix":
                 filename = '/contracts/spiralize-matrix.js';
                 break;
