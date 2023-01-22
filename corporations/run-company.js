@@ -19,7 +19,7 @@ export async function main(ns) {
         // Get current industry (active && !(fullyExpanded && allEmployees))
         // for all divisions
             // If energy < 75 buy coffee
-            // If morale or happiness < 75 throw party for 10_000_000
+            // If morale or happiness < 60 throw party for 10_000_000
         // if not fully expanded
             // expand as able
                 // turn on smart supply
