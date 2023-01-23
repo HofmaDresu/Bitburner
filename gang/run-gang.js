@@ -25,9 +25,7 @@ export async function main(ns) {
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
             let memberStats = currentMembers[i];
-            if (memberStats.str_asc_mult <= TARGET_ASC_MULT && memberStats.def_asc_mult <= TARGET_ASC_MULT) {
-                memberStats = ascendIfProper(ns, memberStats);
-            }
+            memberStats = ascendIfProper(ns, memberStats);
             chooseJob(ns, gangInfo, memberStats, prepareForWar, gangIsFull);
             purchaseGear(ns, memberStats);
             await ns.sleep(2000);
@@ -45,9 +43,10 @@ export async function main(ns) {
 
 /** @param {NS} ns */
 function ascendIfProper(ns, memberStats) {
+    if (ns.gang.getGangInformation().territoryWarfareEngaged) return;
     const ascentionInfo = ns.gang.getAscensionResult(memberStats.name);
-    const ascentionStrMultiplier = Math.min(2, TARGET_ASC_MULT / memberStats.str_asc_mult);
-    const ascentionDefMultiplier = Math.min(2, TARGET_ASC_MULT / memberStats.def_asc_mult);
+    const ascentionStrMultiplier = TARGET_ASC_MULT > memberStats.str_asc_mult ? Math.min(2, TARGET_ASC_MULT / memberStats.str_asc_mult) : 2;
+    const ascentionDefMultiplier = TARGET_ASC_MULT > memberStats.def_asc_mult ? Math.min(2, TARGET_ASC_MULT / memberStats.def_asc_mult) : 2;
     if (ascentionInfo) {
         if(ascentionInfo.str >= ascentionStrMultiplier && ascentionInfo.def >= ascentionDefMultiplier) {
             ns.gang.ascendMember(memberStats.name);
