@@ -77,7 +77,7 @@ export async function main(ns) {
             // if no current industry
                 // If can afford, start one
 
-        await ns.sleep(constants.secondsPerMarketCycle * 2);
+        await ns.sleep(constants.secondsPerMarketCycle * 2 * 1000);
     }
 }
 
