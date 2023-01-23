@@ -19,6 +19,8 @@ export async function main(ns) {
             division.cities.forEach(cityName => {
                 corporation = ns.corporation.getCorporation();
                 let office = ns.corporation.getOffice(divisionName, cityName);
+
+                // EMPLOYEES
                 // TODO: Don't do this if we have caffine research
                 if (office.avgEne < office.maxEne * .75 && corporation.funds > 500_000 * office.employees) {
                     ns.corporation.buyCoffee(divisionName, cityName);
@@ -28,7 +30,11 @@ export async function main(ns) {
                 if ((office.avgHap < office.maxHap * .6 || office.avgMor < office.maxMor * .6) && corporation.funds > 10_000_000 * office.employees) {
                     ns.corporation.throwParty(divisionName, cityName, 10_000_000)
                 }
+                if (office.employees < office.size) {
 
+                }
+
+                // WAREHOUSE
                 if (ns.corporation.hasWarehouse(divisionName, cityName)) {
                     // TODO: If have proper research, bulk purchase
                     let warehouse = ns.corporation.getWarehouse(divisionName, cityName);
@@ -83,8 +89,6 @@ export async function main(ns) {
 
 function getBestMultiplierSupply(ns, industry) {
     const highestFactor = Math.max(industry.hardwareFactor || 0, industry.realEstateFactor || 0, industry.aiCoreFactor || 0, industry.robotFactor || 0);
-    ns.tprint(highestFactor)
-    ns.tprint(industry)
     switch (highestFactor) {
         case industry.hardwareFactor:
             return "Hardware";
