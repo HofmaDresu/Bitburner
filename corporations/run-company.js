@@ -1,12 +1,6 @@
 
 /** @param {NS} ns */
 export async function main(ns) {
-    // TODO: dynamic. Do we even need this?
-    const industryStatus = {
-        "Computer Hardware": {isActive: false, isFullyExpanded: false, hasAllEmployees: false},
-        //TODO: Add industries
-    };
-
     if (!ns.corporation.hasUnlockUpgrade("Smart Supply")) {
         ns.corporation.unlockUpgrade("Smart Supply");
     }
@@ -16,29 +10,70 @@ export async function main(ns) {
     }
 
     while(true) {
-        // for all divisions
-            // If energy < 75 buy coffee
-            // If morale or happiness < 60 throw party for 10_000_000
+        let corporation = ns.corporation.getCorporation();
+        corporation.divisions.forEach(divisionName => {
+            let division = ns.corporation.getDivision(divisionName);
+            const industry = ns.corporation.getIndustryData(division.type);
+            division.cities.forEach(cityName => {
+                let office = ns.corporation.getOffice(divisionName, cityName);
+                // TODO: Don't do this if we have caffine research
+                if (office.avgEne < office.maxEne * .75 && corporation.funds > 500_000 * office.employees) {
+                    ns.corporation.buyCoffee(divisionName, cityName);
+                }
+                // TODO: Don't do this if we have party research
+                if ((office.avgHap < office.maxHap * .6 || office.avgMor < office.maxMor * .6) && corporation.funds > 10_000_000 * office.employees) {
+                    ns.corporation.throwParty(divisionName, cityName, 10_000_000)
+                }
 
-        //allEmployees === 6??
+                if (ns.corporation.hasWarehouse(divisionName, cityName)) {
+                    // TODO: If have proper research, bulk purchase
+                    let warehouse = ns.corporation.getWarehouse(divisionName, cityName);
+                    const materialName = getBestMultiplierSupply(ns, industry);
+                    ns.corporation.setSmartSupplyUseLeftovers(divisionName, cityName, materialName, false);
+                    if (warehouse.sizeUsed < warehouse.size * .5) {
+                        ns.corporation.setSmartSupply(divisionName, cityName, false);
+                        ns.corporation.buyMaterial(divisionName, cityName, materialName, 10);
+                    } else {
+                        ns.corporation.buyMaterial(divisionName, cityName, materialName, 0);
+                        ns.corporation.setSmartSupply(divisionName, cityName, true);
+                    }
+                } else {
+                    ns.corporation.purchaseWarehouse(divisionName, cityName);
+                }
+            });
+        });
 
         // Get current industry (active && !(fullyExpanded && allEmployees))
             // if not fully expanded
                 // expand as able
-                    // turn on smart supply
                     // start sales of correct stuff
-                    // maybe buy some amount of multiplier equipment
             // if not fully employeed but fully expanded
                 // expand office
                 // distribute employees
             // if fully expanded
                 // Purchase any Unlocks or Upgrades we can afford
-            // If has product and fewer than 6, create at 1_000_000_000/1_000_000_000
+            // If has product and fewer than max, create at 1_000_000_000/1_000_000_000
 
 
             // if no current industry
                 // If can afford, start one
 
         await ns.sleep(60000);
+    }
+}
+
+function getBestMultiplierSupply(ns, industry) {
+    const highestFactor = Math.max(industry.hardwareFactor || 0, industry.realEstateFactor || 0, industry.aiCoreFactor || 0, industry.robotFactor || 0);
+    ns.tprint(highestFactor)
+    ns.tprint(industry)
+    switch (highestFactor) {
+        case industry.hardwareFactor:
+            return "Hardware";
+        case industry.realEstateFactor:
+            return "Real Estate";
+        case industry.aiCoreFactor:
+            return "AI Cores";
+        case industry.robotFactor:
+            return "Robots";
     }
 }
