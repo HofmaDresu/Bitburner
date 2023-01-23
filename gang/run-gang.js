@@ -16,12 +16,14 @@ export async function main(ns) {
             ns.gang.recruitMember(newMemberName);
         }
 
+	    const otherGangs = Object.keys(ns.gang.getOtherGangInformation()).filter(k => k !== gangInfo.faction).map(k => ns.gang.getOtherGangInformation()[k]);
         const currentMembers = ns.gang.getMemberNames().map(ns.gang.getMemberInformation);
         const gangIsFull = currentMembers.length === 12
         const anyPurposeForWar = gangInfo.territory < 1;
         const allMembersHaveWarAscentions = currentMembers.every(m => m.str_asc_mult > TARGET_ASC_MULT && m.def_asc_mult > TARGET_ASC_MULT);
         const allMembersHaveAllGear = currentMembers.every(m => !ns.gang.getEquipmentNames().some(e => !(m.upgrades.some(me => me === e) || m.augmentations.some(me => me === e))));
-        const prepareForWar = anyPurposeForWar && gangIsFull && allMembersHaveWarAscentions && allMembersHaveAllGear;
+        const readyForWar = anyPurposeForWar && gangIsFull && allMembersHaveWarAscentions && allMembersHaveAllGear;
+        const prepareForWar = readyForWar && Math.min(...otherGangs.map(og => ns.gang.getChanceToWinClash(og.name))) > .95;
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
             let memberStats = currentMembers[i];
@@ -32,9 +34,8 @@ export async function main(ns) {
         };
 
         
-	    const otherGangInfo = ns.gang.getOtherGangInformation();
-        const sufficientPowerForWar = gangInfo.power > Math.max(...Object.keys(otherGangInfo).filter(k => k !== gangInfo.faction).map(k => otherGangInfo[k].power)) * 4;
-        const shouldGoToWar = sufficientPowerForWar && prepareForWar;
+        const sufficientPowerForWar = gangInfo.power > Math.max(...otherGangs.map(og => og.power)) * 4;
+        const shouldGoToWar = sufficientPowerForWar && readyForWar;
         ns.gang.setTerritoryWarfare(shouldGoToWar);
 
         await ns.sleep(60000)
