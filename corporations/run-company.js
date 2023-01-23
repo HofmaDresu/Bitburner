@@ -30,8 +30,14 @@ export async function main(ns) {
                 if ((office.avgHap < office.maxHap * .6 || office.avgMor < office.maxMor * .6) && corporation.funds > 10_000_000 * office.employees) {
                     ns.corporation.throwParty(divisionName, cityName, 10_000_000)
                 }
-                if (office.employees < office.size) {
+                while (office.employees < office.size) {
+                    const targetJobs = Object.keys(office.employeeJobs).filter(k => !["Training", "Unassigned"].include(key));
+                    // TODO: Something smarter than even placement?
+                    const jobToFill = targetJobs.sort((a, b) => office.employeeJobs[a] - office.employeeJobs[b])[0];
 
+                    ns.corporation.hireEmployee(divisionName, cityName, jobToFill);
+                    
+                    office = ns.corporation.getOffice(divisionName, cityName);
                 }
 
                 // WAREHOUSE
