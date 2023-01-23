@@ -1,6 +1,8 @@
 
 /** @param {NS} ns */
 export async function main(ns) {
+    const constants = ns.corporation.getConstants();
+
     if (!ns.corporation.hasUnlockUpgrade("Smart Supply")) {
         ns.corporation.unlockUpgrade("Smart Supply");
     }
@@ -15,6 +17,7 @@ export async function main(ns) {
             let division = ns.corporation.getDivision(divisionName);
             const industry = ns.corporation.getIndustryData(division.type);
             division.cities.forEach(cityName => {
+                corporation = ns.corporation.getCorporation();
                 let office = ns.corporation.getOffice(divisionName, cityName);
                 // TODO: Don't do this if we have caffine research
                 if (office.avgEne < office.maxEne * .75 && corporation.funds > 500_000 * office.employees) {
@@ -41,6 +44,20 @@ export async function main(ns) {
                     ns.corporation.purchaseWarehouse(divisionName, cityName);
                 }
             });
+        });
+
+        constants.upgradeNames.forEach(upgradeName => {
+            corporation = ns.corporation.getCorporation();
+            if (ns.corporation.getUpgradeLevelCost(upgradeName) < corporation.funds) {
+                ns.corporation.levelUpgrade(upgradeName);
+            }
+        });
+
+        constants.unlockNames.forEach(unlockName => {
+            corporation = ns.corporation.getCorporation();
+            if (ns.corporation.getUnlockUpgradeCost(unlockName) < corporation.funds) {
+                ns.corporation.unlockUpgrade(unlockName);
+            }
         });
 
         // Get current industry (active && !(fullyExpanded && allEmployees))
