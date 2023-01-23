@@ -23,6 +23,7 @@ export async function main(ns) {
                 if (office.avgEne < office.maxEne * .75 && corporation.funds > 500_000 * office.employees) {
                     ns.corporation.buyCoffee(divisionName, cityName);
                 }
+                corporation = ns.corporation.getCorporation();
                 // TODO: Don't do this if we have party research
                 if ((office.avgHap < office.maxHap * .6 || office.avgMor < office.maxMor * .6) && corporation.funds > 10_000_000 * office.employees) {
                     ns.corporation.throwParty(divisionName, cityName, 10_000_000)
@@ -40,7 +41,8 @@ export async function main(ns) {
                         ns.corporation.buyMaterial(divisionName, cityName, materialName, 0);
                         ns.corporation.setSmartSupply(divisionName, cityName, true);
                     }
-                } else {
+                } else if(constants.warehouseInitialCost < corporation.funds) {        
+                    corporation = ns.corporation.getCorporation();            
                     ns.corporation.purchaseWarehouse(divisionName, cityName);
                 }
             });
@@ -75,7 +77,7 @@ export async function main(ns) {
             // if no current industry
                 // If can afford, start one
 
-        await ns.sleep(60000);
+        await ns.sleep(constants.secondsPerMarketCycle * 2);
     }
 }
 
