@@ -2,6 +2,7 @@
 /** @param {NS} ns */
 export async function main(ns) {
     const constants = ns.corporation.getConstants();
+    const cities = ["Aevum", "Chongqing", "Sector-12", "New Tokyo", "Ishima", "Volhaven"];
 
     if (!ns.corporation.hasUnlockUpgrade("Smart Supply")) {
         ns.corporation.unlockUpgrade("Smart Supply");
@@ -14,10 +15,26 @@ export async function main(ns) {
     while(true) {
         let corporation = ns.corporation.getCorporation();
         corporation.divisions.forEach(divisionName => {
+            corporation = ns.corporation.getCorporation();
             let division = ns.corporation.getDivision(divisionName);
             const industry = ns.corporation.getIndustryData(division.type);
+
+
+            if (division.cities.length < cities.length && constants.officeInitialCost + constants.warehouseInitialCost < corporation.funds) {
+                const targetCity = cities.filter(c => !division.cities.includes(c))[0];
+                ns.corporation.expandCity(divisionName, targetCity);            
+                ns.corporation.purchaseWarehouse(divisionName, cityName);                    
+                if (industry.producedMaterials) {
+                    industry.producedMaterials.forEach(materialName => {
+                        ns.corporation.sellMaterial(divisionName, targetCity, materialName, "MAX", "MP");
+                    });
+                }
+            }
+
+
             division.cities.forEach(cityName => {
                 corporation = ns.corporation.getCorporation();
+                
                 let office = ns.corporation.getOffice(divisionName, cityName);
 
                 // EMPLOYEES
@@ -31,14 +48,16 @@ export async function main(ns) {
                     ns.corporation.throwParty(divisionName, cityName, 10_000_000)
                 }
                 while (office.employees < office.size) {
-                    const targetJobs = Object.keys(office.employeeJobs).filter(k => !["Training", "Unassigned"].include(key));
-                    // TODO: Something smarter than even placement?
+                    const targetJobs = Object.keys(office.employeeJobs).filter(key => !["Training", "Unassigned"].includes(key));
+                    // TODO: Something smarter than even placement
+                    // Idea: equal Ops and Eng, .5 Management, equal Research if stuff to research, .25 Business
                     const jobToFill = targetJobs.sort((a, b) => office.employeeJobs[a] - office.employeeJobs[b])[0];
 
                     ns.corporation.hireEmployee(divisionName, cityName, jobToFill);
                     
                     office = ns.corporation.getOffice(divisionName, cityName);
                 }
+                //TODO: train and rebalance employees
 
                 // WAREHOUSE
                 if (ns.corporation.hasWarehouse(divisionName, cityName)) {
@@ -53,9 +72,6 @@ export async function main(ns) {
                         ns.corporation.buyMaterial(divisionName, cityName, materialName, 0);
                         ns.corporation.setSmartSupply(divisionName, cityName, true);
                     }
-                } else if(constants.warehouseInitialCost < corporation.funds) {        
-                    corporation = ns.corporation.getCorporation();            
-                    ns.corporation.purchaseWarehouse(divisionName, cityName);
                 }
             });
         });
@@ -74,20 +90,12 @@ export async function main(ns) {
             }
         });
 
-        // Get current industry (active && !(fullyExpanded && allEmployees))
-            // if not fully expanded
-                // expand as able
-                    // start sales of correct stuff
-            // if not fully employeed but fully expanded
-                // expand office
-                // distribute employees
-            // if fully expanded
-                // Purchase any Unlocks or Upgrades we can afford
-            // If has product and fewer than max, create at 1_000_000_000/1_000_000_000
+        // If has product and fewer than max, create at 1_000_000_000/1_000_000_000
 
+        // Expand warehouse
 
-            // if no current industry
-                // If can afford, start one
+        // if no current industry
+            // If can afford, start one
 
         await ns.sleep(constants.secondsPerMarketCycle * 2 * 1000);
     }
