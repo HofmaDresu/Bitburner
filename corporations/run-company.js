@@ -138,9 +138,9 @@ export async function main(ns) {
 function divisionResearch(ns, division, potentialResearches) {
     if (!ns.corporation.hasResearched(division.name, "AutoBrew") && ns.corporation.getResearchCost(division.name, "AutoBrew") < division.research) {
         ns.corporation.research(division.name, "AutoBrew");
-    } else if (!ns.corporation.hasResearched(division.name, "AutoPartyManager") && ns.corporation.getResearchCost(division.name, "AutoPartyManager") < division.research) {
+    } else if (ns.corporation.hasResearched(division.name, "AutoBrew") ** !ns.corporation.hasResearched(division.name, "AutoPartyManager") && ns.corporation.getResearchCost(division.name, "AutoPartyManager") < division.research) {
         ns.corporation.research(division.name, "AutoPartyManager");
-    } else {
+    } else if (ns.corporation.hasResearched(division.name, "AutoBrew") && ns.corporation.hasResearched(division.name, "AutoBrew")) {
         potentialResearches.forEach(research => {
             if (!ns.corporation.hasResearched(division.name, research) && ns.corporation.getResearchCost(division.name, research) < division.research) {
                 ns.corporation.research(division.name, research);
