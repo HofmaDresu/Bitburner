@@ -104,7 +104,7 @@ export async function main(ns) {
                     ns.corporation.setSmartSupplyUseLeftovers(divisionName, cityName, materialName, false);
                     if (warehouse.sizeUsed < warehouse.size * .5) {
                         ns.corporation.setSmartSupply(divisionName, cityName, false);
-                        ns.corporation.buyMaterial(divisionName, cityName, materialName, 10);
+                        ns.corporation.buyMaterial(divisionName, cityName, materialName, warehouse.size * .1);
                     } else {
                         ns.corporation.buyMaterial(divisionName, cityName, materialName, 0);
                         ns.corporation.setSmartSupply(divisionName, cityName, true);
