@@ -1,4 +1,11 @@
-declare global { const NS: NS; }
+declare global { 
+  const NS: NS; 
+  const Office: Office; 
+  const Division: Division; 
+  const IndustryData: IndustryData; 
+  const CorpIndustryData: CorpIndustryData; 
+  const CorpResearchName: CorpResearchName 
+}
 
 /* TODO: remove ns1-specific documentation for all functions, and just create a basic doc somewhere that says how to
  *       convert examples for use in .script files (e.g. no async/await, var instead of let/const, etc). */

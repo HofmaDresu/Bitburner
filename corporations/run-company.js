@@ -2,6 +2,7 @@
 /** @param {NS} ns */
 export async function main(ns) {
     const constants = ns.corporation.getConstants();
+    constants.res
     const cities = ["Aevum", "Chongqing", "Sector-12", "New Tokyo", "Ishima", "Volhaven"];
 
     if (!ns.corporation.hasUnlockUpgrade("Smart Supply")) {
@@ -31,6 +32,12 @@ export async function main(ns) {
                 }
             }
 
+            //TODO: Products
+                // Build if able and no other building in highest population city
+                // If selling 0 || sale price < .75 MP || selling < .9 production, discontinue
+
+            divisionResearch(ns, division, industry.product ? constants.researchNames : constants.researchNamesBase);
+
 
             division.cities.forEach(cityName => {
                 corporation = ns.corporation.getCorporation();
@@ -38,17 +45,16 @@ export async function main(ns) {
                 let office = ns.corporation.getOffice(divisionName, cityName);
 
                 // EMPLOYEES
-                // TODO: Don't do this if we have caffine research
                 if (office.avgEne < office.maxEne * .75 && corporation.funds > 500_000 * office.employees) {
                     ns.corporation.buyCoffee(divisionName, cityName);
                 }
                 corporation = ns.corporation.getCorporation();
-                // TODO: Don't do this if we have party research
                 if ((office.avgHap < office.maxHap * .6 || office.avgMor < office.maxMor * .6) && corporation.funds > 10_000_000 * office.employees) {
                     ns.corporation.throwParty(divisionName, cityName, 10_000_000)
                 }
+                //TODO: expand office
                 while (office.employees < office.size) {
-                    const targetJobs = Object.keys(office.employeeJobs).filter(key => !["Training", "Unassigned"].includes(key));
+                    const targetJobs = Object.keys(office.employeeJobs).filter(key => !["Unassigned"].includes(key));
                     // TODO: Something smarter than even placement
                     // Idea: equal Ops and Eng, .5 Management, equal Research if stuff to research, .25 Business
                     const jobToFill = targetJobs.sort((a, b) => office.employeeJobs[a] - office.employeeJobs[b])[0];
@@ -57,10 +63,10 @@ export async function main(ns) {
                     
                     office = ns.corporation.getOffice(divisionName, cityName);
                 }
-                //TODO: train and rebalance employees
 
                 // WAREHOUSE
                 if (ns.corporation.hasWarehouse(divisionName, cityName)) {
+                    // TODO: Expand Warehouse
                     // TODO: If have proper research, bulk purchase
                     let warehouse = ns.corporation.getWarehouse(divisionName, cityName);
                     const materialName = getBestMultiplierSupply(ns, industry);
@@ -75,7 +81,7 @@ export async function main(ns) {
                 }
             });
         });
-
+        
         constants.upgradeNames.forEach(upgradeName => {
             corporation = ns.corporation.getCorporation();
             if (ns.corporation.getUpgradeLevelCost(upgradeName) < corporation.funds) {
@@ -89,7 +95,7 @@ export async function main(ns) {
                 ns.corporation.unlockUpgrade(unlockName);
             }
         });
-
+        
         // If has product and fewer than max, create at 1_000_000_000/1_000_000_000
 
         // Expand warehouse
@@ -101,6 +107,22 @@ export async function main(ns) {
     }
 }
 
+/** @param {NS} ns, @param {Division} division, @param {CorpResearchName} potentialResearches */
+function divisionResearch(ns, division, potentialResearches) {
+    if (!ns.corporation.hasResearched(division.name, "AutoBrew") && ns.corporation.getResearchCost(division.name, "AutoBrew") < division.research) {
+        ns.corporation.research(division.name, "AutoBrew");
+    } else if (!ns.corporation.hasResearched(division.name, "AutoPartyManager") && ns.corporation.getResearchCost(division.name, "AutoPartyManager") < division.research) {
+        ns.corporation.research(division.name, "AutoPartyManager");
+    } else {
+        potentialResearches.forEach(research => {
+            if (!ns.corporation.hasResearched(division.name, research) && ns.corporation.getResearchCost(division.name, research) < division.research) {
+                ns.corporation.research(division.name, research);
+            }
+        })
+    }
+}
+
+/** @param {NS} ns, @param {CorpIndustryData} industry */
 function getBestMultiplierSupply(ns, industry) {
     const highestFactor = Math.max(industry.hardwareFactor || 0, industry.realEstateFactor || 0, industry.aiCoreFactor || 0, industry.robotFactor || 0);
     switch (highestFactor) {
