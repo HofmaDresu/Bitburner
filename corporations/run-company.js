@@ -2,7 +2,6 @@
 /** @param {NS} ns */
 export async function main(ns) {
     const constants = ns.corporation.getConstants();
-    constants.res
     const cities = ["Aevum", "Chongqing", "Sector-12", "New Tokyo", "Ishima", "Volhaven"];
 
     if (!ns.corporation.hasUnlockUpgrade("Smart Supply")) {
@@ -11,6 +10,10 @@ export async function main(ns) {
 
     if (ns.corporation.getUpgradeLevel("DreamSense") === 0) {
         ns.corporation.levelUpgrade("DreamSense")
+    }
+
+    if (!ns.corporation.hasUnlockUpgrade("Market Research - Demand")) {
+        ns.corporation.unlockUpgrade("Market Research - Demand")
     }
 
     while(true) {
@@ -32,9 +35,26 @@ export async function main(ns) {
                 }
             }
 
-            //TODO: Products
-                // Build if able and no other building in highest population city
-                // If selling 0 || sale price < .75 MP || selling < .9 production, discontinue
+            if (division.makesProducts) {
+                division.products.forEach(productName => {
+                    const product = ns.corporation.getProduct(divisionName, productName);
+                    const isReady = product.developmentProgress === 100;
+                    const notSelling = Object.keys(product.cityData).every(cn => product.cityData[cn][2] === 0);
+                    const noDemand = Object.keys(product.cityData).every(cn => product.cityData[cn].demand === 0);
+                    if (isReady && notSelling) {
+                        ns.corporation.sellProduct(divisionName, cityName, productName, "MAX", "MP", true);
+                    }
+                    if (isReady && noDemand) {
+                        ns.corporation.discontinueProduct(divisionName, productName)
+                    }
+                });
+
+                const maxProducts = 3 + (ns.corporation.hasResearched(division.name, "uPgrade: Capacity.I") ? 1 : 0) + (ns.corporation.hasResearched(division.name, "uPgrade: Capacity.II") ? 1 : 0);
+                if (division.products.length < maxProducts && corporation.funds < 2_000_000_000) {
+                    const bestCity = division.cities.sort((a, b) => ns.corporation.getOffice(divisionName, b).employees - ns.corporation.getOffice(divisionName, a).employees)[0];
+                    ns.corporation.makeProduct(divisionName, bestCity, crypto.randomUUID(), 1_000_000_000, 1_000_000_000);
+                }
+            }
 
             divisionResearch(ns, division, industry.product ? constants.researchNames : constants.researchNamesBase);
             corporation = ns.corporation.getCorporation();
@@ -107,8 +127,6 @@ export async function main(ns) {
             }
         });
         
-        // TODO: If has product and fewer than max, create at 1_000_000_000/1_000_000_000
-
         // if no current industry
             // If can afford, start one
 

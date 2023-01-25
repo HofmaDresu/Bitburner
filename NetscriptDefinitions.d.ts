@@ -4,7 +4,7 @@ declare global {
   const Division: Division; 
   const IndustryData: IndustryData; 
   const CorpIndustryData: CorpIndustryData; 
-  const CorpResearchName: CorpResearchName 
+  const CorpResearchName: CorpResearchName;
 }
 
 /* TODO: remove ns1-specific documentation for all functions, and just create a basic doc somewhere that says how to
