@@ -53,7 +53,13 @@ export async function main(ns) {
                 if ((office.avgHap < office.maxHap * .6 || office.avgMor < office.maxMor * .6) && corporation.funds > 10_000_000 * office.employees) {
                     ns.corporation.throwParty(divisionName, cityName, 10_000_000)
                 }
-                //TODO: expand office
+                corporation = ns.corporation.getCorporation();
+
+                if (ns.corporation.getOfficeSizeUpgradeCost(divisionName, cityName, 3) < corporation.funds) {
+                    ns.corporation.upgradeOfficeSize(divisionName, cityName, 3);
+                }
+                corporation = ns.corporation.getCorporation();
+
                 while (office.employees < office.size) {
                     const targetJobs = Object.keys(office.employeeJobs).filter(key => !["Unassigned"].includes(key));
                     // TODO: Something smarter than even placement
