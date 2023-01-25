@@ -37,6 +37,7 @@ export async function main(ns) {
                 // If selling 0 || sale price < .75 MP || selling < .9 production, discontinue
 
             divisionResearch(ns, division, industry.product ? constants.researchNames : constants.researchNamesBase);
+            corporation = ns.corporation.getCorporation();
 
 
             division.cities.forEach(cityName => {
@@ -66,8 +67,12 @@ export async function main(ns) {
 
                 // WAREHOUSE
                 if (ns.corporation.hasWarehouse(divisionName, cityName)) {
-                    // TODO: Expand Warehouse
-                    // TODO: If have proper research, bulk purchase
+                    corporation = ns.corporation.getCorporation();                    
+
+                    if (ns.corporation.getUpgradeWarehouseCost(divisionName, cityName) < corporation.funds) {
+                        ns.corporation.upgradeWarehouse(divisionName, cityName);
+                    }
+
                     let warehouse = ns.corporation.getWarehouse(divisionName, cityName);
                     const materialName = getBestMultiplierSupply(ns, industry);
                     ns.corporation.setSmartSupplyUseLeftovers(divisionName, cityName, materialName, false);
