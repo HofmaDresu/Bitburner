@@ -1,8 +1,6 @@
 
 /** @param {NS} ns */
 export async function main(ns) {
-    //TODO: Start corporation if we don't have one
-
     while(!ns.corporation.hasCorporation()) {
         if (ns.getServerMoneyAvailable("home") > 150_000_000_000) {
             ns.corporation.createCorporation(crypto.randomUUID(), true);
@@ -39,6 +37,8 @@ export async function main(ns) {
                 ns.corporation.purchaseWarehouse(divisionName, cityName);                    
                 if (industry.producedMaterials) {
                     industry.producedMaterials.forEach(materialName => {
+                        //TODO: Split out from expansion script to allow adjustments
+                        //TODO: use Market TA II
                         ns.corporation.sellMaterial(divisionName, targetCity, materialName, "MAX", "MP");
                     });
                 }
@@ -46,12 +46,14 @@ export async function main(ns) {
 
             if (division.makesProducts) {
                 division.products.forEach(productName => {
+                    const bestCity = division.cities.sort((a, b) => ns.corporation.getOffice(divisionName, b).employees - ns.corporation.getOffice(divisionName, a).employees)[0];
                     const product = ns.corporation.getProduct(divisionName, productName);
                     const isReady = product.developmentProgress === 100;
                     const notSelling = Object.keys(product.cityData).every(cn => product.cityData[cn][2] === 0);
-                    const noDemand = Object.keys(product.cityData).every(cn => product.cityData[cn].demand === 0);
+                    const noDemand =  product.dmd < 1;
                     if (isReady && notSelling) {
-                        ns.corporation.sellProduct(divisionName, cityName, productName, "MAX", "MP", true);
+                        //TODO: use Market TA II, split out to allow adjustments
+                        ns.corporation.sellProduct(divisionName, bestCity, productName, "MAX", "MP", true);
                     }
                     if (isReady && noDemand) {
                         ns.corporation.discontinueProduct(divisionName, productName)
@@ -59,13 +61,12 @@ export async function main(ns) {
                 });
 
                 const maxProducts = 3 + (ns.corporation.hasResearched(division.name, "uPgrade: Capacity.I") ? 1 : 0) + (ns.corporation.hasResearched(division.name, "uPgrade: Capacity.II") ? 1 : 0);
-                if (division.products.length < maxProducts && corporation.funds < 2_000_000_000) {
-                    const bestCity = division.cities.sort((a, b) => ns.corporation.getOffice(divisionName, b).employees - ns.corporation.getOffice(divisionName, a).employees)[0];
+                if (division.products.length < maxProducts && corporation.funds > 2_000_000_000) {
                     ns.corporation.makeProduct(divisionName, bestCity, crypto.randomUUID(), 1_000_000_000, 1_000_000_000);
                 }
             }
 
-            divisionResearch(ns, division, industry.product ? constants.researchNames : constants.researchNamesBase);
+            divisionResearch(ns, division, (industry.product ? constants.researchNames : constants.researchNamesBase).filter(r => !["HRBuddy-Recruitment", "HRBuddy-Training"].includes(r)));
             corporation = ns.corporation.getCorporation();
 
 
@@ -84,8 +85,8 @@ export async function main(ns) {
                 }
                 corporation = ns.corporation.getCorporation();
 
-                if (ns.corporation.getOfficeSizeUpgradeCost(divisionName, cityName, 3) < corporation.funds) {
-                    ns.corporation.upgradeOfficeSize(divisionName, cityName, 3);
+                if (ns.corporation.getOfficeSizeUpgradeCost(divisionName, cityName, office.employees * 2) < corporation.funds) {
+                    ns.corporation.upgradeOfficeSize(divisionName, cityName, office.employees * 2);
                 }
                 corporation = ns.corporation.getCorporation();
 
@@ -125,8 +126,12 @@ export async function main(ns) {
         
         constants.upgradeNames.forEach(upgradeName => {
             corporation = ns.corporation.getCorporation();
-            if (ns.corporation.getUpgradeLevelCost(upgradeName) < corporation.funds) {
-                ns.corporation.levelUpgrade(upgradeName);
+            const upgradeLevel = ns.corporation.getUpgradeLevel(upgradeName);
+
+            if (corporation.divisions.length === constants.industryNames.length || upgradeLevel < corporation.divisions.length * 10) {
+                if (ns.corporation.getUpgradeLevelCost(upgradeName) < corporation.funds) {
+                    ns.corporation.levelUpgrade(upgradeName);
+                }
             }
         });
 
@@ -136,9 +141,17 @@ export async function main(ns) {
                 ns.corporation.unlockUpgrade(unlockName);
             }
         });
-        
-        // if no current industry
-            // If can afford, start one
+
+        const availableIndustries = constants.industryNames
+            .filter(indName => !corporation.divisions.some(d => ns.corporation.getDivision(d).type === indName))
+            .sort((a, b) => ns.corporation.getIndustryData(a).startingCost - ns.corporation.getIndustryData(b).startingCost);
+        if (availableIndustries.length > 0) {
+            const nextIndustry = availableIndustries[0];
+            corporation = ns.corporation.getCorporation();
+            if (nextIndustry.startingCost < corporation.funds) {
+                ns.corporation.expandIndustry(nextIndustry, nextIndustry);
+            }
+        }
 
         await ns.sleep(constants.secondsPerMarketCycle * 2 * 1000);
     }
@@ -146,7 +159,9 @@ export async function main(ns) {
 
 /** @param {NS} ns, @param {Division} division, @param {CorpResearchName} potentialResearches */
 function divisionResearch(ns, division, potentialResearches) {
-    if (!ns.corporation.hasResearched(division.name, "AutoBrew") && ns.corporation.getResearchCost(division.name, "AutoBrew") < division.research) {
+    if (!ns.corporation.hasResearched(division.name, "Hi-Tech R&D Laboratory") && ns.corporation.getResearchCost(division.name, "Hi-Tech R&D Laboratory") < division.research) {
+        ns.corporation.research(division.name, "Hi-Tech R&D Laboratory");
+    } else if (!ns.corporation.hasResearched(division.name, "AutoBrew") && ns.corporation.getResearchCost(division.name, "AutoBrew") < division.research) {
         ns.corporation.research(division.name, "AutoBrew");
     } else if (ns.corporation.hasResearched(division.name, "AutoBrew") ** !ns.corporation.hasResearched(division.name, "AutoPartyManager") && ns.corporation.getResearchCost(division.name, "AutoPartyManager") < division.research) {
         ns.corporation.research(division.name, "AutoPartyManager");
@@ -154,6 +169,7 @@ function divisionResearch(ns, division, potentialResearches) {
         potentialResearches.forEach(research => {
             if (!ns.corporation.hasResearched(division.name, research) && ns.corporation.getResearchCost(division.name, research) < division.research) {
                 ns.corporation.research(division.name, research);
+                division = ns.corporation.getDivision(division.name);
             }
         })
     }
