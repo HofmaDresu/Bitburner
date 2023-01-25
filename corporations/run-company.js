@@ -107,9 +107,7 @@ export async function main(ns) {
             }
         });
         
-        // If has product and fewer than max, create at 1_000_000_000/1_000_000_000
-
-        // Expand warehouse
+        // TODO: If has product and fewer than max, create at 1_000_000_000/1_000_000_000
 
         // if no current industry
             // If can afford, start one
