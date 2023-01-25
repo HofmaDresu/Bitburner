@@ -1,6 +1,15 @@
 
 /** @param {NS} ns */
 export async function main(ns) {
+    //TODO: Start corporation if we don't have one
+
+    while(!ns.corporation.hasCorporation()) {
+        if (ns.getServerMoneyAvailable("home") > 150_000_000_000) {
+            ns.corporation.createCorporation(crypto.randomUUID(), true);
+        }
+        await ns.sleep(60_000);
+    }
+
     const constants = ns.corporation.getConstants();
     const cities = ["Aevum", "Chongqing", "Sector-12", "New Tokyo", "Ishima", "Volhaven"];
 
