@@ -93,13 +93,14 @@ export async function main(ns) {
 
                 // WAREHOUSE
                 if (ns.corporation.hasWarehouse(divisionName, cityName)) {
-                    corporation = ns.corporation.getCorporation();                    
+                    corporation = ns.corporation.getCorporation();      
+                    let warehouse = ns.corporation.getWarehouse(divisionName, cityName);              
 
-                    if (ns.corporation.getUpgradeWarehouseCost(divisionName, cityName) < corporation.funds) {
+                    if (warehouse.level < 5 && ns.corporation.getUpgradeWarehouseCost(divisionName, cityName) < corporation.funds) {
                         ns.corporation.upgradeWarehouse(divisionName, cityName);
+                        warehouse = ns.corporation.getWarehouse(divisionName, cityName);   
                     }
 
-                    let warehouse = ns.corporation.getWarehouse(divisionName, cityName);
                     const materialName = getBestMultiplierSupply(ns, industry);
                     ns.corporation.setSmartSupplyUseLeftovers(divisionName, cityName, materialName, false);
                     if (warehouse.sizeUsed < warehouse.size * .5) {
