@@ -4,7 +4,7 @@ import {stockToServers} from "/stocks/helpers.js"
 export async function main(ns) {
     sellStocks(ns);
     upgradeHomeServer(ns);
-    purchaseNueroFluxGovernor(ns);
+    await purchaseNueroFluxGovernor(ns);
     ns.singularity.installAugmentations("startup.js")
 }
 
@@ -39,11 +39,14 @@ function upgradeHomeServer(ns) {
     }
 }
 
-function purchaseNueroFluxGovernor(ns) {    
+/** @param {NS} ns */
+async function purchaseNueroFluxGovernor(ns) {    
 	const player = ns.getPlayer();
     const factionsWithReputation = player.factions.map(f => ({faction: f, reputation: ns.singularity.getFactionRep(f)})).sort((a, b) => b.reputation - a.reputation);
     if (factionsWithReputation.length === 0) return;
-    const mostReputedFaction = factionsWithReputation[0];
+    const factionsWithNeuroFluxGoverner = factionsWithReputation.filter(f => ns.singularity.getAugmentationsFromFaction(f.faction).some(a => a === "NeuroFlux Governor"));
+    if (factionsWithNeuroFluxGoverner.length === 0) return;  
+    const mostReputedFaction = factionsWithNeuroFluxGoverner[0];
     let rep = ns.singularity.getAugmentationRepReq("NeuroFlux Governor");
     let cost = ns.singularity.getAugmentationPrice("NeuroFlux Governor");
     let availableMonies = ns.getServerMoneyAvailable("home");
@@ -53,5 +56,6 @@ function purchaseNueroFluxGovernor(ns) {
         rep = ns.singularity.getAugmentationRepReq("NeuroFlux Governor");
         cost = ns.singularity.getAugmentationPrice("NeuroFlux Governor");
         availableMonies = ns.getServerMoneyAvailable("home");
+        await ns.sleep(10);
     }
 }
