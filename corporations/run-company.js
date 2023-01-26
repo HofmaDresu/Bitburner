@@ -137,7 +137,7 @@ export async function main(ns) {
 
         constants.unlockNames.forEach(unlockName => {
             corporation = ns.corporation.getCorporation();
-            if (ns.corporation.getUnlockUpgradeCost(unlockName) < corporation.funds) {
+            if (!ns.corporation.hasUnlockUpgrade(unlockName) && ns.corporation.getUnlockUpgradeCost(unlockName) < corporation.funds) {
                 ns.corporation.unlockUpgrade(unlockName);
             }
         });
