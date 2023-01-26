@@ -8,8 +8,11 @@ export async function main(ns) {
     const data = ns.codingcontract.getData(contractFileName, targetServer);
     const targetIndex = data.length;
 
-    const minMovesToReachEnd = tryToReachEnd(ns, data, 0, targetIndex, 0);
-    
+    let minMovesToReachEnd = tryToReachEnd(ns, data, 0, targetIndex, 0);
+    if (minMovesToReachEnd === Infinity) {
+        minMovesToReachEnd = 0;
+    }
+
     const result = ns.codingcontract.attempt(minMovesToReachEnd, contractFileName, targetServer, {returnReward: true});
     if (result) {
         ns.tprint(result);
