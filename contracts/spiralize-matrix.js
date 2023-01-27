@@ -20,43 +20,47 @@ export async function main(ns) {
 
     let spiralizedMatrix = [];
 
-    while (minWidthIndex < maxWidthIndex || minHeightIndex < maxHeightIndex -1) {
-        spiralizedMatrix.push(matrix[currentHeightIndex][currentWidthIndex]);
+    if (maxHeightIndex > 1) {
+        while (minWidthIndex < maxWidthIndex || minHeightIndex < maxHeightIndex -1) {
+            spiralizedMatrix.push(matrix[currentHeightIndex][currentWidthIndex]);
 
-        if (movementType === "w") {
-            const proposedIndex = currentWidthIndex + movementDirection;
-            if (proposedIndex >= maxWidthIndex) {
-                movementType = "h";
-                currentHeightIndex += movementDirection;
-                minHeightIndex++;
-            } else if (proposedIndex < minWidthIndex) {
-                movementType = "h";
-                currentHeightIndex += movementDirection;
-                maxHeightIndex--;
-            } else {
-                currentWidthIndex = proposedIndex;
-            }
-        } else if (movementType === "h") {
-            const proposedIndex = currentHeightIndex + movementDirection;
-            if (proposedIndex >= maxHeightIndex) {
-                movementType = "w";
-                movementDirection *= -1;
-                currentWidthIndex += movementDirection;
-                maxWidthIndex--;
-            } else if (proposedIndex < minHeightIndex) {
-                movementType = "w";
-                movementDirection *= -1;
-                currentWidthIndex += movementDirection;
-                minWidthIndex++;
-            } else {
-                currentHeightIndex = proposedIndex;
+            if (movementType === "w") {
+                const proposedIndex = currentWidthIndex + movementDirection;
+                if (proposedIndex >= maxWidthIndex) {
+                    movementType = "h";
+                    currentHeightIndex += movementDirection;
+                    minHeightIndex++;
+                } else if (proposedIndex < minWidthIndex) {
+                    movementType = "h";
+                    currentHeightIndex += movementDirection;
+                    maxHeightIndex--;
+                } else {
+                    currentWidthIndex = proposedIndex;
+                }
+            } else if (movementType === "h") {
+                const proposedIndex = currentHeightIndex + movementDirection;
+                if (proposedIndex >= maxHeightIndex) {
+                    movementType = "w";
+                    movementDirection *= -1;
+                    currentWidthIndex += movementDirection;
+                    maxWidthIndex--;
+                } else if (proposedIndex < minHeightIndex) {
+                    movementType = "w";
+                    movementDirection *= -1;
+                    currentWidthIndex += movementDirection;
+                    minWidthIndex++;
+                } else {
+                    currentHeightIndex = proposedIndex;
+                }
             }
         }
+    } else {
+        spiralizedMatrix = matrix[0];
     }
 
     
     // Horrible hack
-    spiralizedMatrix = spiralizedMatrix.slice(0, expectedLength)
+    spiralizedMatrix = spiralizedMatrix.length === 0 ? matrix : spiralizedMatrix.slice(0, expectedLength)
     
     const result = ns.codingcontract.attempt(spiralizedMatrix, contractFileName, targetServer, {returnReward: true});
     if (result) {
