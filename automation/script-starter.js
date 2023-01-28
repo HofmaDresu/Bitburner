@@ -7,9 +7,12 @@ export async function main(ns) {
         startScriptIfAvailableRam(ns, '/contracts/complete-coding-contracts.js');
         startScriptIfAvailableRam(ns, '/upgraders/purchase-server.js');
         startScriptIfAvailableRam(ns, '/upgraders/purchase-programs.js');
-        // TODO: start gang if able?
+        // TODO: lower karma if crime money multiplier is good enough?
         if (ns.gang.inGang()) {
             startScriptIfAvailableRam(ns, '/gang/run-gang.js');
+        } else if (ns.heart.break() < -54_000) {
+            //TODO: make sure we're in slum snakes
+            ns.gang.createGang("Slum Snakes");
         }
         if (multipliers.HacknetNodeMoney > .5) {
             startScriptIfAvailableRam(ns, '/upgraders/purchase-hacknet-nodes.js') 
@@ -19,8 +22,9 @@ export async function main(ns) {
         startScriptIfAvailableRam(ns, '/stocks/play-the-market.js');
         // TODO: re-activate after challenge
         //startScriptIfAvailableRam(ns, '/corporations/run-company.js');
-        startScriptIfAvailableRam(ns, '/experience/gain-intelligence.js');
-        ns.sleep(10_000);
+        // TODO: Update to only run up to max hacks
+        //startScriptIfAvailableRam(ns, '/experience/gain-intelligence.js');
+        await ns.sleep(10_000);
     }
 }
 
