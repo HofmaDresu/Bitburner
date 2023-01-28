@@ -5,7 +5,7 @@ export async function main(ns) {
     sellStocks(ns);
     upgradeHomeServer(ns);
     await purchaseNueroFluxGovernor(ns);
-    ns.singularity.installAugmentations("startup.js")
+    ns.singularity.installAugmentations("/automation/script-starter.js")
 }
 
 function sellStocks(ns) {
