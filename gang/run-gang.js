@@ -45,7 +45,7 @@ export async function main(ns) {
 
 /** @param {NS} ns */
 function ascendIfProper(ns, memberStats) {
-    if (ns.gang.getGangInformation().territoryWarfareEngaged) return;
+    if (ns.gang.getGangInformation().territoryWarfareEngaged) return memberStats;
     const ascentionInfo = ns.gang.getAscensionResult(memberStats.name);
     const ascentionStrMultiplier = TARGET_ASC_MULT > memberStats.str_asc_mult ? Math.min(2, TARGET_ASC_MULT / memberStats.str_asc_mult) : 2;
     const ascentionDefMultiplier = TARGET_ASC_MULT > memberStats.def_asc_mult ? Math.min(2, TARGET_ASC_MULT / memberStats.def_asc_mult) : 2;
