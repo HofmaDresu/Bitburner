@@ -16,14 +16,15 @@ export async function main(ns) {
             ns.gang.recruitMember(newMemberName);
         }
 
-	    const otherGangs = Object.keys(ns.gang.getOtherGangInformation()).filter(k => k !== gangInfo.faction).map(k => ns.gang.getOtherGangInformation()[k]);
+        const otherGangNames = Object.keys(ns.gang.getOtherGangInformation());
+	    const otherGangs = otherGangNames.filter(k => k !== gangInfo.faction).map(k => ns.gang.getOtherGangInformation()[k]);
         const currentMembers = ns.gang.getMemberNames().map(ns.gang.getMemberInformation);
         const gangIsFull = currentMembers.length === 12
         const anyPurposeForWar = gangInfo.territory < 1;
         const allMembersHaveWarAscentions = currentMembers.every(m => m.str_asc_mult > TARGET_ASC_MULT && m.def_asc_mult > TARGET_ASC_MULT);
         const allMembersHaveAllGear = currentMembers.every(m => !ns.gang.getEquipmentNames().some(e => !(m.upgrades.some(me => me === e) || m.augmentations.some(me => me === e))));
         const readyForWar = anyPurposeForWar && gangIsFull && allMembersHaveWarAscentions && allMembersHaveAllGear;
-        const prepareForWar = readyForWar && Math.min(...otherGangs.map(og => ns.gang.getChanceToWinClash(og.name))) > .95;
+        const prepareForWar = readyForWar && Math.min(...otherGangNames.map(ogn => ns.gang.getChanceToWinClash(ogn))) < .95;
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
             let memberStats = currentMembers[i];
