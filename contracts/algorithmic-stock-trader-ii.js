@@ -43,5 +43,5 @@ async function getMaxProfit(ns, potentialActions, currentDepth) {
             potentialProfits.push(currentSale.profit);
         }
     }
-    return potentialProfits.sort((a, b) => b - a)[0];
+    return potentialProfits.length === 0 ? 0 : potentialProfits.sort((a, b) => b - a)[0];
 }
