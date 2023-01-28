@@ -16,8 +16,8 @@ export async function main(ns) {
             ns.gang.recruitMember(newMemberName);
         }
 
-        const otherGangNames = Object.keys(ns.gang.getOtherGangInformation());
-	    const otherGangs = otherGangNames.filter(k => k !== gangInfo.faction).map(k => ns.gang.getOtherGangInformation()[k]);
+        const otherGangNames = Object.keys(ns.gang.getOtherGangInformation()).filter(k => k !== gangInfo.faction);
+	    const otherGangs = otherGangNames.map(k => ns.gang.getOtherGangInformation()[k]);
         const currentMembers = ns.gang.getMemberNames().map(ns.gang.getMemberInformation);
         const gangIsFull = currentMembers.length === 12
         const anyPurposeForWar = gangInfo.territory < 1;
