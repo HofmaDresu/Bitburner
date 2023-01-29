@@ -29,7 +29,9 @@ export async function main(ns) {
 
 /** @param {NS} ns */
 function startScriptIfAvailableRam(ns, script) {
-    const availableRam = ns.getServerMaxRam("home") - ns.getServerUsedRam("home");
+    const maxContractSolverRam =  ns.ls("home", "/contracts/").filter(fn => fn.indexOf("/get") === -1 && fn.indexOf("/complete") === -1)
+        .map(fn => ns.getScriptRam(fn)).sort()[0];
+    const availableRam = ns.getServerMaxRam("home") - ns.getServerUsedRam("home") - maxContractSolverRam;
     const scriptRam = ns.getScriptRam(script);
     const isScriptRunning = ns.scriptRunning(script, "home");
 
