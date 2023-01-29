@@ -23,8 +23,7 @@ export async function main(ns) {
         startScriptIfAvailableRam(ns, '/stocks/activate-purchases.js');
         startScriptIfAvailableRam(ns, '/stocks/play-the-market.js');
         startScriptIfAvailableRam(ns, '/corporations/run-company.js');
-        // TODO: Update to only run up to max hacks
-        //startScriptIfAvailableRam(ns, '/experience/gain-intelligence.js');
+        startScriptIfAvailableRam(ns, '/experience/gain-intelligence.js');
         await ns.sleep(10_000);
     }
 }
