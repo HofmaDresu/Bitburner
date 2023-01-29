@@ -144,3 +144,8 @@ export function copyFilesToServer(ns, hostname) {
 	MONEY_MAKER_SCRIPTS.forEach(s => ns.scp(s, hostname));
 
 }
+
+export function getMaxContractSolverRam(ns) {
+	return ns.ls("home", "/contracts/").filter(fn => fn.indexOf("/get") === -1 && fn.indexOf("/complete") === -1)
+		.map(fn => ns.getScriptRam(fn)).sort()[0];
+}
