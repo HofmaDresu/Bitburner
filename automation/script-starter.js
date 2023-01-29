@@ -7,8 +7,10 @@ export async function main(ns) {
         startScriptIfAvailableRam(ns, '/money-maker/run-money-maker-v2.js');
         startScriptIfAvailableRam(ns, '/upgraders/upgrade-home-server.js');
         startScriptIfAvailableRam(ns, '/contracts/complete-coding-contracts.js');
-        startScriptIfAvailableRam(ns, '/upgraders/purchase-server.js');
-        startScriptIfAvailableRam(ns, '/upgraders/purchase-programs.js');
+        if ((multipliers.ScriptHackMoney > .5 && multipliers.ScriptHackMoneyGain > .5) || ns.getServerMaxRam("home") > 3_000) {
+            startScriptIfAvailableRam(ns, '/upgraders/purchase-server.js');
+            startScriptIfAvailableRam(ns, '/upgraders/purchase-programs.js');
+        }
         // TODO: lower karma if crime money multiplier is good enough?
         if (ns.gang.inGang()) {
             startScriptIfAvailableRam(ns, '/gang/run-gang.js');
