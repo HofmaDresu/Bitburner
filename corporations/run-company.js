@@ -62,8 +62,11 @@ export async function main(ns) {
                 });
 
                 const maxProducts = 3 + (ns.corporation.hasResearched(division.name, "uPgrade: Capacity.I") ? 1 : 0) + (ns.corporation.hasResearched(division.name, "uPgrade: Capacity.II") ? 1 : 0);
-                if (division.products.length < maxProducts && corporation.funds > 2_000_000_000 && division.products.every(productName => ns.corporation.getProduct(divisionName, productName).developmentProgress === 100)) {
-                    ns.corporation.makeProduct(divisionName, bestCity, crypto.randomUUID(), 1_000_000_000, 1_000_000_000);
+                const minProductInvestment = 1_000_000;
+                const maxProductInvestment = 1_000_000_000;
+                const targetProductInvestment = Math.min(maxProductInvestment, Math.max(minProductInvestment, corporation.funds / 2));
+                if (division.products.length < maxProducts && corporation.funds >= targetProductInvestment * 2 && division.products.every(productName => ns.corporation.getProduct(divisionName, productName).developmentProgress === 100)) {
+                    ns.corporation.makeProduct(divisionName, bestCity, crypto.randomUUID(), targetProductInvestment, targetProductInvestment);
                 }
             }
 
