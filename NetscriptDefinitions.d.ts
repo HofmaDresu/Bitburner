@@ -5,6 +5,7 @@ declare global {
   const IndustryData: IndustryData; 
   const CorpIndustryData: CorpIndustryData; 
   const CorpResearchName: CorpResearchName;
+  const CorporationInfo: CorporationInfo;
 }
 
 /* TODO: remove ns1-specific documentation for all functions, and just create a basic doc somewhere that says how to
