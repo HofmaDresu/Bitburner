@@ -12,6 +12,7 @@ export async function main(ns) {
             startScriptIfAvailableRam(ns, '/upgraders/purchase-server.js');
         }
         // TODO: lower karma if crime money multiplier is good enough?
+        // TODO: Move gang API usage to gang file
         if (ns.gang.inGang()) {
             startScriptIfAvailableRam(ns, '/gang/run-gang.js');
         } else if (ns.heart.break() < -54_000) {

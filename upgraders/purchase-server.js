@@ -19,6 +19,7 @@ export async function main(ns) {
 		ns.print(`Target Ram ${ram}`);
 		const maxServers = ns.getPurchasedServerLimit();
 		currentServers = ns.getPurchasedServers();
+		// TODO: Get best starting ram
 		const costToUpgradeServers = ns.getPurchasedServerCost(ram * 2) * maxServers;
 		ns.print(`Currently have ${currentServers.length} with a max of ${maxServers}`);
 		ns.print(`It will cost ${costToUpgradeServers.toLocaleString('en-US')} to upgrade servers`);
@@ -34,7 +35,7 @@ export async function main(ns) {
 			await purchaseServers(ns, maxServers, ram);
 		}
 		currentRamRunning = true;
-        await ns.sleep(10000);
+        await ns.sleep(60000);
     }
 }
 

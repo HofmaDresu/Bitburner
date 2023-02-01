@@ -28,13 +28,13 @@ export async function main(ns) {
         for (let i = 0; i < currentMembers.length; i++) {
             gangInfo = ns.gang.getGangInformation();
             let memberStats = currentMembers[i];
-            memberStats = ascendIfProper(ns, memberStats);
+            memberStats = ascendIfProper(ns, memberStats, prepareForWar);
             chooseJob(ns, gangInfo, memberStats, prepareForWar, gangIsFull);
             purchaseGear(ns, memberStats);
             await ns.sleep(2000);
         };
 
-        
+        //TODO: only look at gangs with territory
         const sufficientPowerForWar = gangInfo.power > Math.max(...otherGangs.map(og => og.power)) * 4;
         const shouldGoToWar = sufficientPowerForWar && readyForWar;
         ns.gang.setTerritoryWarfare(shouldGoToWar);
@@ -44,8 +44,8 @@ export async function main(ns) {
 }
 
 /** @param {NS} ns */
-function ascendIfProper(ns, memberStats) {
-    if (ns.gang.getGangInformation().territoryWarfareEngaged) return memberStats;
+function ascendIfProper(ns, memberStats, prepareForWar) {
+    if (prepareForWar) return memberStats;
     const ascentionInfo = ns.gang.getAscensionResult(memberStats.name);
     const ascentionStrMultiplier = TARGET_ASC_MULT > memberStats.str_asc_mult ? Math.min(2, TARGET_ASC_MULT / memberStats.str_asc_mult) : 2;
     const ascentionDefMultiplier = TARGET_ASC_MULT > memberStats.def_asc_mult ? Math.min(2, TARGET_ASC_MULT / memberStats.def_asc_mult) : 2;
