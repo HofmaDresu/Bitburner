@@ -62,19 +62,20 @@ function runCity(corporation, ns, divisionName, cityName, industry) {
     corporation = ns.corporation.getCorporation();
 
     let office = ns.corporation.getOffice(divisionName, cityName);
+    
+    corporation = manageWarehouse(ns, divisionName, cityName, corporation, industry, office.employees);
 
     ({ office, corporation } = manageEmployees(office, corporation, ns, divisionName, cityName));
 
-    corporation = manageWarehouse(ns, divisionName, cityName, corporation, industry);
     return corporation;
 }
 
-function manageWarehouse(ns, divisionName, cityName, corporation, industry) {
+function manageWarehouse(ns, divisionName, cityName, corporation, industry, employees) {
     if (ns.corporation.hasWarehouse(divisionName, cityName)) {
         corporation = ns.corporation.getCorporation();
         let warehouse = ns.corporation.getWarehouse(divisionName, cityName);
 
-        if (warehouse.level < 5 && ns.corporation.getUpgradeWarehouseCost(divisionName, cityName) < corporation.funds) {
+        if (warehouse.level < employees / 3 && ns.corporation.getUpgradeWarehouseCost(divisionName, cityName) < corporation.funds) {
             ns.corporation.upgradeWarehouse(divisionName, cityName);
             warehouse = ns.corporation.getWarehouse(divisionName, cityName);
         }
@@ -83,7 +84,8 @@ function manageWarehouse(ns, divisionName, cityName, corporation, industry) {
         ns.corporation.setSmartSupplyUseLeftovers(divisionName, cityName, materialName, false);
         if (warehouse.sizeUsed < warehouse.size * .5) {
             ns.corporation.setSmartSupply(divisionName, cityName, false);
-            ns.corporation.buyMaterial(divisionName, cityName, materialName, warehouse.size * .01);
+            // TODO: take production needs into account
+            ns.corporation.buyMaterial(divisionName, cityName, materialName, warehouse.size * .05);
         } else {
             ns.corporation.buyMaterial(divisionName, cityName, materialName, 0);
             ns.corporation.setSmartSupply(divisionName, cityName, true);
@@ -102,8 +104,8 @@ function manageEmployees(office, corporation, ns, divisionName, cityName) {
     }
     corporation = ns.corporation.getCorporation();
 
-    if (ns.corporation.getOfficeSizeUpgradeCost(divisionName, cityName, office.employees * 2) < corporation.funds) {
-        ns.corporation.upgradeOfficeSize(divisionName, cityName, office.employees * 2);
+    if (ns.corporation.getOfficeSizeUpgradeCost(divisionName, cityName, office.employees) < corporation.funds) {
+        ns.corporation.upgradeOfficeSize(divisionName, cityName, office.employees);
     }
     corporation = ns.corporation.getCorporation();
 
@@ -153,6 +155,7 @@ function expandCity(division, cities, constants, corporation, ns, divisionName, 
         const targetCity = cities.filter(c => !division.cities.includes(c))[0];
         ns.corporation.expandCity(divisionName, targetCity);
         ns.corporation.purchaseWarehouse(divisionName, targetCity);
+        ns.corporation.setSmartSupply(divisionName, targetCity, true);
         if (industry.producedMaterials) {
             industry.producedMaterials.forEach(materialName => {
                 //TODO: Split out from expansion script to allow adjustments
@@ -169,7 +172,7 @@ function upgradeCorporation(constants, corporation, ns) {
         corporation = ns.corporation.getCorporation();
         const upgradeLevel = ns.corporation.getUpgradeLevel(upgradeName);
 
-        if (corporation.divisions.length === constants.industryNames.length || upgradeLevel < corporation.divisions.length * 10) {
+        if (corporation.divisions.length === constants.industryNames.length || upgradeLevel < corporation.divisions.length * 5) {
             if (ns.corporation.getUpgradeLevelCost(upgradeName) < corporation.funds) {
                 ns.corporation.levelUpgrade(upgradeName);
             }
