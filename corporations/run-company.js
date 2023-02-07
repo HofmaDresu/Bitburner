@@ -135,6 +135,7 @@ function makeProductsAsNeeded(division, ns, corporation) {
                 //TODO: use Market TA II, split out to allow adjustments
                 ns.corporation.sellProduct(division.name, bestCity, productName, "MAX", "MP", true);
             }
+            // OR isReady and price < .1 of highest price
             if (isReady && noDemand) {
                 ns.corporation.discontinueProduct(division.name, productName);
             }
