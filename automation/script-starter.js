@@ -20,6 +20,7 @@ export async function main(ns) {
             ns.gang.createGang("Slum Snakes");
         }
         startScriptIfAvailableRam(ns, '/upgraders/purchase-hacknet-servers.js');
+        startScriptIfAvailableRam(ns, '/hacknet/run-hacknet.js');
         // TODO: spend hashes
         startScriptIfAvailableRam(ns, '/stocks/stock-watcher.js');
         startScriptIfAvailableRam(ns, '/stocks/activate-purchases.js');
