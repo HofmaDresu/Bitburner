@@ -28,6 +28,8 @@ export async function main(ns) {
                     break;
             }
         }
+
+        await ns.sleep(10_000);
     }
 }
 
