@@ -26,6 +26,7 @@ function upgradeHomeServer(ns) {
     let upgradeHomeRamCost = ns.singularity.getUpgradeHomeRamCost();
     let availableMonies = ns.getServerMoneyAvailable("home");
 
+    // TODO: get working for fully-upgraded home server
     while (upgradeHomeCoresCost && upgradeHomeRamCost && (availableMonies > upgradeHomeCoresCost || availableMonies > upgradeHomeRamCost)) {
         if (upgradeHomeCoresCost > 0 && availableMonies > upgradeHomeCoresCost) {
             ns.singularity.upgradeHomeCores();

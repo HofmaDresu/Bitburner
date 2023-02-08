@@ -19,9 +19,8 @@ export async function main(ns) {
             //TODO: make sure we're in slum snakes
             ns.gang.createGang("Slum Snakes");
         }
-        if (multipliers.HacknetNodeMoney > .5) {
-            startScriptIfAvailableRam(ns, '/upgraders/purchase-hacknet-nodes.js') 
-        }
+        startScriptIfAvailableRam(ns, '/upgraders/purchase-hacknet-servers.js');
+        // TODO: spend hashes
         startScriptIfAvailableRam(ns, '/stocks/stock-watcher.js');
         startScriptIfAvailableRam(ns, '/stocks/activate-purchases.js');
         startScriptIfAvailableRam(ns, '/stocks/play-the-market.js');
