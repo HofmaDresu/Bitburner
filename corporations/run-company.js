@@ -88,12 +88,24 @@ function runDivision(corporation, ns, divisionName, cities, constants) {
     return corporation;
 }
 
+/** @param {Division} division, @param {NS} ns, @param {CorporationInfo} corporation */
 function runCity(corporation, ns, divisionName, cityName, industry) {
     corporation = ns.corporation.getCorporation();
 
     let office = ns.corporation.getOffice(divisionName, cityName);
     
     corporation = manageWarehouse(ns, divisionName, cityName, corporation, industry, office.employees);
+
+    
+    if (industry.producedMaterials) {
+        industry.producedMaterials.forEach(materialName => {
+            if (ns.corporation.hasResearched(divisionName, "Market-TA.II")) {
+                ns.corporation.setMaterialMarketTA2(divisionName, cityName, materialName, true);
+            } else {
+                ns.corporation.sellMaterial(divisionName, cityName, materialName, "MAX", "MP");
+            }
+        });
+    }
 
     ({ office, corporation } = manageEmployees(office, corporation, ns, divisionName, cityName));
 
@@ -161,9 +173,13 @@ function makeProductsAsNeeded(division, ns, corporation) {
             const isReady = product.developmentProgress === 100;
             const notSelling = Object.keys(product.cityData).every(cn => product.cityData[cn][2] === 0);
             const noDemand = product.dmd < 1;
-            if (isReady && notSelling) {
-                //TODO: use Market TA II, split out to allow adjustments
-                ns.corporation.sellProduct(division.name, bestCity, productName, "MAX", "MP", true);
+            if (isReady) {
+                
+                if (ns.corporation.hasResearched(division.name, "Market-TA.II")) {
+                    ns.corporation.setProductMarketTA2(division.name, productName, true);
+                } else {
+                    ns.corporation.sellProduct(division.name, bestCity, productName, "MAX", "MP", true);
+                }
             }
             // OR isReady and price < .1 of highest price
             if (isReady && noDemand) {
@@ -187,13 +203,6 @@ function expandCity(division, cities, constants, corporation, ns, divisionName, 
         ns.corporation.expandCity(divisionName, targetCity);
         ns.corporation.purchaseWarehouse(divisionName, targetCity);
         ns.corporation.setSmartSupply(divisionName, targetCity, true);
-        if (industry.producedMaterials) {
-            industry.producedMaterials.forEach(materialName => {
-                //TODO: Split out from expansion script to allow adjustments
-                //TODO: use Market TA II
-                ns.corporation.sellMaterial(divisionName, targetCity, materialName, "MAX", "MP");
-            });
-        }
     }
     return ns.corporation.getDivision(divisionName);
 }
