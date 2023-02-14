@@ -33,6 +33,6 @@ export async function main(ns) {
             }
         }
 
-        await ns.sleep(10_000);
+        await ns.sleep(1_000);
     }
 }
