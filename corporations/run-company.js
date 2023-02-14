@@ -2,6 +2,7 @@
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("sleep");
+    ns.disableLog("getServerMoneyAvailable");
     while(!ns.corporation.hasCorporation()) {
         if (ns.getServerMoneyAvailable("home") > 150_000_000_000) {
             ns.corporation.createCorporation(crypto.randomUUID(), true);
@@ -34,7 +35,36 @@ export async function main(ns) {
 
         corporation = expandIndustry(constants, corporation, ns, cities);
 
+        handleShares(ns, corporation, constants, cities);
+
         await ns.sleep(constants.secondsPerMarketCycle * 2 * 1000);
+    }
+}
+
+/** @param {NS} ns, @param {CorporationInfo} corporation */
+function handleShares(ns, corporation, constants, cities) {
+    if (!corporation.public) {
+        if (corporation.revenue > 20) {
+            ns.corporation.goPublic(corporation.totalShares);
+        } else {
+            return;
+        }
+    }
+    
+    const availableIndustries = constants.industryNames
+        .filter(indName => !corporation.divisions.some(d => ns.corporation.getDivision(d).type === indName));
+    if (availableIndustries.length > 0 || !corporation.divisions.every(divisionName => ns.corporation.getDivision(divisionName).cities.length === cities.length)) {
+        //if (corporation.shareSaleCooldown === 0) { // always 0??
+        try {
+            ns.corporation.issueNewShares();
+        } catch {}
+    } else {
+        ns.corporation.issueDividends(.1);
+    }
+
+    if (corporation.issuedShares > 0) {
+        const affordableShares = Math.min(ns.getServerMoneyAvailable("home") / corporation.sharePrice, corporation.issuedShares);
+        ns.corporation.buyBackShares(affordableShares);
     }
 }
 
