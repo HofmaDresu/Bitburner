@@ -16,6 +16,7 @@ function startBestScript(ns, targetServer, server) {
 	let scriptToRunRam = null;
 	// Advanced scripts only need one thread since they farm out work cleverly
 	let idealThreads = 1;
+	// Make sure we can run scripts + their subscripts
 	const scriptMemoryMap = MONEY_MAKER_SCRIPTS
 		.map(s => ({script: s, ram: ns.getScriptRam(s)}))
 		.filter(sr => sr.ram < availableMemory)

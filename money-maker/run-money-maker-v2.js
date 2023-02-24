@@ -36,7 +36,7 @@ export async function main(ns) {
                     const serverToHack = bestServersForHacking[hackIndex];
 					ns.print(`Start hacking ${serverToHack} on ${server} for monies`)
 					ns.run('/money-maker/start-server.js', 1, ...[serverToHack, server]);
-					await ns.sleep(200);
+					await ns.sleep(1000);
                     hackIndex++;
                 }
                 startableIndex++;
@@ -61,6 +61,7 @@ export async function main(ns) {
 			for (; startableIndex < startableServers.length; startableIndex++) {
 				ns.print(`Start hacking n00dles for exp 2`)
 				const server = startableServers[startableIndex];
+				if (server.indexOf("hacknet") >= 0) continue;
 				ns.killall(server);
                 copyFilesToServer(ns, server);
 				ns.exec('/experience/gain-hack-experience.js', server, 1, "n00dles");

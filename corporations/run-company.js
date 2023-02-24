@@ -63,7 +63,7 @@ function handleShares(ns, corporation, constants, cities) {
     }
 
     if (corporation.issuedShares > 0) {
-        const affordableShares = Math.min(ns.getServerMoneyAvailable("home") / corporation.sharePrice, corporation.issuedShares);
+        const affordableShares = Math.floor(Math.min(ns.getServerMoneyAvailable("home") / corporation.sharePrice, corporation.issuedShares));
         ns.corporation.buyBackShares(affordableShares);
     }
 }
