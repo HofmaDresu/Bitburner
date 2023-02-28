@@ -1,5 +1,40 @@
 export const MAX_SINGLE_PROGRAM_RAM = 8_192;
 
+export const FACTIONS = [
+	'CyberSec',
+	'Tian Di Hui',
+	'Netburners',
+	'Shadows of Anarchy',
+	'Sector-12',
+	'Chongqing',
+	'New Tokyo',
+	'Ishima',
+	'Aevum',
+	'Volhaven',
+	'NiteSec',
+	'The Black Hand',
+	'BitRunners',
+	'ECorp',
+	'MegaCorp',
+	'KuaiGong International',
+	'Four Sigma',
+	'NWO',
+	'Blade Industries',
+	'OmniTek Incorporated',
+	'Bachman & Associates',
+	'Clarke Incorporated',
+	'Fulcrum Secret Technologies',
+	'Slum Snakes',
+	'Tetrads',
+	'Silhouette',
+	'Speakers for the Dead',
+	'The Dark Army',
+	'The Syndicate',
+	'The Covenant',
+	'Daedalus',
+	'Illuminati',
+];
+
 /** @param {NS} ns */
 export function getStartableServers(ns, currentServer, myHackingLevel, previousServer, gainRootAccessIfPossible = false) {
 	const servers = ns.scan(currentServer).filter(s => s != previousServer);
