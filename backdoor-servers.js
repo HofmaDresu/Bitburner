@@ -17,8 +17,10 @@ export async function main(ns) {
 async function backdoorServersRecursive(ns, currentServer, previousServer) {
 	ns.print(`${currentServer} <- ${previousServer}`)
 	if (!ns.hasRootAccess(currentServer)) return;
-	ns.singularity.connect(currentServer);
-	await ns.singularity.installBackdoor();
+	ns.singularity.connect(currentServer);	
+	if (!ns.getServer(currentServer).backdoorInstalled) {
+		await ns.singularity.installBackdoor();
+	}
 	var servers = ns.scan(currentServer).filter(s => s != previousServer);
 	if (!servers || servers.length === 0) return;
 	for (let i = 0; i < servers.length; i++) {
