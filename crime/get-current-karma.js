@@ -1,4 +1,6 @@
 /** @param {NS} ns */
 export async function main(ns) {
-    ns.tprint(ns.heart.break());
+    const karma = ns.heart.break();
+    ns.tprint(karma);
+    return karma;
 }
