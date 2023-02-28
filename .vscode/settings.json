@@ -5,4 +5,7 @@
         "jsconfig.json": true,
         "NetscriptDefinitions.d.ts": true,
     },
+    "bitburner.fileWatcher.enable": true,
+    "bitburner.showPushSuccessNotification": true,
+    "bitburner.showFileWatcherEnabledNotification": true,
 }
