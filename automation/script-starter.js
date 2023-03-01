@@ -12,14 +12,7 @@ export async function main(ns) {
         if ((multipliers.ScriptHackMoney > .5 && multipliers.ScriptHackMoneyGain > .5) || ns.getServerMaxRam("home") > 3_000) {
             startScriptIfAvailableRam(ns, '/upgraders/purchase-server.js');
         }
-        // TODO: lower karma if crime money multiplier is good enough?
-        // TODO: Move gang API usage to gang file
-        if (ns.gang.inGang()) {
-            startScriptIfAvailableRam(ns, '/gang/run-gang.js');
-        } else if (ns.heart.break() < -54_000) {
-            //TODO: make sure we're in slum snakes
-            ns.gang.createGang("Slum Snakes");
-        }
+        startScriptIfAvailableRam(ns, '/gang/run-gang.js');
         // TODO: if hacking is too weak, start hacknet servers
         startScriptIfAvailableRam(ns, '/upgraders/purchase-hacknet-servers.js');
         startScriptIfAvailableRam(ns, '/hacknet/run-hacknet.js');

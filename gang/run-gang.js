@@ -1,4 +1,5 @@
 import { getWarPrepStatus } from "gang/helpers";
+import { CRIMES, getTrainingCrime, getMoneyCrime, getKarmaCrime } from "crime/helpers";
 
 const TARGET_ASC_MULT = 20.0;
 
@@ -7,7 +8,11 @@ export async function main(ns) {
     ns.disableLog("getServerMoneyAvailable");
     ns.disableLog("sleep");
     while(true) {
-        if (!ns.gang.inGang()) continue;
+        if (!ns.gang.inGang()) {
+            reduceKarma(ns);
+            await ns.sleep(60_000);
+            continue;
+        };
         let gangInfo = ns.gang.getGangInformation();
         
 
@@ -39,8 +44,40 @@ export async function main(ns) {
         const shouldGoToWar = sufficientPowerForWar && readyForWar;
         ns.gang.setTerritoryWarfare(shouldGoToWar);
 
-        await ns.sleep(60000)
+        await ns.sleep(60_000);
     }
+}
+
+/** @param {NS} ns */
+function reduceKarma(ns) {
+    if (ns.gang.inGang()) return;
+    const karma = ns.heart.break();
+    const targetGang = "Slum Snakes";
+
+    if (ns.singularity.checkFactionInvitations().some(fi => fi === targetGang)) {
+        ns.singularity.joinFaction(targetGang);
+    }
+
+    if (karma <= -54_000) {
+        ns.gang.createGang(targetGang);
+        if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork().crimeType)) {
+            const moneyCrime = getMoneyCrime(ns);
+            ns.singularity.commitCrime(moneyCrime, false);
+        }
+    } else {
+        if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork().crimeType)) {
+            const karmaCrime = getKarmaCrime(ns);
+            const trainingCrime = getTrainingCrime(ns);
+
+            if (ns.singularity.getCrimeChance(karmaCrime) >= .5) {
+                ns.singularity.commitCrime(karmaCrime, false);
+            } else {
+                ns.singularity.commitCrime(trainingCrime, false);
+            }
+
+        }
+    }
+
 }
 
 /** @param {NS} ns */
