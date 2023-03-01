@@ -60,19 +60,19 @@ function reduceKarma(ns) {
 
     if (karma <= -54_000) {
         ns.gang.createGang(targetGang);
-        if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork().crimeType)) {
+        if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork()?.crimeType)) {
             const moneyCrime = getMoneyCrime(ns);
-            ns.singularity.commitCrime(moneyCrime, false);
+            if (ns.singularity.getCurrentWork()?.crimeType !== moneyCrime) ns.singularity.commitCrime(moneyCrime);
         }
     } else {
-        if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork().crimeType)) {
+        if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork()?.crimeType)) {
             const karmaCrime = getKarmaCrime(ns);
             const trainingCrime = getTrainingCrime(ns);
 
             if (ns.singularity.getCrimeChance(karmaCrime) >= .5) {
-                ns.singularity.commitCrime(karmaCrime, false);
+                if (ns.singularity.getCurrentWork()?.crimeType !== karmaCrime) ns.singularity.commitCrime(karmaCrime);
             } else {
-                ns.singularity.commitCrime(trainingCrime, false);
+                if (ns.singularity.getCurrentWork()?.crimeType !== trainingCrime) ns.singularity.commitCrime(trainingCrime);
             }
 
         }
