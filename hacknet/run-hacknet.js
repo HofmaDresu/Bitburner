@@ -24,28 +24,37 @@ export async function main(ns) {
 
         const maxHashes = ns.hacknet.hashCapacity();
         const costToDecreaseSecurity = ns.hacknet.hashCost("Reduce Minimum Security");
-        const costToBoostMoney = ns.hacknet.hashCost("Increase Maximum Money");
+        const costToBoostMoney = ns.hacknet.hashCost("Increase Maximum Money");        
 
-        if (cheepestUpgradeCost < 20_000_000) {
+        if (cheepestUpgradeCost < 50_000_000 || !ns.scriptRunning("/automation/script-starter.js", "home")) {
             if (ns.hacknet.hashCost("Sell for Money") < currentHash) {
                 ns.hacknet.spendHashes("Sell for Money");
             }
+            await ns.sleep(getSleepTime(ns, 4));
         } else if (orderedNotMinSecurityServers.length > 0 && costToDecreaseSecurity <= maxHashes && (orderedNotMaxMoneyServers.length == 0 || costToDecreaseSecurity < 2 * costToBoostMoney)) {
             if (costToDecreaseSecurity < currentHash) {
                 ns.hacknet.spendHashes("Reduce Minimum Security", orderedNotMinSecurityServers[0]);
             }
+            await ns.sleep(getSleepTime(ns, costToDecreaseSecurity));
         } else if (orderedNotMaxMoneyServers.length > 0 && costToBoostMoney <= maxHashes) {
             if (costToBoostMoney < currentHash) {
                 ns.hacknet.spendHashes("Increase Maximum Money", orderedNotMaxMoneyServers[0]);
             }
+            await ns.sleep(getSleepTime(ns, costToBoostMoney));
         } else {
             if (ns.hacknet.hashCost("Sell for Money") < currentHash) {
                 ns.hacknet.spendHashes("Sell for Money");
             }
+            await ns.sleep(getSleepTime(ns, 4));
         }
 
-
-        await ns.sleep(1_000);
     }
 
+    /** @param {NS} ns */
+    function getSleepTime(ns, actionCost) {
+        const hacknetServerStats = Array.from({length:  ns.hacknet.numNodes()}, (x, i) => i).map(x => ns.hacknet.getNodeStats(x));
+        const totalProduction = hacknetServerStats.map(x => x.production).reduce((sum, curr) => sum += curr, 0);
+
+        return Math.max(100, (1_000 * (actionCost / totalProduction)) - 100);
+    }
 }
