@@ -13,6 +13,10 @@ export async function main(ns) {
             await ns.sleep(60_000);
             continue;
         };
+        if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork()?.crimeType)) {
+            const moneyCrime = getMoneyCrime(ns);
+            if (ns.singularity.getCurrentWork()?.crimeType !== moneyCrime) ns.singularity.commitCrime(moneyCrime);
+        }
         let gangInfo = ns.gang.getGangInformation();
         
 
@@ -60,10 +64,6 @@ function reduceKarma(ns) {
 
     if (karma <= -54_000) {
         ns.gang.createGang(targetGang);
-        if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork()?.crimeType)) {
-            const moneyCrime = getMoneyCrime(ns);
-            if (ns.singularity.getCurrentWork()?.crimeType !== moneyCrime) ns.singularity.commitCrime(moneyCrime);
-        }
     } else {
         if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork()?.crimeType)) {
             const karmaCrime = getKarmaCrime(ns);
