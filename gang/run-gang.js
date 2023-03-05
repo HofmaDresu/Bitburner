@@ -14,8 +14,12 @@ export async function main(ns) {
             continue;
         };
         if (!ns.singularity.isBusy() ||  CRIMES.some(c => c === ns.singularity.getCurrentWork()?.crimeType)) {
-            const moneyCrime = getMoneyCrime(ns);
-            if (ns.singularity.getCurrentWork()?.crimeType !== moneyCrime) ns.singularity.commitCrime(moneyCrime);
+            if (ns.getPlayer().numPeopleKilled >= 30) {
+                const moneyCrime = getMoneyCrime(ns);
+                if (ns.singularity.getCurrentWork()?.crimeType !== moneyCrime) ns.singularity.commitCrime(moneyCrime);
+            } else {
+                if (ns.singularity.getCurrentWork()?.crimeType !== 'homicide') ns.singularity.commitCrime('homicide');
+            }
         }
         let gangInfo = ns.gang.getGangInformation();
         
