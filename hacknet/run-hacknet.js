@@ -30,7 +30,7 @@ export async function main(ns) {
             if (ns.hacknet.hashCost("Sell for Money") < currentHash) {
                 ns.hacknet.spendHashes("Sell for Money");
             }
-            await ns.sleep(getSleepTime(ns, 4));
+            await ns.sleep(getSleepTime(ns, 2));
         } else if (orderedNotMinSecurityServers.length > 0 && costToDecreaseSecurity <= maxHashes && (orderedNotMaxMoneyServers.length == 0 || costToDecreaseSecurity < 2 * costToBoostMoney)) {
             if (costToDecreaseSecurity < currentHash) {
                 ns.hacknet.spendHashes("Reduce Minimum Security", orderedNotMinSecurityServers[0]);
