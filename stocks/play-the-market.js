@@ -51,7 +51,7 @@ export async function main(ns) {
 
 function calculateSharesForLong(ns, stockSymbol, buyPrice, sellPrice) {
 	const transactionFee = 100_000;
-	var maxShares = ns.stock.getMaxShares(stockSymbol) * .75;
+	var maxShares = ns.stock.getMaxShares(stockSymbol);
 	var minShares = ns.stock.getMaxShares(stockSymbol) * .25;
 	var myMoney = ns.getServerMoneyAvailable("home") * .80 - transactionFee;
 	var sharesToBuy = 0;
