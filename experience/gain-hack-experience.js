@@ -12,7 +12,10 @@ export async function main(ns) {
 
 	const hostname = ns.getServer().hostname;
 
-	const availableMemory = ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname);
+	let availableMemory = ns.getServerMaxRam(hostname) - ns.getServerUsedRam(hostname);
+	if (hostname === "home") {
+		availableMemory *= .8;
+	}
 	const weakenRam = ns.getScriptRam('/money-maker/weaken-server.js');
 	const maxWeakenThreads = Math.max(Math.floor(availableMemory / weakenRam), 1);
 
