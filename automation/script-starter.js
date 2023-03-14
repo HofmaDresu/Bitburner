@@ -1,9 +1,9 @@
-import {getMaxContractSolverRam} from 'helpers';
+import {getMaxContractSolverRam, getNodeMultipliers} from 'helpers';
 import { MAX_MANUAL_HACKS, MANUAL_HACK_SCRIPT } from 'experience/gain-intelligence';
 
 /** @param {NS} ns */
 export async function main(ns) {
-    const multipliers = ns.getBitNodeMultipliers();
+    const multipliers = getNodeMultipliers(ns);
     while(true) {        
         startScriptIfAvailableRam(ns, '/money-maker/run-money-maker-v2.js');
         startScriptIfAvailableRam(ns, '/upgraders/upgrade-home-server.js');

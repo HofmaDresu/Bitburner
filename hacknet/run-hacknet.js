@@ -1,5 +1,5 @@
 import {getCheapestUpgrade} from 'hacknet/helpers';
-import {getBestServersForHacking} from "/helpers.js";
+import {getBestServersForHacking, getNodeMultipliers} from "/helpers.js";
 
 /** @param {NS} ns */
 export async function main(ns) {	
@@ -8,7 +8,7 @@ export async function main(ns) {
     ns.disableLog("scan");
     ns.disableLog("getHackingLevel");
     ns.disableLog("sleep");
-    const multipliers = ns.getBitNodeMultipliers();
+    const multipliers = getNodeMultipliers(ns);
     while(true) {
         const player = ns.getPlayer();
         const currentNodes = ns.hacknet.numNodes();

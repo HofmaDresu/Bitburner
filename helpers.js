@@ -112,6 +112,15 @@ export function getBestServersForHacking(ns, myHackingLevel) {
 	return orderedServers;
 }
 
+/** @param {NS} ns */
+export function storeNodeMultipliers(ns) {
+	ns.write("/bitnode-multipliers.txt", JSON.stringify(ns.getBitNodeMultipliers()), "w");
+}
+
+export function getNodeMultipliers(ns) {
+	return JSON.parse(ns.read("/bitnode-multipliers.txt"));
+}
+
 export async function weakenToMin(ns, server) {
 	const minSecurityLevel = ns.getServerMinSecurityLevel(server);
 	while (await ns.getServerSecurityLevel(server) > minSecurityLevel + 1) {
