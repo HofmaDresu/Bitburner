@@ -177,6 +177,7 @@ function makeProductsAsNeeded(division, ns, corporation) {
             if (isReady) {
                 
                 if (ns.corporation.hasResearched(division.name, "Market-TA.II")) {
+                    ns.corporation.sellProduct(division.name, bestCity, productName, "MAX", "MP", true);
                     ns.corporation.setProductMarketTA2(division.name, productName, true);
                 } else {
                     ns.corporation.sellProduct(division.name, bestCity, productName, "MAX", "MP", true);
