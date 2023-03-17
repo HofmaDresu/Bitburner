@@ -1,18 +1,23 @@
-import * as helpers from "helpers" 
+//import * as helpers from "helpers" 
 
 
 /** @param {NS} ns */
 export async function main(ns) {
-	ns.tprint(ns.heart.break())
-	ns.tprint(ns.getPlayer().numPeopleKilled)
+	//ns.tprint(ns.heart.break())
+	//ns.tprint(ns.getPlayer().numPeopleKilled)
+//
+//
+	//helpers.FACTIONS.forEach(f => {
+	//	const availableAugments = ns.singularity.getAugmentationsFromFaction(f).filter(f => !ns.singularity.getOwnedAugmentations(true).some(oa => oa === f));
+	//	if (availableAugments.length > 0) {
+	//		ns.tprint(`${f}: ${availableAugments.join(', ')}`);
+	//	}
+	//})
 
-
-	helpers.FACTIONS.forEach(f => {
-		const availableAugments = ns.singularity.getAugmentationsFromFaction(f).filter(f => !ns.singularity.getOwnedAugmentations(true).some(oa => oa === f));
-		if (availableAugments.length > 0) {
-			ns.tprint(`${f}: ${availableAugments.join(', ')}`);
-		}
-	})
+	const pos = ns.stock.getPosition("OMN");
+	ns.tprint(pos);
+	ns.tprint(1.2 * pos[0] * pos[1])
+	ns.tprint(ns.stock.getSaleGain("OMN", pos[0], "Long"))
 }
 
 /** @param {NS} ns */
