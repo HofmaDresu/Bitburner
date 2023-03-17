@@ -1,8 +1,18 @@
-//import * as helpers from "helpers.js"
+import * as helpers from "helpers" 
+
 
 /** @param {NS} ns */
 export async function main(ns) {
-	ns.tprint(ns.getBitNodeMultipliers())
+	ns.tprint(ns.heart.break())
+	ns.tprint(ns.getPlayer().numPeopleKilled)
+
+
+	helpers.FACTIONS.forEach(f => {
+		const availableAugments = ns.singularity.getAugmentationsFromFaction(f).filter(f => !ns.singularity.getOwnedAugmentations(true).some(oa => oa === f));
+		if (availableAugments.length > 0) {
+			ns.tprint(`${f}: ${availableAugments.join(', ')}`);
+		}
+	})
 }
 
 /** @param {NS} ns */
