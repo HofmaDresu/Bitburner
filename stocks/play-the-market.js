@@ -26,7 +26,7 @@ export async function main(ns) {
 					ns.stock.sellStock(stockSymbol, longShares);
 				}
 				if (shortShares && ns.stock.getSaleGain(stockSymbol, shortShares, "Short") > 1.2 * shortPx * shortShares) {
-					ns.stock.sellShort(stockSymbol, ownedData.amount);
+					ns.stock.sellShort(stockSymbol, shortShares);
 				}	
 			} else if (flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")) {
 				// We have none of this stock
