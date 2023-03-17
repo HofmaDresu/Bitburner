@@ -3,11 +3,11 @@ import {stockPriceFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIX
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog('sleep');
+	ns.disableLog('getServerMoneyAvailable');
 	await purchaseWseIfNeeded(ns);
 	await purchaseTIXAPIAccessIfNeeded(ns);
 
 	var buyPriceMultiplier = .25;
-	var sellPriceMultiplier = .20;
 
 	while (true) {
 		purchase4sTIXAPIAccessIfNeeded(ns);
