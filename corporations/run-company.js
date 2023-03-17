@@ -117,7 +117,7 @@ function manageWarehouse(ns, divisionName, cityName, corporation, industry, empl
         corporation = ns.corporation.getCorporation();
         let warehouse = ns.corporation.getWarehouse(divisionName, cityName);
 
-        if (warehouse.level < employees / 3 && ns.corporation.getUpgradeWarehouseCost(divisionName, cityName) < corporation.funds) {
+        if ((warehouse.level < employees / 3 || warehouse.sizeUsed > warehouse.size * .8) && ns.corporation.getUpgradeWarehouseCost(divisionName, cityName) < corporation.funds) {
             ns.corporation.upgradeWarehouse(divisionName, cityName);
             warehouse = ns.corporation.getWarehouse(divisionName, cityName);
         }
@@ -171,7 +171,6 @@ function makeProductsAsNeeded(division, ns, corporation) {
         division.products.forEach(productName => {
             const product = ns.corporation.getProduct(division.name, productName);
             const isReady = product.developmentProgress === 100;
-            const notSelling = Object.keys(product.cityData).every(cn => product.cityData[cn][2] === 0);
             const noDemand = product.dmd < 1;
             if (isReady) {
                 
@@ -183,6 +182,7 @@ function makeProductsAsNeeded(division, ns, corporation) {
                 }
             }
             // OR isReady and price < .1 of highest price
+            // Not sure how to do this, how do we tell current sale price?
             if (isReady && noDemand) {
                 ns.corporation.discontinueProduct(division.name, productName);
             }
