@@ -12,15 +12,8 @@
 *** Install and run an extra script on each hackable server once?
 ** How to track augments?
 
-
 * Fix get servers helper to optionally ignore p-servers
 
 * create script to find remaining augments
-
-* create "end of run" db value
-** stop purchasing hacknet servers
-** stop purchasing stocks
-** stop purchasing servers
-** reset on restart
 
 * reset stock watcher db on restart? on new bitnode?
