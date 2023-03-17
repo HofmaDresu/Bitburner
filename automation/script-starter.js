@@ -22,6 +22,7 @@ export async function main(ns) {
         startScriptIfAvailableRam(ns, '/corporations/run-company.js');
         startScriptIfAvailableRam(ns, '/experience/gain-intelligence.js');
         if (allScriptsAreRunning(ns)) {
+            //TODO: This needs to adjust for increases in RAM
             startScriptIfAvailableRam(ns, '/experience/gain-hack-experience.js');
         }
         await ns.sleep(10_000);
