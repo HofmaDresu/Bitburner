@@ -1,16 +1,16 @@
-import {stockPriceFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded} from "/stocks/helpers.js"
+import {stockPriceFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded} from "stocks/helpers"
 
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog('sleep');
 	await purchaseWseIfNeeded(ns);
 	await purchaseTIXAPIAccessIfNeeded(ns);
-	await purchase4sTIXAPIAccessIfNeeded(ns);
 
 	var buyPriceMultiplier = .25;
 	var sellPriceMultiplier = .20;
 
 	while (true) {
+		purchase4sTIXAPIAccessIfNeeded(ns);
 		var stockPriceData = JSON.parse(ns.read(stockPriceFileName));	
 		var flagsData = JSON.parse(ns.read(stockFlagsFileName));
 		Object.keys(stockPriceData).forEach(stockSymbol => {
@@ -32,12 +32,12 @@ export async function main(ns) {
 				}	
 			} else if (flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")) {
 				// We have none of this stock
-				var forcast = ns.stock.getForecast(stockSymbol)
+				var forcast = ns.stock.has4SDataTIXAPI() ? ns.stock.getForecast(stockSymbol) : .6;
 				if (maxLongPurchasePrice > askPrice && forcast > .5) {
 					var sharesToBuy = calculateSharesForLong(ns, stockSymbol, askPrice, minLongSellPrice);
 					if (sharesToBuy === 0) return;
 					ns.stock.buyStock(stockSymbol, sharesToBuy);
-				} else if (minShortPurchasePrice < bidPrice && forcast < .5 && flagsData.allowShorts) {
+				} else if (minShortPurchasePrice < bidPrice && forcast < .5) {
 					var sharesToBuy = calculateSharesForShort(ns, stockSymbol, bidPrice, maxShortSellPrice);
 					if (sharesToBuy === 0) return;
 					ns.stock.buyShort(stockSymbol, sharesToBuy);

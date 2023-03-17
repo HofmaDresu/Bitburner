@@ -77,10 +77,8 @@ export async function purchaseTIXAPIAccessIfNeeded(ns) {
 }
 
 /** @param {NS} ns */
-export async function purchase4sTIXAPIAccessIfNeeded(ns) {
-    while (!ns.stock.has4SDataTIXAPI()) {
+export function purchase4sTIXAPIAccessIfNeeded(ns) {
+    if (!ns.stock.has4SDataTIXAPI()) {
         ns.stock.purchase4SMarketDataTixApi();
-        await ns.sleep(60000);
-        continue;
     }
 }
