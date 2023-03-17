@@ -23,7 +23,7 @@ export async function main(ns) {
 		const costToUpgradeServers = ns.getPurchasedServerCost(ram * 2) * maxServers;
 		ns.print(`Currently have ${currentServers.length} with a max of ${maxServers}`);
 		ns.print(`It will cost ${costToUpgradeServers.toLocaleString('en-US')} to upgrade servers`);
-		if (costToUpgradeServers < ns.getServerMoneyAvailable("home")) {
+		if (costToUpgradeServers < ns.getServerMoneyAvailable("home") && ns.scriptRunning("/automation/script-starter.js", "home")) {
 			for (let i = 0; i < currentServers.length; i++) {
 				ns.killall(currentServers[i]);
 				ns.deleteServer(currentServers[i]);

@@ -30,7 +30,7 @@ export async function main(ns) {
 				if (shortShares && askPrice < maxShortSellPrice) {
 					ns.stock.sellShort(stockSymbol, ownedData.amount);
 				}	
-			} else if (flagsData.allowPurchases) {
+			} else if (flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")) {
 				// We have none of this stock
 				var forcast = ns.stock.getForecast(stockSymbol)
 				if (maxLongPurchasePrice > askPrice && forcast > .5) {

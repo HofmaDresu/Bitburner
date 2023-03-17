@@ -8,7 +8,7 @@ export async function main(ns) {
     let costToAddNode = ns.formulas.hacknetServers.hacknetServerCost(currentNodes+1, player.mults.hacknet_node_purchase_cost);
     let cheapestUpgrade = getCheapestUpgrade(ns, currentNodes, player);
 
-    while (currentNodes < maxNodes || cheapestUpgrade[3] != Infinity) {
+    while (ns.scriptRunning("/automation/script-starter.js", "home") && (currentNodes < maxNodes || cheapestUpgrade[3] != Infinity)) {
         player = ns.getPlayer();
         currentNodes = ns.hacknet.numNodes();
         costToAddNode = ns.formulas.hacknetServers.hacknetServerCost(currentNodes+1, player.mults.hacknet_node_purchase_cost);
