@@ -46,6 +46,7 @@ export async function main(ns) {
 	}
 }
 
+/** @param {NS} ns */
 function forcastIsFavorable(ns, stockSymbol, position) {
 	if (ns.stock.has4SDataTIXAPI()) {
 		const forcast = ns.stock.getForecast(stockSymbol);
@@ -55,6 +56,7 @@ function forcastIsFavorable(ns, stockSymbol, position) {
 	}
 }
 
+/** @param {NS} ns */
 function calculateSharesToBuy(ns, stockSymbol, buyPrice) {
 	const transactionFee = 100_000;
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
