@@ -51,18 +51,17 @@ function handleShares(ns, corporation, constants, cities) {
         }
     }
     
+    //if (corporation.shareSaleCooldown === 0) { // always 0??
+    try {
+        ns.corporation.issueNewShares();
+    } catch {}
     const availableIndustries = constants.industryNames
         .filter(indName => !corporation.divisions.some(d => ns.corporation.getDivision(d).type === indName));
-    if (availableIndustries.length > 0 || !corporation.divisions.every(divisionName => ns.corporation.getDivision(divisionName).cities.length === cities.length)) {
-        //if (corporation.shareSaleCooldown === 0) { // always 0??
-        try {
-            ns.corporation.issueNewShares();
-        } catch {}
-    } else {
+    if (availableIndustries === 0 && corporation.divisions.every(divisionName => ns.corporation.getDivision(divisionName).cities.length === cities.length)) {
         ns.corporation.issueDividends(.1);
     }
 
-    if (corporation.issuedShares > 0) {
+    if (corporation.issuedShares > 0 && ns.scriptRunning("/automation/script-starter.js", "home")) {
         // * 1.2 to account for increasing stock price
         const affordableShares = Math.floor(Math.min(ns.getServerMoneyAvailable("home") / (corporation.sharePrice * 1.2), corporation.issuedShares));
         ns.corporation.buyBackShares(affordableShares);
