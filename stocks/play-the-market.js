@@ -1,4 +1,5 @@
 import {stockPriceFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded} from "stocks/helpers"
+import { getHackableServers } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -18,7 +19,7 @@ export async function main(ns) {
 		var stockPriceData = JSON.parse(ns.read(stockPriceFileName));	
 		var flagsData = JSON.parse(ns.read(stockFlagsFileName));
 		Object.keys(stockPriceData)
-		.sort((a, b) => stockHasHackableServerComparator(b) - stockHasHackableServerComparator(a))
+		.sort((a, b) => stockHasHackableServerComparator(ns, b) - stockHasHackableServerComparator(ns, a))
 		.forEach(stockSymbol => {
 			const [longShares, longPx, shortShares, shortPx] = ns.stock.getPosition(stockSymbol);
 			var maxPriceDiffSeen = stockPriceData[stockSymbol].maxPrice - stockPriceData[stockSymbol].minPrice;
@@ -52,7 +53,8 @@ export async function main(ns) {
 	}
 }
 
-function stockHasHackableServerComparator(b) {
+function stockHasHackableServerComparator(ns, b) {
+	const hackableServers = getHackableServers(ns, "home");
 	return stockToServers[b].some(server => hackableServers.some(hs => hs === server)) ? 1 : 0;
 }
 
