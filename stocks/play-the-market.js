@@ -60,17 +60,10 @@ function forcastIsFavorable(ns, stockSymbol, position) {
 function calculateSharesToBuy(ns, stockSymbol, buyPrice) {
 	const transactionFee = 100_000;
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
-	var minShares = maxShares * .1;
 	var myMoney = ns.getServerMoneyAvailable("home") - transactionFee * 2;
 	var sharesToBuy = 0;
 	while (sharesToBuy * buyPrice <= myMoney && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
-	
-	if (sharesToBuy >= minShares) {
-		return sharesToBuy;
-	}
-	else {
-		return 0;
-	}
+	return sharesToBuy;
 }
