@@ -41,6 +41,10 @@ export function getStockForServer(server) {
 export const stockFlagsFileName = "/stocks/stock-flags.txt";
 export const stockPriceFileName = "/stocks/stock-database.txt";
 
+export function resetMarketData(ns) {    
+    ns.write(stockPriceFileName, JSON.stringify({}), "w");
+}
+
 /** @param {NS} ns */
 export function shouldLowerValueForStock(ns, stockSymbol) {	
     if (!ns.stock.hasWSEAccount() || !ns.stock.hasTIXAPIAccess()) return true;
