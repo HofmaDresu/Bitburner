@@ -1,5 +1,5 @@
-import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin, MAX_SINGLE_PROGRAM_RAM} from "/helpers.js";
-import {shouldLowerValueForStock, shouldRaiseValueForStock, getStockForServer} from "/stocks/helpers.js";
+import {calculateThreadsForGrowToTargetPercent, calculateThreadsForHackToTargetPercent, calculateThreadsToWeakenToMin, MAX_SINGLE_PROGRAM_RAM} from "helpers";
+import {shouldLowerValueForStock, shouldRaiseValueForStock, getStockForServer} from "stocks/helpers";
 
 const PADDING_TIME = 200;
 
@@ -48,7 +48,7 @@ async function actionServer(ns, targetServerHostname, script, calcActionTime, ca
 	let threadsNeededForAction = calcActionThreads();
 	while (threadsNeededForAction > 0) {
 		const actionTime = await weakenToMin(ns, targetServerHostname, hostname, script, threadsNeededForAction, calcActionTime);
-		ns.run(script, threadsNeededForAction, targetServerHostname, threadsNeededForAction, shouldManipulateMarket(targetServerHostname));
+		ns.run(script, threadsNeededForAction, targetServerHostname, shouldManipulateMarket(targetServerHostname));
 		await ns.sleep(actionTime);
 		threadsNeededForAction = calcActionThreads();
 	}
