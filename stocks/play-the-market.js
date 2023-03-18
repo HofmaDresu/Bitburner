@@ -17,7 +17,9 @@ export async function main(ns) {
 		purchase4sTIXAPIAccessIfNeeded(ns);
 		var stockPriceData = JSON.parse(ns.read(stockPriceFileName));	
 		var flagsData = JSON.parse(ns.read(stockFlagsFileName));
-		Object.keys(stockPriceData).forEach(stockSymbol => {
+		Object.keys(stockPriceData)
+		.sort((a, b) => stockHasHackableServerComparator(b) - stockHasHackableServerComparator(a))
+		.forEach(stockSymbol => {
 			const [longShares, longPx, shortShares, shortPx] = ns.stock.getPosition(stockSymbol);
 			var maxPriceDiffSeen = stockPriceData[stockSymbol].maxPrice - stockPriceData[stockSymbol].minPrice;
 			var maxLongPurchasePrice = stockPriceData[stockSymbol].minPrice + (maxPriceDiffSeen * buyPriceMultiplier);
@@ -48,6 +50,10 @@ export async function main(ns) {
 		
 		await ns.sleep(60000);
 	}
+}
+
+function stockHasHackableServerComparator(b) {
+	return stockToServers[b].some(server => hackableServers.some(hs => hs === server)) ? 1 : 0;
 }
 
 /** @param {NS} ns */
