@@ -1,10 +1,14 @@
 import {stockPriceFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded, stockToServers} from "stocks/helpers"
 import { getHackableServers } from "helpers";
+const transactionFee = 100_000;
 
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog('sleep');
 	ns.disableLog('getServerMoneyAvailable');
+	ns.disableLog('getServerMaxMoney');
+	ns.disableLog('scan');
+	ns.disableLog('stock.purchase4SMarketDataTixApi');
 	await purchaseWseIfNeeded(ns);
 	await purchaseTIXAPIAccessIfNeeded(ns);
 
@@ -29,10 +33,10 @@ export async function main(ns) {
 			var bidPrice = ns.stock.getBidPrice(stockSymbol);
 			if (longShares || shortShares) {
 				// We have some of this stock
-				if (longShares && ns.stock.getSaleGain(stockSymbol, longShares, "Long") > 1.2 * longPx * longShares) {
+				if (longShares && ns.stock.getSaleGain(stockSymbol, longShares, "Long") > (1.2 * longPx * longShares) - transactionFee) {
 					ns.stock.sellStock(stockSymbol, longShares);
 				}
-				if (shortShares && ns.stock.getSaleGain(stockSymbol, shortShares, "Short") > 1.2 * shortPx * shortShares) {
+				if (shortShares && ns.stock.getSaleGain(stockSymbol, shortShares, "Short") > (1.2 * shortPx * shortShares) - transactionFee) {
 					ns.stock.sellShort(stockSymbol, shortShares);
 				}	
 			} else if (flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")) {
@@ -49,7 +53,7 @@ export async function main(ns) {
 			}
 		});
 		
-		await ns.sleep(60000);
+		await ns.sleep(6000);
 	}
 }
 
@@ -70,7 +74,6 @@ function forcastIsFavorable(ns, stockSymbol, position) {
 
 /** @param {NS} ns */
 function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen) {
-	const transactionFee = 100_000;
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
 	var myMoney = ns.getServerMoneyAvailable("home") * .9 - transactionFee;
 	var sharesToBuy = 0;
@@ -88,7 +91,6 @@ function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen) {
 
 /** @param {NS} ns */
 function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen) {
-	const transactionFee = 100_000;
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
 	var myMoney = ns.getServerMoneyAvailable("home") * .9 - transactionFee;
 	var sharesToBuy = 0;
