@@ -31,11 +31,11 @@ export async function main(ns) {
 			} else if (flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")) {
 				// We have none of this stock
 				if (maxLongPurchasePrice > askPrice && forcastIsFavorable(ns, stockSymbol, "Long")) {
-					var sharesToBuy = calculateSharesToBuy(ns, stockSymbol, askPrice);
+					var sharesToBuy = calculateLongSharesToBuy(ns, stockSymbol, askPrice, stockPriceData[stockSymbol].maxPrice);
 					if (sharesToBuy === 0) return;
 					ns.stock.buyStock(stockSymbol, sharesToBuy);
 				} else if (minShortPurchasePrice < bidPrice && forcastIsFavorable(ns, stockSymbol, "Short")) {
-					var sharesToBuy = calculateSharesToBuy(ns, stockSymbol, bidPrice);
+					var sharesToBuy = calculateShortSharesToBuy(ns, stockSymbol, bidPrice, stockPriceData[stockSymbol].minPrice);
 					if (sharesToBuy === 0) return;
 					ns.stock.buyShort(stockSymbol, sharesToBuy);
 				}
@@ -57,13 +57,37 @@ function forcastIsFavorable(ns, stockSymbol, position) {
 }
 
 /** @param {NS} ns */
-function calculateSharesToBuy(ns, stockSymbol, buyPrice) {
+function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen) {
 	const transactionFee = 100_000;
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
-	var myMoney = ns.getServerMoneyAvailable("home") - transactionFee * 2;
+	var myMoney = ns.getServerMoneyAvailable("home") * .9 - transactionFee;
 	var sharesToBuy = 0;
-	while (sharesToBuy * buyPrice <= myMoney && sharesToBuy <= maxShares) {
+	while (sharesToBuy * buyPrice < myMoney && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
-	return sharesToBuy;
+	const moneyToBuy = sharesToBuy * buyPrice;
+	const maxSaleMoney = sharesToBuy * maxPriceSeen;
+	if (maxSaleMoney - moneyToBuy > 2 * transactionFee && maxSaleMoney - moneyToBuy > moneyToBuy * 1.2) {
+		return sharesToBuy;
+	} else {
+		return 0;
+	}
+}
+
+/** @param {NS} ns */
+function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen) {
+	const transactionFee = 100_000;
+	var maxShares = ns.stock.getMaxShares(stockSymbol);
+	var myMoney = ns.getServerMoneyAvailable("home") * .9 - transactionFee;
+	var sharesToBuy = 0;
+	while (sharesToBuy * buyPrice < myMoney && sharesToBuy <= maxShares) {
+		sharesToBuy++;
+	}
+	const moneyToBuy = sharesToBuy * buyPrice;
+	const minSaleMoney = sharesToBuy * minPriceSeen;
+	if (moneyToBuy - minSaleMoney > 2 * transactionFee && moneyToBuy - minSaleMoney > moneyToBuy * .2) {
+		return sharesToBuy;
+	} else {
+		return 0;
+	}
 }
