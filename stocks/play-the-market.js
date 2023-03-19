@@ -108,7 +108,7 @@ function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen) {
 	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Short");
 	const minSaleMoney = sharesToBuy * minPriceSeen;
 	const potentialProfit = moneyToBuy - minSaleMoney - transactionFee;
-	if (buyPrice > 4 * minPriceSeen && potentialProfit > moneyToBuy * .2) {
+	if (buyPrice > 10 * minPriceSeen && potentialProfit > moneyToBuy * .2) {
 		return sharesToBuy;
 	} else {
 		return 0;
