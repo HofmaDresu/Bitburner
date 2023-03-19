@@ -33,10 +33,10 @@ export async function main(ns) {
 			var bidPrice = ns.stock.getBidPrice(stockSymbol);
 			if (longShares || shortShares) {
 				// We have some of this stock
-				if (longShares && ns.stock.getSaleGain(stockSymbol, longShares, "Long") > (1.2 * longPx * longShares) - transactionFee) {
+				if (longShares && saleIsProfittable(ns, stockSymbol, longShares, "Long", longPx)) {
 					ns.stock.sellStock(stockSymbol, longShares);
 				}
-				if (shortShares && ns.stock.getSaleGain(stockSymbol, shortShares, "Short") > (1.2 * shortPx * shortShares) - transactionFee) {
+				if (shortShares && saleIsProfittable(ns, stockSymbol, shortShares, "Short", shortPx)) {
 					ns.stock.sellShort(stockSymbol, shortShares);
 				}	
 			} else if (flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")) {
@@ -55,6 +55,14 @@ export async function main(ns) {
 		
 		await ns.sleep(6000);
 	}
+}
+
+/** @param {NS} ns */
+function saleIsProfittable(ns, stockSymbol, shares, position, px) {
+	const saleGain = ns.stock.getSaleGain(stockSymbol, shares, position);
+	const overTransactionFee = saleGain > transactionFee;
+	const sufficientProfit = saleGain > (1.2 * px * shares) - transactionFee
+	return overTransactionFee && sufficientProfit;
 }
 
 function stockHasHackableServerComparator(ns, b) {
@@ -82,7 +90,7 @@ function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen) {
 	}
 	const moneyToBuy = sharesToBuy * buyPrice;
 	const maxSaleMoney = sharesToBuy * maxPriceSeen;
-	if (maxSaleMoney - moneyToBuy > 2 * transactionFee && maxSaleMoney - moneyToBuy > moneyToBuy * 1.2) {
+	if (maxSaleMoney - moneyToBuy > moneyToBuy * 1.2 && moneyToBuy * .2 > transactionFee) {
 		return sharesToBuy;
 	} else {
 		return 0;
@@ -99,7 +107,7 @@ function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen) {
 	}
 	const moneyToBuy = sharesToBuy * buyPrice;
 	const minSaleMoney = sharesToBuy * minPriceSeen;
-	if (moneyToBuy - minSaleMoney > 2 * transactionFee && moneyToBuy - minSaleMoney > moneyToBuy * .2) {
+	if (moneyToBuy - minSaleMoney > moneyToBuy * .2 && moneyToBuy * .2 > transactionFee) {
 		return sharesToBuy;
 	} else {
 		return 0;
