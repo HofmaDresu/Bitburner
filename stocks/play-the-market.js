@@ -60,9 +60,8 @@ export async function main(ns) {
 /** @param {NS} ns */
 function saleIsProfittable(ns, stockSymbol, shares, position, px) {
 	const saleGain = ns.stock.getSaleGain(stockSymbol, shares, position);
-	const overTransactionFee = saleGain > transactionFee;
-	const sufficientProfit = saleGain > (1.2 * px * shares) - transactionFee
-	return overTransactionFee && sufficientProfit;
+	const sufficientProfit = saleGain > (1.2 * px * shares);
+	return sufficientProfit;
 }
 
 function stockHasHackableServerComparator(ns, b) {
@@ -83,15 +82,15 @@ function forcastIsFavorable(ns, stockSymbol, position) {
 /** @param {NS} ns */
 function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen) {
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
-	var myMoney = ns.getServerMoneyAvailable("home") * .9 - transactionFee;
+	var myMoney = ns.getServerMoneyAvailable("home") * .9;
 	var sharesToBuy = 0;
-	while (sharesToBuy * buyPrice < myMoney && sharesToBuy <= maxShares) {
+	while (ns.stock.getPurchaseCost(stockSymbol, sharesToBuy + 1, "Long") < myMoney && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
-	const moneyToBuy = sharesToBuy * buyPrice;
-	const maxSaleMoney = sharesToBuy * maxPriceSeen;
+	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Long");
+	const maxSaleMoney = sharesToBuy * maxPriceSeen - transactionFee;
 	const potentialProfit = maxSaleMoney - moneyToBuy;
-	if (potentialProfit > moneyToBuy * 1.2 && potentialProfit > transactionFee) {
+	if (potentialProfit > moneyToBuy * 1.2) {
 		return sharesToBuy;
 	} else {
 		return 0;
@@ -101,15 +100,15 @@ function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen) {
 /** @param {NS} ns */
 function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen) {
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
-	var myMoney = ns.getServerMoneyAvailable("home") * .9 - transactionFee;
+	var myMoney = ns.getServerMoneyAvailable("home") * .9;
 	var sharesToBuy = 0;
-	while (sharesToBuy * buyPrice < myMoney && sharesToBuy <= maxShares) {
+	while (ns.stock.getPurchaseCost(stockSymbol, sharesToBuy + 1, "Short") < myMoney && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
-	const moneyToBuy = sharesToBuy * buyPrice;
-	const minSaleMoney = sharesToBuy * minPriceSeen;
+	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Short");
+	const minSaleMoney = sharesToBuy * minPriceSeen - transactionFee;
 	const potentialProfit = moneyToBuy - minSaleMoney;
-	if (buyPrice > 4 * minPriceSeen && potentialProfit > moneyToBuy * .2 && potentialProfit > transactionFee) {
+	if (buyPrice > 4 * minPriceSeen && potentialProfit > moneyToBuy * .2) {
 		return sharesToBuy;
 	} else {
 		return 0;
