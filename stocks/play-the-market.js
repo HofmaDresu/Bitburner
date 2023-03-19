@@ -90,7 +90,8 @@ function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen) {
 	}
 	const moneyToBuy = sharesToBuy * buyPrice;
 	const maxSaleMoney = sharesToBuy * maxPriceSeen;
-	if (maxSaleMoney - moneyToBuy > moneyToBuy * 1.2 && moneyToBuy * .2 > transactionFee) {
+	const potentialProfit = maxSaleMoney - moneyToBuy;
+	if (potentialProfit > moneyToBuy * 1.2 && potentialProfit > transactionFee) {
 		return sharesToBuy;
 	} else {
 		return 0;
@@ -107,7 +108,8 @@ function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen) {
 	}
 	const moneyToBuy = sharesToBuy * buyPrice;
 	const minSaleMoney = sharesToBuy * minPriceSeen;
-	if (moneyToBuy - minSaleMoney > moneyToBuy * .2 && moneyToBuy * .2 > transactionFee) {
+	const potentialProfit = moneyToBuy - minSaleMoney;
+	if (buyPrice > 2 * minPriceSeen && potentialProfit > moneyToBuy * .2 && potentialProfit > transactionFee) {
 		return sharesToBuy;
 	} else {
 		return 0;
