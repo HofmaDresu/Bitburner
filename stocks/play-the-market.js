@@ -19,7 +19,8 @@ export async function main(ns) {
 	}
 
 	while (true) {
-		purchase4sTIXAPIAccessIfNeeded(ns);
+		//TODO: re-enable
+		//purchase4sTIXAPIAccessIfNeeded(ns);
 		var stockPriceData = JSON.parse(ns.read(stockPriceFileName));	
 		var flagsData = JSON.parse(ns.read(stockFlagsFileName));
 		Object.keys(stockPriceData)
@@ -33,19 +34,19 @@ export async function main(ns) {
 			var bidPrice = ns.stock.getBidPrice(stockSymbol);
 			if (longShares || shortShares) {
 				// We have some of this stock
-				if (longShares && saleIsProfittable(ns, stockSymbol, longShares, "Long", longPx)) {
+				if (longShares && saleIsProfittable(ns, stockSymbol, longShares, "Long", longPx) && sellForcastIsFavorable(ns, stockSymbol, "Long")) {
 					ns.stock.sellStock(stockSymbol, longShares);
 				}
-				if (shortShares && saleIsProfittable(ns, stockSymbol, shortShares, "Short", shortPx)) {
+				if (shortShares && saleIsProfittable(ns, stockSymbol, shortShares, "Short", shortPx) && sellForcastIsFavorable(ns, stockSymbol, "Short")) {
 					ns.stock.sellShort(stockSymbol, shortShares);
 				}	
 			} else if (flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")) {
 				// We have none of this stock
-				if (maxLongPurchasePrice > askPrice && forcastIsFavorable(ns, stockSymbol, "Long")) {
+				if (maxLongPurchasePrice > askPrice && buyForcastIsFavorable(ns, stockSymbol, "Long")) {
 					var sharesToBuy = calculateLongSharesToBuy(ns, stockSymbol, askPrice, stockPriceData[stockSymbol].maxPrice);
 					if (sharesToBuy === 0) return;
 					ns.stock.buyStock(stockSymbol, sharesToBuy);
-				} else if (minShortPurchasePrice < bidPrice && forcastIsFavorable(ns, stockSymbol, "Short")) {
+				} else if (minShortPurchasePrice < bidPrice && buyForcastIsFavorable(ns, stockSymbol, "Short")) {
 					var sharesToBuy = calculateShortSharesToBuy(ns, stockSymbol, bidPrice, stockPriceData[stockSymbol].minPrice);
 					if (sharesToBuy === 0) return;
 					ns.stock.buyShort(stockSymbol, sharesToBuy);
@@ -70,10 +71,20 @@ function stockHasHackableServerComparator(ns, b) {
 }
 
 /** @param {NS} ns */
-function forcastIsFavorable(ns, stockSymbol, position) {
+function buyForcastIsFavorable(ns, stockSymbol, position) {
 	if (ns.stock.has4SDataTIXAPI()) {
 		const forcast = ns.stock.getForecast(stockSymbol);
-		return position === "Long" && forcast > .5 || position === "Short" && forcast < .5;
+		return position === "Long" && forcast > .6 || position === "Short" && forcast < .4;
+	} else {
+		return true;
+	}
+}
+
+/** @param {NS} ns */
+function sellForcastIsFavorable(ns, stockSymbol, position) {
+	if (ns.stock.has4SDataTIXAPI()) {
+		const forcast = ns.stock.getForecast(stockSymbol);
+		return position === "Long" && forcast < .4 || position === "Short" && forcast > .6;
 	} else {
 		return true;
 	}
