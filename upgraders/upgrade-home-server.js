@@ -12,11 +12,13 @@ export async function main(ns) {
 		ns.print(`Upgrade cores cost ${upgradeHomeCoresCost.toLocaleString('en-US')}`);
 		ns.print(`Upgrade ram cost ${upgradeHomeRamCost.toLocaleString('en-US')}`);
 
-		if (upgradeHomeCoresCost > 0 && availableMonies > upgradeHomeCoresCost) {
-			ns.singularity.upgradeHomeCores();
-		}
-		if (upgradeHomeRamCost > 0 && availableMonies > upgradeHomeRamCost) {
-			ns.singularity.upgradeHomeRam();
+		if (ns.scriptRunning("/automation/script-starter.js", "home")) {
+			if (upgradeHomeCoresCost > 0 && availableMonies > upgradeHomeCoresCost) {
+				ns.singularity.upgradeHomeCores();
+			}
+			if (upgradeHomeRamCost > 0 && availableMonies > upgradeHomeRamCost) {
+				ns.singularity.upgradeHomeRam();
+			}
 		}
 		await ns.sleep(60000);
 	} while (upgradeHomeCoresCost > 0 || upgradeHomeRamCost > 0)
