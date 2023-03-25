@@ -1,6 +1,7 @@
 import {stockPriceFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded, stockToServers} from "stocks/helpers"
 import { getHackableServers } from "helpers";
 const transactionFee = 100_000;
+const PROFIT_MARGIN = 1.4;
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -42,14 +43,20 @@ export async function main(ns) {
 				}	
 			} else if (flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")) {
 				// We have none of this stock
-				if (maxLongPurchasePrice > askPrice && buyForcastIsFavorable(ns, stockSymbol, "Long")) {
-					var sharesToBuy = calculateLongSharesToBuy(ns, stockSymbol, askPrice, stockPriceData[stockSymbol].maxPrice);
-					if (sharesToBuy === 0) return;
-					ns.stock.buyStock(stockSymbol, sharesToBuy);
-				} else if (minShortPurchasePrice < bidPrice && buyForcastIsFavorable(ns, stockSymbol, "Short")) {
-					var sharesToBuy = calculateShortSharesToBuy(ns, stockSymbol, bidPrice, stockPriceData[stockSymbol].minPrice);
-					if (sharesToBuy === 0) return;
-					ns.stock.buyShort(stockSymbol, sharesToBuy);
+				const shouldLookAtLong = stockPriceData[stockSymbol].maxPrice - askPrice > bidPrice - stockPriceData[stockSymbol].minPrice;
+
+				if (shouldLookAtLong) {
+					if (maxLongPurchasePrice > askPrice && buyForcastIsFavorable(ns, stockSymbol, "Long")) {
+						var sharesToBuy = calculateLongSharesToBuy(ns, stockSymbol, askPrice, stockPriceData[stockSymbol].maxPrice);
+						if (sharesToBuy === 0) return;
+						ns.stock.buyStock(stockSymbol, sharesToBuy);
+					}
+				} else {
+					if (minShortPurchasePrice < bidPrice && buyForcastIsFavorable(ns, stockSymbol, "Short")) {
+						var sharesToBuy = calculateShortSharesToBuy(ns, stockSymbol, bidPrice, stockPriceData[stockSymbol].minPrice);
+						if (sharesToBuy === 0) return;
+						ns.stock.buyShort(stockSymbol, sharesToBuy);
+					}
 				}
 			}
 		});
@@ -61,7 +68,7 @@ export async function main(ns) {
 /** @param {NS} ns */
 function saleIsProfittable(ns, stockSymbol, shares, position, px) {
 	const saleGain = ns.stock.getSaleGain(stockSymbol, shares, position);
-	const sufficientProfit = saleGain > (1.2 * px * shares);
+	const sufficientProfit = saleGain > (PROFIT_MARGIN * px * shares);
 	return sufficientProfit;
 }
 
@@ -101,7 +108,7 @@ function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen) {
 	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Long");
 	const maxSaleMoney = sharesToBuy * maxPriceSeen;
 	const potentialProfit = maxSaleMoney - moneyToBuy - transactionFee;
-	if (potentialProfit > moneyToBuy * 1.2) {
+	if (potentialProfit > moneyToBuy * PROFIT_MARGIN) {
 		return sharesToBuy;
 	} else {
 		return 0;
@@ -119,7 +126,7 @@ function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen) {
 	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Short");
 	const minSaleMoney = sharesToBuy * minPriceSeen;
 	const potentialProfit = moneyToBuy - minSaleMoney - transactionFee;
-	if (buyPrice > 10 * minPriceSeen && potentialProfit > moneyToBuy * .2) {
+	if (buyPrice > 10 * minPriceSeen && potentialProfit > moneyToBuy * PROFIT_MARGIN) {
 		return sharesToBuy;
 	} else {
 		return 0;
