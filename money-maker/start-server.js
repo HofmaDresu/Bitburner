@@ -18,7 +18,7 @@ function startBestScript(ns, targetServer, server) {
 	let idealThreads = 1;
 	// Make sure we can run scripts + their subscripts
 	const scriptMemoryMap = MONEY_MAKER_SCRIPTS
-		.map(s => ({script: s, ram: ns.getScriptRam(s)}))
+		.map(s => ({script: s, ram: getFullScriptRam(ns, s)}))
 		.filter(sr => sr.ram < availableMemory)
 		.sort((a, b) => b.ram - a.ram);
 
@@ -29,10 +29,19 @@ function startBestScript(ns, targetServer, server) {
 	
 	// Most basic script should be run at max power
 	if (scriptToRun === '/money-maker/money-maker.js') {
-		scriptToRunRam = ns.getScriptRam(scriptToRun);
+		scriptToRunRam = getFullScriptRam(ns, scriptToRun);
 		idealThreads = Math.floor(availableMemory / scriptToRunRam);	
 	}
 
 	const maxThreads = Math.floor(availableMemory / scriptToRunRam);	
 	if (maxThreads > 0) ns.exec(scriptToRun, server, idealThreads, targetServer);
+}
+
+// method to get full ram cost of money maker scripts including the max of hack/weaken/grow
+function getFullScriptRam(ns, script) {
+	let ram = ns.getScriptRam(script);
+	if (script !== '/money-maker/money-maker.js') {
+		ram += Math.max(ns.getScriptRam('/experience/hack-server.js'), ns.getScriptRam('/experience/weaken-server.js'), ns.getScriptRam('/experience/grow-server.js'));
+	}
+	return ram;
 }
