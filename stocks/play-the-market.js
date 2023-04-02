@@ -15,10 +15,6 @@ export async function main(ns) {
 
 	var buyPriceMultiplier = .25;
 
-	while(ns.getPlayer().playtimeSinceLastAug < 60 * 60 * 1000) {
-		await ns.sleep(60 * 1000);
-	}
-
 	while (true) {
 		//TODO: re-enable
 		//purchase4sTIXAPIAccessIfNeeded(ns);
