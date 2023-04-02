@@ -6,7 +6,9 @@ export async function main(ns) {
     const multipliers = getNodeMultipliers(ns);
     while(true) {        
         startScriptIfAvailableRam(ns, '/money-maker/run-money-maker-v2.js');
-        //startScriptIfAvailableRam(ns, '/upgraders/upgrade-home-server.js');
+        // Let the money maker run for a bit before starting other scripts
+        await ns.sleep(10_000);
+        startScriptIfAvailableRam(ns, '/upgraders/upgrade-home-server.js');
         startScriptIfAvailableRam(ns, '/contracts/complete-coding-contracts.js');
         //startScriptIfAvailableRam(ns, '/upgraders/purchase-programs.js');
         if ((multipliers.ScriptHackMoney > .5 && multipliers.ScriptHackMoneyGain > .5) || ns.getServerMaxRam("home") > 3_000) {
