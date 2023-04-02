@@ -1,4 +1,4 @@
-import {stockToServers} from "/stocks/helpers.js"
+import {stockToServers} from "stocks/helpers"
 
 /** @param {NS} ns */
 export async function main(ns) {

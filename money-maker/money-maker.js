@@ -1,4 +1,4 @@
-import {weakenToMin} from "/helpers.js";
+import {weakenToMin} from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -9,6 +9,7 @@ export async function main(ns) {
 	}
 }
 
+/** @param {NS} ns */
 async function makeMoneyFromServer(ns, server) {
 	const maxMoney = ns.getServerMaxMoney(server);
 	const targetGrowMoney = maxMoney * 1.0;

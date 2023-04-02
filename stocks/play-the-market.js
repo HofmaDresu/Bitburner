@@ -146,7 +146,8 @@ function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen, addi
 	}
 	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Short");
 	const minSaleMoney = sharesToBuy * minPriceSeen;
-	const potentialProfit = moneyToBuy - minSaleMoney - transactionFee;
+	const potentialProfit = moneyToBuy + (moneyToBuy - minSaleMoney - transactionFee);
+	//ns.print(`stockSymbol: ${stockSymbol}, sharesToBuy: ${sharesToBuy}, moneyToBuy: ${moneyToBuy.toLocaleString('en-US')}, minSaleMoney: ${minSaleMoney.toLocaleString('en-US')}, potentialProfit: ${potentialProfit.toLocaleString('en-US')}`);
 	if (buyPrice > 10 * minPriceSeen && potentialProfit > moneyToBuy * PROFIT_MARGIN) {
 		return sharesToBuy;
 	} else {
