@@ -110,13 +110,12 @@ function sellForcastIsFavorable(ns, stockSymbol, position) {
 
 /** @param {NS} ns */
 function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen, additionalMoney = 0) {
-	if (!canPurchase(ns)) {
+	if (!canPurchase(ns) || buyPrice === 0) {
 		return 0;
 	}
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
-	var myMoney = (ns.getServerMoneyAvailable("home") + additionalMoney) * .9;
 	var sharesToBuy = 0;
-	while (ns.stock.getPurchaseCost(stockSymbol, sharesToBuy + 1, "Long") < myMoney && sharesToBuy <= maxShares) {
+	while (canAffordShares(ns, stockSymbol, sharesToBuy + 1, "Long", additionalMoney) && isSmallEnoughPortionOfNetWorth(ns, stockSymbol, sharesToBuy + 1, "Long", additionalMoney) && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
 	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Long");
@@ -131,13 +130,12 @@ function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen, addit
 
 /** @param {NS} ns */
 function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen, additionalMoney = 0) {
-	if (!canPurchase(ns)) {
+	if (!canPurchase(ns) || buyPrice === 0) {
 		return 0;
 	}
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
-	var myMoney = (ns.getServerMoneyAvailable("home") + additionalMoney) * .9;
 	var sharesToBuy = 0;
-	while (ns.stock.getPurchaseCost(stockSymbol, sharesToBuy + 1, "Short") < myMoney && sharesToBuy <= maxShares) {
+	while (canAffordShares(ns, stockSymbol, sharesToBuy + 1, "Short", additionalMoney) && isSmallEnoughPortionOfNetWorth(ns, stockSymbol, sharesToBuy + 1, "Short", additionalMoney) && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
 	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Short");
@@ -154,4 +152,26 @@ function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen, addi
 function canPurchase(ns) {
 	var flagsData = JSON.parse(ns.read(stockFlagsFileName));
 	return flagsData.allowPurchases && ns.scriptRunning("/automation/script-starter.js", "home")
+}
+
+/** @param {NS} ns */
+function canAffordShares(ns, stockSymbol, shares, position, additionalMoney) {
+	const money = (ns.getServerMoneyAvailable("home") + additionalMoney) * .5; 
+	const cost = ns.stock.getPurchaseCost(stockSymbol, shares, position);
+	return money > cost;
+}
+
+/** @param {NS} ns */
+function isSmallEnoughPortionOfNetWorth(ns, stockSymbol, shares, position, additionalMoney) {
+	const money = (ns.getServerMoneyAvailable("home") + additionalMoney);
+	const stockValue = Object.keys(stockToServers).map(stockSymbol => {
+		const [longShares, _longPx, shortShares, _shortPx] = ns.stock.getPosition(stockSymbol);
+		let value = 0;
+		
+		value += ns.stock.getSaleGain(stockSymbol, longShares, "Long");
+		value += ns.stock.getSaleGain(stockSymbol, shortShares, "Short");
+		return value;
+	}).reduce((prev, curr) => prev += curr, 0);
+	const cost = ns.stock.getPurchaseCost(stockSymbol, shares, position);
+	return cost < (money + stockValue) * .25;
 }
