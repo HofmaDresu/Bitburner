@@ -1,7 +1,7 @@
 import {stockPriceFileName, stockFlagsFileName, purchaseWseIfNeeded, purchaseTIXAPIAccessIfNeeded, purchase4sTIXAPIAccessIfNeeded, stockToServers} from "stocks/helpers"
 import { getHackableServers } from "helpers";
 const transactionFee = 100_000;
-const PROFIT_MARGIN = 1.4;
+const PROFIT_MARGIN = 1.2;
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -30,31 +30,25 @@ export async function main(ns) {
 			var bidPrice = ns.stock.getBidPrice(stockSymbol);
 			if (longShares || shortShares) {
 				// We have some of this stock
-				if (longShares && saleIsProfittable(ns, stockSymbol, longShares, "Long", longPx) && sellForcastIsFavorable(ns, stockSymbol, "Long") && !wouldRebuy(ns, stockSymbol, longShares, "Long", askPrice, stockPriceData[stockSymbol].maxPrice)) {
+				if (shouldSell(ns, stockSymbol, longShares, "Long", longPx, askPrice, stockPriceData[stockSymbol].maxPrice, maxLongPurchasePrice)) {
 					ns.stock.sellStock(stockSymbol, longShares);
 				}
-				if (shortShares && saleIsProfittable(ns, stockSymbol, shortShares, "Short", shortPx) && sellForcastIsFavorable(ns, stockSymbol, "Short") && !wouldRebuy(ns, stockSymbol, shortShares, "Short", bidPrice, stockPriceData[stockSymbol].minPrice)) {
+				if (shouldSell(ns, stockSymbol, shortShares, "Short", shortPx, bidPrice, stockPriceData[stockSymbol].minPrice, minShortPurchasePrice)) {
 					ns.stock.sellShort(stockSymbol, shortShares);
 				}	
-			} else {
-				// We have none of this stock
-				const shouldLookAtLong = stockPriceData[stockSymbol].maxPrice - askPrice > bidPrice - stockPriceData[stockSymbol].minPrice;
+			} 
+			const shouldLookAtLong = stockPriceData[stockSymbol].maxPrice - askPrice > bidPrice - stockPriceData[stockSymbol].minPrice;
 
-				if (shouldLookAtLong) {
-					if (maxLongPurchasePrice > askPrice && buyForcastIsFavorable(ns, stockSymbol, "Long")) {
-						var sharesToBuy = calculateLongSharesToBuy(ns, stockSymbol, askPrice, stockPriceData[stockSymbol].maxPrice);
-						if (sharesToBuy === 0) return;
-						ns.print(`maxDiff: ${maxPriceDiffSeen.toLocaleString('en-US')}, maxLongPurchasePrice: ${maxLongPurchasePrice.toLocaleString('en-US')}, askPrice: ${askPrice.toLocaleString('en-US')}`);
-						ns.stock.buyStock(stockSymbol, sharesToBuy);
-					}
-				} else {
-					if (minShortPurchasePrice < bidPrice && buyForcastIsFavorable(ns, stockSymbol, "Short")) {
-						var sharesToBuy = calculateShortSharesToBuy(ns, stockSymbol, bidPrice, stockPriceData[stockSymbol].minPrice);
-						if (sharesToBuy === 0) return;
-						ns.print(`maxDiff: ${maxPriceDiffSeen.toLocaleString('en-US')}, minShortPurchasePrice: ${minShortPurchasePrice.toLocaleString('en-US')}, bidPrice: ${bidPrice.toLocaleString('en-US')}`);
-						ns.stock.buyShort(stockSymbol, sharesToBuy);
-					}
-				}
+			if (shouldLookAtLong) {
+				var sharesToBuy = calculateLongSharesToBuy(ns, stockSymbol, askPrice, stockPriceData[stockSymbol].maxPrice, maxLongPurchasePrice);
+				if (sharesToBuy === 0) return;
+				ns.print(`maxDiff: ${maxPriceDiffSeen.toLocaleString('en-US')}, maxLongPurchasePrice: ${maxLongPurchasePrice.toLocaleString('en-US')}, askPrice: ${askPrice.toLocaleString('en-US')}`);
+				ns.stock.buyStock(stockSymbol, sharesToBuy);
+			} else {
+				var sharesToBuy = calculateShortSharesToBuy(ns, stockSymbol, bidPrice, stockPriceData[stockSymbol].minPrice, minShortPurchasePrice);
+				if (sharesToBuy === 0) return;
+				ns.print(`maxDiff: ${maxPriceDiffSeen.toLocaleString('en-US')}, minShortPurchasePrice: ${minShortPurchasePrice.toLocaleString('en-US')}, bidPrice: ${bidPrice.toLocaleString('en-US')}`);
+				ns.stock.buyShort(stockSymbol, sharesToBuy);
 			}
 		});
 		
@@ -63,14 +57,19 @@ export async function main(ns) {
 }
 
 /** @param {NS} ns */
-function wouldRebuy(ns, stockSymbol, shares, position, purchasePrice, minMaxPrice) {
+function shouldSell(ns, stockSymbol, shares, position, px, purchasePrice, minMaxPrice, minMaxPurchasePrice) {
+	return shares && saleIsProfittable(ns, stockSymbol, shares, position, px) && sellForcastIsFavorable(ns, stockSymbol, position) && !wouldRebuy(ns, stockSymbol, shares, position, purchasePrice, minMaxPrice, minMaxPurchasePrice)
+}
+
+/** @param {NS} ns */
+function wouldRebuy(ns, stockSymbol, shares, position, purchasePrice, minMaxPrice, minMaxPurchasePrice) {
 	const saleGain = ns.stock.getSaleGain(stockSymbol, shares, position);
 	if (position == "Long") {
-		const sharesToBuy = calculateLongSharesToBuy(ns, stockSymbol, purchasePrice, minMaxPrice, saleGain);
+		const sharesToBuy = calculateLongSharesToBuy(ns, stockSymbol, purchasePrice, minMaxPrice, minMaxPurchasePrice, saleGain);
 		return sharesToBuy > 0;
 	}
 	if (position == "Short") {
-		const sharesToBuy = calculateShortSharesToBuy(ns, stockSymbol, purchasePrice, minMaxPrice, saleGain);
+		const sharesToBuy = calculateShortSharesToBuy(ns, stockSymbol, purchasePrice, minMaxPrice, minMaxPurchasePrice, saleGain);
 		return sharesToBuy > 0;
 	}	
 }
@@ -109,13 +108,18 @@ function sellForcastIsFavorable(ns, stockSymbol, position) {
 }
 
 /** @param {NS} ns */
-function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen, additionalMoney = 0) {
-	if (!canPurchase(ns) || buyPrice === 0) {
+function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen, maxPurchasePrice, additionalMoney = 0) {
+	if (!canPurchase(ns) || buyPrice === 0 || maxPurchasePrice < buyPrice || !buyForcastIsFavorable(ns, stockSymbol, "Long")) {
 		return 0;
 	}
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
 	var sharesToBuy = 0;
-	while (canAffordShares(ns, stockSymbol, sharesToBuy + 1, "Long", additionalMoney) && isSmallEnoughPortionOfNetWorth(ns, stockSymbol, sharesToBuy + 1, "Long", additionalMoney) && sharesToBuy <= maxShares) {
+
+	const [longShares, _longPx, _shortShares, _shortPx] = ns.stock.getPosition(stockSymbol);
+	// Don't count shares in net worth if we're about to buy more
+	const sharesInNetWorth = additionalMoney !== 0 ? longShares : 0;
+	
+	while (canAffordShares(ns, stockSymbol, sharesToBuy + 1, "Long", additionalMoney) && isSmallEnoughPortionOfNetWorth(ns, stockSymbol, sharesToBuy + sharesInNetWorth + 1, "Long", additionalMoney) && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
 	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Long");
@@ -129,13 +133,16 @@ function calculateLongSharesToBuy(ns, stockSymbol, buyPrice, maxPriceSeen, addit
 }
 
 /** @param {NS} ns */
-function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen, additionalMoney = 0) {
-	if (!canPurchase(ns) || buyPrice === 0) {
+function calculateShortSharesToBuy(ns, stockSymbol, buyPrice, minPriceSeen, minPurchasePrice, additionalMoney = 0) {
+	if (!canPurchase(ns) || buyPrice === 0 || minPurchasePrice > buyPrice || !buyForcastIsFavorable(ns, stockSymbol, "Short")) {
 		return 0;
 	}
 	var maxShares = ns.stock.getMaxShares(stockSymbol);
 	var sharesToBuy = 0;
-	while (canAffordShares(ns, stockSymbol, sharesToBuy + 1, "Short", additionalMoney) && isSmallEnoughPortionOfNetWorth(ns, stockSymbol, sharesToBuy + 1, "Short", additionalMoney) && sharesToBuy <= maxShares) {
+	const [_longShares, _longPx, shortShares, _shortPx] = ns.stock.getPosition(stockSymbol);
+	// Don't count shares in net worth if we're about to buy more
+	const sharesInNetWorth = additionalMoney !== 0 ? shortShares : 0;
+	while (canAffordShares(ns, stockSymbol, sharesToBuy + 1, "Short", additionalMoney) && isSmallEnoughPortionOfNetWorth(ns, stockSymbol, sharesToBuy + sharesInNetWorth + 1, "Short", additionalMoney) && sharesToBuy <= maxShares) {
 		sharesToBuy++;
 	}
 	const moneyToBuy = ns.stock.getPurchaseCost(stockSymbol, sharesToBuy, "Short");
@@ -163,6 +170,7 @@ function canAffordShares(ns, stockSymbol, shares, position, additionalMoney) {
 
 /** @param {NS} ns */
 function isSmallEnoughPortionOfNetWorth(ns, stockSymbol, shares, position, additionalMoney) {
+	//TODO: Upgrade for multiple purchases of same stock
 	const money = (ns.getServerMoneyAvailable("home") + additionalMoney);
 	const stockValue = Object.keys(stockToServers).map(stockSymbol => {
 		const [longShares, _longPx, shortShares, _shortPx] = ns.stock.getPosition(stockSymbol);
