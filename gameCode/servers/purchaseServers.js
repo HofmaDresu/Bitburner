@@ -42,8 +42,7 @@ function purchaseAndStartServer(ns, ram) {
 
 /** @param {NS} ns */
 async function upgradeServersToRam(ns, oldRam, newRam) {
-    // TODO: only delete if < newRam
-    let currentLowRamServers = ns.getPurchasedServers().filter((s) => s.indexOf(`${newRam}gb`) === -1);
+    let currentLowRamServers = ns.getPurchasedServers().filter((s) => s.indexOf(`${oldRam}gb`) !== -1);
     while (currentLowRamServers.length > 0) {
         if (ns.getServerMoneyAvailable("home") > ns.getPurchasedServerCost(newRam)) {
             const oldServer = currentLowRamServers.pop();
