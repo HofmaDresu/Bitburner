@@ -5,6 +5,7 @@ export async function main(ns) {
     let ram = 8;
     ns.disableLog("sleep");
     ns.disableLog("getServerMoneyAvailable");
+    ns.disableLog("getServerMaxMoney");
 
     await purchaseServersToLimit(ns, ram);
 
