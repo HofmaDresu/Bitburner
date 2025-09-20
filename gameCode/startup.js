@@ -5,7 +5,7 @@ export async function main(ns) {
     let usedServerRam = ns.getServerUsedRam("home");
     let availableRam = maxServerRam - usedServerRam;
     startScriptIfAble(ns, "servers/purchaseServers.js", availableRam);
-    const stillMoreToStart = true;
+    let stillMoreToStart = true;
 
     while(stillMoreToStart) {
         usedServerRam = ns.getServerUsedRam("home");
@@ -22,7 +22,8 @@ export async function main(ns) {
             continue;
         }
 
-        await ns.asleep(10000);
+        await ns.asleep(1000);
+        stillMoreToStart = false;
     }
 }
 
