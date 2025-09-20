@@ -61,7 +61,10 @@ async function startServers(ns, servers) {
         ns.brutessh(server);
         portCount++;
     }
-
+    if (ns.fileExists("FTPCrack.exe", "home")) {
+        ns.ftpcrack(server);
+        portCount++;
+    }
 
     if (portCount < requiredNumPorts) return;
     ns.nuke(server);
