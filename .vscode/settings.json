@@ -1,5 +1,5 @@
 {
-    "bitburner.authToken": "GEHzgDwuYh9JwEZnIKeInUqfFsUyTfH0XuzlvRzCKdm0TJdn+e801Z/l/BorilKx",
+    "bitburner.authToken": "Bo3BTbzmACxx8NxoiHfqSh0F9XE5Ald1vEFeoQhfYOicK0LYAdRGeUWx5JR5wGMR",
     "javascript.preferences.importModuleSpecifier": "non-relative",
     "files.exclude": {
         "jsconfig.json": true,
@@ -8,4 +8,5 @@
     "bitburner.fileWatcher.enable": true,
     "bitburner.showPushSuccessNotification": true,
     "bitburner.showFileWatcherEnabledNotification": true,
+    "bitburner.scriptRoot": "./gameCode"
 }
