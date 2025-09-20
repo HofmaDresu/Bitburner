@@ -1,5 +1,7 @@
 /** @param {NS} ns */
 export async function main(ns) {
+    ns.disableLog("asleep");
+    ns.disableLog("sleep");
     const target = ns.args[0];
 
     const hostname = ns.getHostname();
