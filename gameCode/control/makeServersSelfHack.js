@@ -1,3 +1,5 @@
+import { getServers } from 'helpers';
+
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("disableLog");
@@ -19,21 +21,6 @@ export async function main(ns) {
         startServers(ns, servers);
         await ns.asleep(10000);
     }
-}
-
-/** @param {NS} ns */
-function getServers(ns) {
-    let servers = ns.scan("home").filter((s) => s !== parent && s.indexOf("pserv") === -1);
-    let currentServersLength = 0;
-    let iterator = 0;
-    do {
-        const newServers = ns.scan(servers[iterator]).filter((s) => servers.indexOf(s) === -1 && s !== "home");
-        servers = servers.concat(newServers);
-        currentServersLength = servers.length;
-        iterator++;
-    } while (iterator < currentServersLength);
-
-    return servers;    
 }
 
 /** @param {NS} ns */
