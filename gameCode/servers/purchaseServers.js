@@ -33,12 +33,13 @@ async function purchaseServersToLimit(ns, ram) {
 function purchaseAndStartServer(ns, ram) {
     let hostname = ns.purchaseServer(`pserv-${ram}gb`, ram);
     ns.scp(["control/makeMoneyFromTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js"], hostname);
-    ns.exec("control/makeMoneyFromTarget.js", hostname, 1, getBestServerToHack(ns));
+    const bestServerToHack =  getBestServerToHack(ns);
+    ns.exec("control/makeMoneyFromTarget.js", hostname, 1, bestServerToHack);
 }
 
 /** @param {NS} ns */
 function getBestServerToHack(ns) {
-    const serversToHack = ns.getPurchasedServers().filter((s) => s.indexOf("pserv") === -1);
+    const serversToHack = ns.scan("home").filter((s) => s.indexOf("pserv") === -1);
     const myHackingAbility = ns.getPlayer().skills.hacking;
     const serversInGoodHackRange = serversToHack.filter((s) => ns.getServerRequiredHackingLevel(s) < .5 * myHackingAbility);
     const serversSortedByMoney = serversInGoodHackRange.sort((a, b) => ns.getServerMaxMoney(b) - ns.getServerMaxMoney(a));
