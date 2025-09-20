@@ -5,7 +5,7 @@ export async function main(ns) {
     const ram = 8;
 
     // Iterator we'll use for our loop
-    let i = 0;
+    let i = ns.getPurchasedServers().length;
 
     // Continuously try to purchase servers until we've reached the maximum
     // amount of servers
