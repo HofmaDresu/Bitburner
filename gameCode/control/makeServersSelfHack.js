@@ -11,8 +11,6 @@ export async function main(ns) {
     ns.disableLog("nuke");
     ns.disableLog("exec");
     ns.disableLog("scan");
-    ns.ui.openTail();
-    await ns.asleep(1000);
 
     const servers = getServers(ns);
     ns.print(servers);
