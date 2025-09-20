@@ -3,12 +3,6 @@ export async function main(ns) {
     const target = ns.args[0];
 
     const hostname = ns.getHostname();
-
-    if (ns.fileExists("BruteSSH.exe", "home")) {
-        ns.brutessh(target);
-    }
-
-    ns.nuke(target);
     const args = [target];
 
     // Infinite loop that continously hacks/grows/weakens the target server
