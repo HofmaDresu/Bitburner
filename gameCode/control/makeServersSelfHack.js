@@ -33,13 +33,11 @@ async function startServers(ns, servers) {
 
 /** @param {NS} ns */
  function startServerIfPossible(ns, server) {
-    const moneyThresh = ns.getServerMaxMoney(server);
     const player = ns.getPlayer();
     const requiredHackingLevel = ns.getServerRequiredHackingLevel(server);
     const requiredNumPorts = ns.getServerNumPortsRequired(server);
 
     if (player.skills.hacking < requiredHackingLevel) return;
-    if (moneyThresh === 0) return;
 
     let portCount = 0;
     if (ns.fileExists("BruteSSH.exe", "home")) {
@@ -55,7 +53,9 @@ async function startServers(ns, servers) {
     ns.nuke(server);
     
     const mainScript = "control/makeMoneyFromTarget.js";
-    if (ns.scriptRunning)
+    if (ns.scriptRunning(mainScript, server)) {
+        return;
+    }
     ns.scp([mainScript, "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js"], server);
     ns.print(`Attempting to start server '${server}'`)
     ns.exec(mainScript, server, 1, server);
