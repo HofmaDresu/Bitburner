@@ -38,6 +38,10 @@ async function weaken(ns, hostname, args) {
 /** @param {NS} ns */
 async function runScriptAtMaxThreads(ns, script, hostname, args) {
     const threads = calculateThreads(ns, script, hostname);
+    if (threads === 0) {
+        await ns.sleep(10000);
+        return;
+    };
     ns.run(script, threads, ...args);
     await waitForScriptToFinish(ns, script, hostname, args);
 }

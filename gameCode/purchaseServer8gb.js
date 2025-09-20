@@ -3,6 +3,8 @@ export async function main(ns) {
     // How much RAM each purchased server will have. In this case, it'll
     // be 8GB.
     const ram = 8;
+    ns.disableLog("sleep");
+    ns.disableLog("getServerMoneyAvailable");
 
     // Iterator we'll use for our loop
     let i = ns.getPurchasedServers().length;
