@@ -1,3 +1,5 @@
+import { getBestServerToHack } from "helpers";
+
 /** @param {NS} ns */
 export async function main(ns) {
     let ram = 8;
@@ -35,16 +37,6 @@ function purchaseAndStartServer(ns, ram) {
     ns.scp(["control/makeMoneyFromTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js"], hostname);
     const bestServerToHack =  getBestServerToHack(ns);
     ns.exec("control/makeMoneyFromTarget.js", hostname, 1, bestServerToHack);
-}
-
-/** @param {NS} ns */
-function getBestServerToHack(ns) {
-    const serversToHack = ns.scan("home").filter((s) => s.indexOf("pserv") === -1);
-    const myHackingAbility = ns.getPlayer().skills.hacking;
-    const serversInGoodHackRange = serversToHack.filter((s) => ns.getServerRequiredHackingLevel(s) < .5 * myHackingAbility);
-    const serversSortedByMoney = serversInGoodHackRange.sort((a, b) => ns.getServerMaxMoney(b) - ns.getServerMaxMoney(a));
-
-    return serversSortedByMoney[0];
 }
 
 /** @param {NS} ns */

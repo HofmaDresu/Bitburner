@@ -1,3 +1,5 @@
+import { getBestServerToHack } from "helpers";
+
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("asleep");
@@ -16,7 +18,7 @@ export async function main(ns) {
             await ns.asleep(10000);
             continue;
         }
-        started = startScriptIfAble(ns, "control/makeMoneyFromTarget.js", availableRam, ["zer0"]);
+        started = startScriptIfAble(ns, "control/makeMoneyFromTarget.js", availableRam, [getBestServerToHack(ns)]);
         if (!started) {
             await ns.asleep(10000);
             continue;
