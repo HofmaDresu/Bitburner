@@ -19,7 +19,7 @@ export async function main(ns) {
             //  4. Increment our iterator to indicate that we've bought a new server
             let hostname = ns.purchaseServer(`pserv-${ram}gb-${i}`, ram);
             ns.scp(["control/makeMoneyFromTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js"], hostname);
-            ns.exec("contro/makeMoneyFromTarget.js", hostname, 1, "joesguns");
+            ns.exec("control/makeMoneyFromTarget.js", hostname, 1, "joesguns");
             ++i;
         }
         //Make the script wait for a second before looping again.
