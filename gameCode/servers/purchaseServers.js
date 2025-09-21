@@ -1,4 +1,4 @@
-import { getBestServerToHack, copyAndRunHackingScripts } from "helpers";
+import { getBestServerToHack, copyAndRunHackingScripts, availableSpendingMoney } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -22,7 +22,7 @@ async function purchaseServersToLimit(ns, ram) {
     let i = ns.getPurchasedServers().length;
     while (i < ns.getPurchasedServerLimit()) {
         // Check if we have enough money to purchase a server
-        if (ns.getServerMoneyAvailable("home") > ns.getPurchasedServerCost(ram)) {
+        if (availableSpendingMoney(ns) > ns.getPurchasedServerCost(ram)) {
             purchaseAndStartServer(ns, ram);
             ++i;
         }

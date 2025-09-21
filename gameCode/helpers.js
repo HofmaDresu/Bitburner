@@ -30,3 +30,8 @@ export function copyAndRunHackingScripts(ns, hostname, target) {
     const bestServerToHack =  getBestServerToHack(ns);
     ns.exec("control/makeMoneyFromTarget.js", hostname, 1, target);
 }
+
+/** @param {NS} ns */
+export function availableSpendingMoney(ns, reserveAmount = .1) {
+    return ns.getServerMoneyAvailable("home") * (1 - reserveAmount);
+}
