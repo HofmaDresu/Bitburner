@@ -18,7 +18,7 @@ export async function main(ns) {
             await ns.asleep(10000);
             continue;
         }
-        started = startScriptIfAble(ns, "hacknet/purchaseNodes.js", availableRam]);
+        started = startScriptIfAble(ns, "hacknet/purchaseNodes.js", availableRam);
         if (!started) {
             await ns.asleep(10000);
             continue;
