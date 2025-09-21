@@ -1,4 +1,4 @@
-import { getServers } from 'helpers';
+import { getServers, copyAndRunHackingScripts } from 'helpers';
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -56,11 +56,9 @@ async function startServers(ns, servers) {
     if (portCount < requiredNumPorts) return;
     ns.nuke(server);
     
-    const mainScript = "control/makeMoneyFromTarget.js";
-    if (ns.scriptRunning(mainScript, server)) {
+    if (ns.scriptRunning("control/makeMoneyFromTarget.js", server)) {
         return;
     }
-    ns.scp([mainScript, "growing/growTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js", "weakening/weakenTarget.js"], hostname);
     ns.print(`Attempting to start server '${server}'`)
-    ns.exec(mainScript, server, 1, server);
+    copyAndRunHackingScripts(ns, server, server)
 }

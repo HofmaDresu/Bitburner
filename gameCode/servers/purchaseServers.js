@@ -1,4 +1,4 @@
-import { getBestServerToHack } from "helpers";
+import { getBestServerToHack, copyAndRunHackingScripts } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -35,9 +35,8 @@ async function purchaseServersToLimit(ns, ram) {
 /** @param {NS} ns */
 function purchaseAndStartServer(ns, ram) {
     let hostname = ns.purchaseServer(`pserv-${ram}gb`, ram);
-    ns.scp(["control/makeMoneyFromTarget.js", "growing/growTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js", "weakening/weakenTarget.js"], hostname);
     const bestServerToHack =  getBestServerToHack(ns);
-    ns.exec("control/makeMoneyFromTarget.js", hostname, 1, bestServerToHack);
+    copyAndRunHackingScripts(ns, hostname, bestServerToHack)
 }
 
 /** @param {NS} ns */

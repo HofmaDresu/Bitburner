@@ -1,4 +1,4 @@
-import { getBestServerToHack } from "helpers";
+import { getBestServerToHack, copyAndRunHackingScripts } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -6,8 +6,7 @@ export async function main(ns) {
 
     for (const server of servers) {
         const bestServerToHack =  getBestServerToHack(ns);
-        ns.scp(["control/makeMoneyFromTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js"], server);
-        ns.exec("control/makeMoneyFromTarget.js", server, 1, bestServerToHack);
+        copyAndRunHackingScripts(ns, server, bestServerToHack);
         await ns.sleep(100);
     }
 }

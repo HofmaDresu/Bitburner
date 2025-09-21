@@ -23,3 +23,10 @@ export function getServers(ns) {
 
     return servers;    
 }
+
+/** @param {NS} ns */
+export function copyAndRunHackingScripts(ns, hostname, target) {
+    ns.scp(["control/makeMoneyFromTarget.js", "growing/growTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js", "weakening/weakenTarget.js"], hostname);
+    const bestServerToHack =  getBestServerToHack(ns);
+    ns.exec("control/makeMoneyFromTarget.js", hostname, 1, target);
+}
