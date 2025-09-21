@@ -48,6 +48,10 @@ async function startServers(ns, servers) {
         ns.ftpcrack(server);
         portCount++;
     }
+    if (ns.fileExists("relaySMTP.exe", "home")) {
+        ns.relaysmtp(server);
+        portCount++;
+    }
 
     if (portCount < requiredNumPorts) return;
     ns.nuke(server);
