@@ -6,13 +6,18 @@ export async function main(ns) {
 
     const hostname = ns.getHostname();
     const args = [target];
+    const securityThresh = ns.getServerMinSecurityLevel(target);
+    const moneyThresh = ns.getServerMaxMoney(target);
 
     // Infinite loop that continously hacks/grows/weakens the target server
     while(true) {
-        await weaken(ns, hostname, args);
-        await grow(ns, hostname, args);
-        await weaken(ns, hostname, args);
-        await hack(ns, hostname, args);
+        if (ns.getServerSecurityLevel(target) > securityThresh) {
+            await weaken(ns, hostname, args);
+        } else if (ns.getServerMoneyAvailable(target) < moneyThresh) {
+            await grow(ns, hostname, args);
+        } else {        
+            await hack(ns, hostname, args);
+        }
     }
 }
 
