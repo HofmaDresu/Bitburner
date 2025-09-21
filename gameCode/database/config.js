@@ -1,0 +1,3 @@
+{
+    "buyStocks": true
+}

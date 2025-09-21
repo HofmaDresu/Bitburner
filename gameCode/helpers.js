@@ -36,3 +36,15 @@ export function copyAndRunHackingScripts(ns, hostname, target) {
 export function availableSpendingMoney(ns, reserveAmount = .1) {
     return ns.getServerMoneyAvailable("home") * (1 - reserveAmount);
 }
+
+
+export const CONFIG_FILE_NAME = "database/config.js";
+
+/** @param {NS} ns */
+export function getConfig(ns) {    
+    let configData = {};
+    try {
+        configData = JSON.parse(ns.read(CONFIG_FILE_NAME));
+    } catch {}
+    return configData;
+}
