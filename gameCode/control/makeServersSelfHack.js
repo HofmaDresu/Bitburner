@@ -60,7 +60,7 @@ async function startServers(ns, servers) {
     if (ns.scriptRunning(mainScript, server)) {
         return;
     }
-    ns.scp([mainScript, "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js"], server);
+    ns.scp([mainScript, "growing/growTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js", "weakening/weakenTarget.js"], hostname);
     ns.print(`Attempting to start server '${server}'`)
     ns.exec(mainScript, server, 1, server);
 }

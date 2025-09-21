@@ -30,14 +30,14 @@ async function hack(ns, hostname, args) {
 
 /** @param {NS} ns */
 async function grow(ns, hostname, args) {   
-    const script = "/growing/growTargetToMax.js";
+    const script = "/growing/growTarget.js";
     ns.print("growing");
     await runScriptAtMaxThreads(ns, script, hostname, args);
 }
 
 /** @param {NS} ns */
 async function weaken(ns, hostname, args) {   
-    const script = "/weakening/weakenTargetToMin.js";
+    const script = "/weakening/weakenTarget.js";
     ns.print("weakening");
     await runScriptAtMaxThreads(ns, script, hostname, args);
 }
