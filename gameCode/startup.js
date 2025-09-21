@@ -3,17 +3,23 @@ import { getBestServerToHack } from "helpers";
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("asleep");
-    const maxServerRam = ns.getServerMaxRam("home");
+    let maxServerRam = ns.getServerMaxRam("home");
     let usedServerRam = ns.getServerUsedRam("home");
-    let availableRam = maxServerRam - usedServerRam;
-    startScriptIfAble(ns, "servers/purchaseServers.js", availableRam);
+    let availableRam = maxServerRam - usedServerRam;    
     let stillMoreToStart = true;
 
     while(stillMoreToStart) {
+        maxServerRam = ns.getServerMaxRam("home");
         usedServerRam = ns.getServerUsedRam("home");
         availableRam = maxServerRam - usedServerRam;
+        let started = false;
 
-        let started = startScriptIfAble(ns, "control/makeServersSelfHack.js", availableRam);
+        started = startScriptIfAble(ns, "control/makeServersSelfHack.js", availableRam);
+        if (!started) {
+            await ns.asleep(10000);
+            continue;
+        }
+        started = startScriptIfAble(ns, "servers/purchaseServers.js", availableRam);
         if (!started) {
             await ns.asleep(10000);
             continue;
@@ -24,6 +30,11 @@ export async function main(ns) {
             continue;
         }
         started = startScriptIfAble(ns, "hacknet/upgradeNodes.js", availableRam);
+        if (!started) {
+            await ns.asleep(10000);
+            continue;
+        }
+        started = startScriptIfAble(ns, "stocks/trackStockValues.js", availableRam);
         if (!started) {
             await ns.asleep(10000);
             continue;
