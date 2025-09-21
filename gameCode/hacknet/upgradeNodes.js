@@ -83,4 +83,5 @@ function getCheapestUpgrade(ns, nodeIndex) {
     if (Math.min(coreCost, ramCost, levelCost) === levelCost) {
         return LEVEL;
     }
+    return NONE;
 }
