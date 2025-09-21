@@ -39,6 +39,7 @@ export function availableSpendingMoney(ns, reserveAmount = .1) {
 
 
 export const CONFIG_FILE_NAME = "database/config.js";
+export const CONFIG_BUY_STOCKS = "buyStocks";
 
 /** @param {NS} ns */
 export function getConfig(ns) {    
@@ -47,4 +48,9 @@ export function getConfig(ns) {
         configData = JSON.parse(ns.read(CONFIG_FILE_NAME));
     } catch {}
     return configData;
+}
+
+/** @param {NS} ns */
+export function saveConfig(ns, config) {
+    ns.write(CONFIG_FILE_NAME, JSON.stringify(config), "w");
 }

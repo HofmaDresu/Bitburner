@@ -1,5 +1,5 @@
 import { getStockHistory, canTradeStocks, getStockCommission } from "stocks/helpers";
-import { availableSpendingMoney, getConfig } from "helpers";
+import { availableSpendingMoney, getConfig, CONFIG_BUY_STOCKS } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -22,7 +22,7 @@ export async function main(ns) {
 
 /** @param {NS} ns */
 function buyLongIfAppropriate(ns, symbol, min, max) {
-    if (!getConfig(ns)["buyStocks"]) return;
+    if (!getConfig(ns)[CONFIG_BUY_STOCKS]) return;
     // Not enough potential profit in spread
     if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit()) return;
     const askPrice = ns.stock.getAskPrice(symbol)

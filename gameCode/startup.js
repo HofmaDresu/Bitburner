@@ -1,4 +1,4 @@
-import { getBestServerToHack } from "helpers";
+import { getBestServerToHack, getConfig, saveConfig, CONFIG_BUY_STOCKS } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -13,6 +13,7 @@ export async function main(ns) {
         usedServerRam = ns.getServerUsedRam("home");
         availableRam = maxServerRam - usedServerRam;
         let started = false;
+        setStartupConfig(ns);
 
         started = startScriptIfAble(ns, "control/makeServersSelfHack.js", availableRam);
         if (!started) {
@@ -48,6 +49,13 @@ export async function main(ns) {
         await ns.asleep(1000);
         stillMoreToStart = false;
     }
+}
+
+/** @param {NS} ns */
+function setStartupConfig(ns) {
+    const config = getConfig(ns);
+    config[CONFIG_BUY_STOCKS] = true;
+    saveConfig(config);
 }
 
 /** @param {NS} ns */
