@@ -40,6 +40,11 @@ export async function main(ns) {
             await ns.asleep(10000);
             continue;
         }
+        started = startScriptIfAble(ns, "stocks/playTheMarket.js", availableRam);
+        if (!started) {
+            await ns.asleep(10000);
+            continue;
+        }
         started = startScriptIfAble(ns, "control/makeMoneyFromTarget.js", availableRam, [getBestServerToHack(ns)]);
         if (!started) {
             await ns.asleep(10000);
