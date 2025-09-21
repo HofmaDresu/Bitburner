@@ -1,9 +1,8 @@
-import { STOCK_HISTORY_FILE_NAME, getStockHistory } from "stocks/helpers";
+import { STOCK_HISTORY_FILE_NAME, getStockHistory, canTradeStocks } from "stocks/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
-
-    while (!(ns.stock.hasWSEAccount() && ns.stock.hasTIXAPIAccess())) {
+    while (!canTradeStocks(ns)) {
         await ns.stock.nextUpdate();
     }
 

@@ -9,3 +9,8 @@ export function getStockHistory(ns) {
     } catch {}
     return stockHistoryData;
 }
+
+/** @param {NS} ns */
+export function canTradeStocks(ns) {    
+    return ns.stock.hasWSEAccount() && ns.stock.hasTIXAPIAccess();
+}
