@@ -10,9 +10,14 @@ export async function main(ns) {
     ns.disableLog("getServerRequiredHackingLevel");
     ns.disableLog("getServerNumPortsRequired");
     ns.disableLog("brutessh");
+    ns.disableLog("ftpcrack");
+    ns.disableLog("relaysmtp");
+    ns.disableLog("httpworm");
+    ns.disableLog("sqlinject");
     ns.disableLog("nuke");
     ns.disableLog("exec");
     ns.disableLog("scan");
+    ns.disableLog("getServerMaxRam");
 
     const servers = getServers(ns);
     ns.print(servers);
@@ -64,9 +69,10 @@ async function startServers(ns, servers) {
     if (portCount < requiredNumPorts) return;
     ns.nuke(server);
     
-    if (ns.scriptRunning("control/makeMoneyFromTarget.js", server)) {
-        return;
-    }
+    const mainScript = "control/makeMoneyFromTarget.js";
+    if (ns.scriptRunning(mainScript, server)) return;
+    if (ns.getServerMaxRam(server) < ns.getScriptRam(mainScript)) return;
+
     ns.print(`Attempting to start server '${server}'`)
     copyAndRunHackingScripts(ns, server, server)
 }
