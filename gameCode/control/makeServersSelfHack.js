@@ -52,6 +52,14 @@ async function startServers(ns, servers) {
         ns.relaysmtp(server);
         portCount++;
     }
+    if (ns.fileExists("HTTPWorm.exe", "home")) {
+        ns.httpworm(server);
+        portCount++;
+    }
+    if (ns.fileExists("SQLInject.exe", "home")) {
+        ns.sqlinject(server);
+        portCount++;
+    }
 
     if (portCount < requiredNumPorts) return;
     ns.nuke(server);
