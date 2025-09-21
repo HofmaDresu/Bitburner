@@ -1,5 +1,4 @@
-
-const STOCK_HISTORY_FILE_NAME = "database/stockHistory.js";
+import { STOCK_HISTORY_FILE_NAME, getStockHistory } from "stocks/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -29,10 +28,7 @@ function getPrices(ns, symbols) {
 
 /** @param {NS} ns */
 function storePrices(ns, symbols, prices) {
-    let stockHistoryData = {};
-    try {
-        stockHistoryData = JSON.parse(ns.read(STOCK_HISTORY_FILE_NAME));
-    } catch {}
+    let stockHistoryData = getStockHistory(ns);
 
     symbols.forEach(s => {
         stockHistoryData[s] = {
