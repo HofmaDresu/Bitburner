@@ -14,3 +14,7 @@ export function getStockHistory(ns) {
 export function canTradeStocks(ns) {    
     return ns.stock.hasWSEAccount() && ns.stock.hasTIXAPIAccess();
 }
+
+export function getStockCommission() {
+    return 100_000;
+}
