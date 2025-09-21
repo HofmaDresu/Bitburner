@@ -6,7 +6,7 @@ export function getBestServerToHack(ns) {
     const serversInGoodHackRange = serversSortedByMoney.filter((s) => ns.getServerRequiredHackingLevel(s) < .5 * myHackingAbility);
     const serversInAnyHackRange = serversSortedByMoney.filter((s) => ns.getServerRequiredHackingLevel(s) < myHackingAbility);
 
-    return serversInGoodHackRange[0] || serversInAnyHackRange[0];
+    return serversInGoodHackRange[0] || serversInAnyHackRange[0] || "n00dles";
 }
 
 /** @param {NS} ns */
