@@ -60,7 +60,7 @@ export async function main(ns) {
 function setStartupConfig(ns) {
     const config = getConfig(ns);
     config[CONFIG_BUY_STOCKS] = true;
-    saveConfig(config);
+    saveConfig(ns, config);
 }
 
 /** @param {NS} ns */

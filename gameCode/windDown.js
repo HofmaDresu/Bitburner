@@ -1,17 +1,22 @@
-import { getBestServerToHack, getConfig, saveConfig, CONFIG_BUY_STOCKS } from "helpers";
+import { getConfig, saveConfig, CONFIG_BUY_STOCKS } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
-    setWindDownConfig();
-    ns.scriptKill("purchaseServers", "home");
-    ns.scriptKill("purchaseNodes", "home");
-    ns.scriptKill("upgradeNodes", "home");
-    ns.scriptKill("playTheMarket", "home");
+    setWindDownConfig(ns);
+    killScriptIfRunning(ns, "servers/purchaseServers.js");
+    killScriptIfRunning(ns, "hacknet/purchaseNodes.js");
+    killScriptIfRunning(ns, "hacknet/upgradeNodes.js");
+}
+
+function killScriptIfRunning(ns, script) {
+    if(ns.scriptRunning(script, "home")) {
+        ns.scriptKill(script, "home");
+    }
 }
 
 /** @param {NS} ns */
 function setWindDownConfig(ns) {
     const config = getConfig(ns);
     config[CONFIG_BUY_STOCKS] = false;
-    saveConfig(config);
+    saveConfig(ns, config);
 }
