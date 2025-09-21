@@ -18,12 +18,12 @@ export async function main(ns) {
             await ns.asleep(10000);
             continue;
         }
-        started = startScriptIfAble(ns, "hacknet/purchaseNodes.js", availableRam, [getBestServerToHack(ns)]);
+        started = startScriptIfAble(ns, "hacknet/purchaseNodes.js", availableRam]);
         if (!started) {
             await ns.asleep(10000);
             continue;
         }
-        started = startScriptIfAble(ns, "hacknet/upgradeNodes.js", availableRam, [getBestServerToHack(ns)]);
+        started = startScriptIfAble(ns, "hacknet/upgradeNodes.js", availableRam);
         if (!started) {
             await ns.asleep(10000);
             continue;

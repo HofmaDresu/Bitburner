@@ -2,7 +2,8 @@
 export function getBestServerToHack(ns) {
     const serversToHack = getServers(ns);
     const myHackingAbility = ns.getPlayer().skills.hacking;
-    const serversSortedByMoney = serversToHack.sort((a, b) => ns.getServerMaxMoney(b) - ns.getServerMaxMoney(a));
+    const serversWithRootAccess = serversToHack.filter(ns.hasRootAccess);
+    const serversSortedByMoney = serversWithRootAccess.sort((a, b) => ns.getServerMaxMoney(b) - ns.getServerMaxMoney(a));
     const serversInGoodHackRange = serversSortedByMoney.filter((s) => ns.getServerRequiredHackingLevel(s) < .5 * myHackingAbility);
     const serversInAnyHackRange = serversSortedByMoney.filter((s) => ns.getServerRequiredHackingLevel(s) < myHackingAbility);
 
