@@ -91,3 +91,48 @@ function calculateThreads(ns, script, hostname) {
     const availabeThreads = availableRam / requiredRam;
     return Math.floor(availabeThreads);
 }
+
+
+/** @param {NS} ns */
+export function nukeServer(ns, server) {
+    ns.disableLog("getServerRequiredHackingLevel");
+    ns.disableLog("getServerNumPortsRequired");
+    ns.disableLog("brutessh");
+    ns.disableLog("ftpcrack");
+    ns.disableLog("relaysmtp");
+    ns.disableLog("httpworm");
+    ns.disableLog("sqlinject");
+    ns.disableLog("nuke");
+    const player = ns.getPlayer();
+    const requiredHackingLevel = ns.getServerRequiredHackingLevel(server);
+    const requiredNumPorts = ns.getServerNumPortsRequired(server);
+
+    if (player.skills.hacking < requiredHackingLevel) return false;
+
+    let portCount = 0;
+    if (ns.fileExists("BruteSSH.exe", "home")) {
+        ns.brutessh(server);
+        portCount++;
+    }
+    if (ns.fileExists("FTPCrack.exe", "home")) {
+        ns.ftpcrack(server);
+        portCount++;
+    }
+    if (ns.fileExists("relaySMTP.exe", "home")) {
+        ns.relaysmtp(server);
+        portCount++;
+    }
+    if (ns.fileExists("HTTPWorm.exe", "home")) {
+        ns.httpworm(server);
+        portCount++;
+    }
+    if (ns.fileExists("SQLInject.exe", "home")) {
+        ns.sqlinject(server);
+        portCount++;
+    }
+
+    if (portCount < requiredNumPorts) return false;
+    ns.nuke(server);
+    
+    return true;
+}
