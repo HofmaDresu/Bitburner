@@ -85,13 +85,16 @@ async function waitForScriptToFinish(ns, script, hostname, args) {
 /** @param {NS} ns */
 function calculateThreads(ns, script, hostname) {
     const requiredRam = ns.getScriptRam(script);
-    const maxServerRam = ns.getServerMaxRam(hostname);
-    const usedServerRam = ns.getServerUsedRam(hostname);
-    const availableRam = maxServerRam - usedServerRam - (hostname === "home" ? 10 : 0);
+    const availableRam = getAvailableRam(ns, hostname);
     const availabeThreads = availableRam / requiredRam;
     return Math.floor(availabeThreads);
 }
 
+export function getAvailableRam(ns, hostname) {
+    const maxServerRam = ns.getServerMaxRam(hostname);
+    const usedServerRam = ns.getServerUsedRam(hostname);
+    return maxServerRam - usedServerRam - (hostname === "home" ? 10 : 0);
+}
 
 /** @param {NS} ns */
 export function nukeServer(ns, server) {
