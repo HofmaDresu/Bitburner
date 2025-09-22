@@ -30,6 +30,7 @@ async function startServers(ns, servers) {
 /** @param {NS} ns */
  function startServerIfPossible(ns, server) {
     if(!nukeServer(ns, server)) return;
+    if(server.indexOf("pserv") !== -1) return;
     
     const makeMoneyScript = "control/makeMoneyFromTarget.js";
     if (ns.scriptRunning(makeMoneyScript, server)) {
