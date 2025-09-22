@@ -93,7 +93,7 @@ function calculateThreads(ns, script, hostname) {
 export function getAvailableRam(ns, hostname) {
     const maxServerRam = ns.getServerMaxRam(hostname);
     const usedServerRam = ns.getServerUsedRam(hostname);
-    return maxServerRam - usedServerRam - (hostname === "home" ? 10 : 0);
+    return Math.min(0, maxServerRam - usedServerRam - (hostname === "home" ? 20 : 0));
 }
 
 /** @param {NS} ns */
