@@ -32,7 +32,7 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
     if (sharesLong > 0) return;
 
-    const availableMoney = availableSpendingMoney(ns);
+    const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000_000) return;
     const sharesICanBuy = Math.floor(availableMoney / askPrice);
     // Not enough potential profit given current monies
