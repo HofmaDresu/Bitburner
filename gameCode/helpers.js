@@ -93,7 +93,8 @@ function calculateThreads(ns, script, hostname) {
 export function getAvailableRam(ns, hostname) {
     const maxServerRam = ns.getServerMaxRam(hostname);
     const usedServerRam = ns.getServerUsedRam(hostname);
-    return Math.min(0, maxServerRam - usedServerRam - (hostname === "home" ? 20 : 0));
+    const reservedMemory = hostname === "home" ? 20 : 0;
+    return Math.max(0, maxServerRam - usedServerRam - reservedMemory);
 }
 
 /** @param {NS} ns */
@@ -147,7 +148,7 @@ export function killScriptIfRunningOnHome(ns, script) {
 }
 
 /** @param {NS} ns */
-function startScriptOnHomeIfAble(ns, script, availableRam, args = []) {
+export function startScriptOnHomeIfAble(ns, script, availableRam, args = []) {
     const requiredRam = ns.getScriptRam(script);
     if(ns.scriptRunning(script, "home")) {
         return true;

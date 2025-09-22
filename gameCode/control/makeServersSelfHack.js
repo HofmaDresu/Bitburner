@@ -1,4 +1,4 @@
-import { getServers, copyAndRunHackingScripts } from 'helpers';
+import { getServers, copyAndRunHackingScripts, nukeServer } from 'helpers';
 
 /** @param {NS} ns */
 export async function main(ns) {

@@ -1,4 +1,4 @@
-import { startScriptOnHomeIfAble, killScriptIfRunningOnHome } from "helpers";
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getAvailableRam } from "helpers";
 import { canTradeStocks } from "stocks/helpers";
 
 /** @param {NS} ns */
@@ -6,6 +6,7 @@ export async function main(ns) {
     ns.disableLog("sleep");
     let availableRam = getAvailableRam(ns, "home");   
     let thingsToDo = true;
+    // TODO: restart makeMoneyFromTarget and servers when new best target exists
     while (thingsToDo) {
         if (canTradeStocks(ns) && iOwnStocks(ns)) {
             killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js");
