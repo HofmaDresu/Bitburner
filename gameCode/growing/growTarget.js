@@ -1,5 +1,6 @@
 /** @param {NS} ns */
 export async function main(ns) {
     const target = ns.args[0];
-    await ns.grow(target);
+    const manipulateStock = ns.args.length == 2 ? ns.args[1] : false;
+    await ns.grow(target, {stock: manipulateStock});
 }

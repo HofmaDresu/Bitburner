@@ -1,3 +1,5 @@
+import { runScriptAtMaxThreads } from "helpers";
+
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("asleep");
@@ -40,32 +42,4 @@ async function weaken(ns, hostname, args) {
     const script = "/weakening/weakenTarget.js";
     ns.print("weakening");
     await runScriptAtMaxThreads(ns, script, hostname, args);
-}
-
-/** @param {NS} ns */
-async function runScriptAtMaxThreads(ns, script, hostname, args) {
-    const threads = calculateThreads(ns, script, hostname);
-    if (threads === 0) {
-        await ns.sleep(10000);
-        return;
-    };
-    ns.run(script, threads, ...args);
-    await waitForScriptToFinish(ns, script, hostname, args);
-}
-
-/** @param {NS} ns */
-async function waitForScriptToFinish(ns, script, hostname, args) {
-    while(ns.isRunning(script, hostname, ...args)) {
-        await ns.asleep(1000);
-    }
-}
-
-/** @param {NS} ns */
-function calculateThreads(ns, script, hostname) {
-    const requiredRam = ns.getScriptRam(script);
-    const maxServerRam = ns.getServerMaxRam(hostname);
-    const usedServerRam = ns.getServerUsedRam(hostname);
-    const availableRam = maxServerRam - usedServerRam;
-    const availabeThreads = availableRam / requiredRam;
-    return Math.floor(availabeThreads);
 }

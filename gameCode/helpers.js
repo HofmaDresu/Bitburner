@@ -27,9 +27,18 @@ export function getServers(ns) {
 
 /** @param {NS} ns */
 export function copyAndRunHackingScripts(ns, hostname, target) {
-    ns.scp(["control/makeMoneyFromTarget.js", "growing/growTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js", "weakening/weakenTarget.js"], hostname);
-    const bestServerToHack =  getBestServerToHack(ns);
+    copyAllScripts(ns, hostname);
     ns.exec("control/makeMoneyFromTarget.js", hostname, 1, target);
+}
+
+/** @param {NS} ns */
+export function copyAndRunMarketManipulationScripts(ns, hostname) {
+    copyAllScripts(ns, hostname);
+    ns.exec("stocks/manipulateTheMarket.js", hostname, 1);
+}
+
+function copyAllScripts(ns, hostname) {
+    ns.scp(["control/makeMoneyFromTarget.js", "growing/growTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js", "weakening/weakenTarget.js", "stocks/manipulateTheMarket.js", "helpers.js", "stocks/helpers.js"], hostname);
 }
 
 /** @param {NS} ns */
@@ -53,4 +62,32 @@ export function getConfig(ns) {
 /** @param {NS} ns */
 export function saveConfig(ns, config) {
     ns.write(CONFIG_FILE_NAME, JSON.stringify(config), "w");
+}
+
+/** @param {NS} ns */
+export async function runScriptAtMaxThreads(ns, script, hostname, args) {
+    const threads = calculateThreads(ns, script, hostname);
+    if (threads === 0) {
+        await ns.sleep(10000);
+        return;
+    };
+    ns.run(script, threads, ...args);
+    await waitForScriptToFinish(ns, script, hostname, args);
+}
+
+/** @param {NS} ns */
+async function waitForScriptToFinish(ns, script, hostname, args) {
+    while(ns.isRunning(script, hostname, ...args)) {
+        await ns.asleep(1000);
+    }
+}
+
+/** @param {NS} ns */
+function calculateThreads(ns, script, hostname) {
+    const requiredRam = ns.getScriptRam(script);
+    const maxServerRam = ns.getServerMaxRam(hostname);
+    const usedServerRam = ns.getServerUsedRam(hostname);
+    const availableRam = maxServerRam - usedServerRam;
+    const availabeThreads = availableRam / requiredRam;
+    return Math.floor(availabeThreads);
 }
