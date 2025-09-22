@@ -87,7 +87,7 @@ function calculateThreads(ns, script, hostname) {
     const requiredRam = ns.getScriptRam(script);
     const maxServerRam = ns.getServerMaxRam(hostname);
     const usedServerRam = ns.getServerUsedRam(hostname);
-    const availableRam = maxServerRam - usedServerRam;
+    const availableRam = maxServerRam - usedServerRam - (hostname === "home" ? 10 : 0);
     const availabeThreads = availableRam / requiredRam;
     return Math.floor(availabeThreads);
 }
