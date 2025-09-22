@@ -139,3 +139,22 @@ export function nukeServer(ns, server) {
     
     return true;
 }
+
+export function killScriptIfRunningOnHome(ns, script) {
+    if(ns.scriptRunning(script, "home")) {
+        ns.scriptKill(script, "home");
+    }
+}
+
+/** @param {NS} ns */
+function startScriptOnHomeIfAble(ns, script, availableRam, args = []) {
+    const requiredRam = ns.getScriptRam(script);
+    if(ns.scriptRunning(script, "home")) {
+        return true;
+    } else if (requiredRam < availableRam) {
+        ns.exec(script, "home", 1, ...args);
+        return true;
+    }
+
+    return false;
+}

@@ -1,17 +1,11 @@
-import { getConfig, saveConfig, CONFIG_BUY_STOCKS } from "helpers";
+import { getConfig, saveConfig, CONFIG_BUY_STOCKS, killScriptIfRunningOnHome } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
     setWindDownConfig(ns);
-    killScriptIfRunning(ns, "servers/purchaseServers.js");
-    killScriptIfRunning(ns, "hacknet/purchaseNodes.js");
-    killScriptIfRunning(ns, "hacknet/upgradeNodes.js");
-}
-
-function killScriptIfRunning(ns, script) {
-    if(ns.scriptRunning(script, "home")) {
-        ns.scriptKill(script, "home");
-    }
+    killScriptIfRunningOnHome(ns, "servers/purchaseServers.js");
+    killScriptIfRunningOnHome(ns, "hacknet/purchaseNodes.js");
+    killScriptIfRunningOnHome(ns, "hacknet/upgradeNodes.js");
 }
 
 /** @param {NS} ns */
