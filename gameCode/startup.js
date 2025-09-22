@@ -41,6 +41,11 @@ export async function main(ns) {
             await ns.sleep(10000);
             continue;
         }
+        started = startScriptOnHomeIfAble(ns, "control/homeRunner.js", availableRam);
+        if (!started) {
+            await ns.sleep(10000);
+            continue;
+        }
         started = startScriptOnHomeIfAble(ns, "control/makeMoneyFromTarget.js", availableRam, [getBestServerToHack(ns)]);
         if (!started) {
             await ns.sleep(10000);
