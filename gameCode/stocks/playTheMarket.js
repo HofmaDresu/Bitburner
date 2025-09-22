@@ -44,12 +44,11 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
 function sellLongIfAppropriate(ns, symbol, min, max) {
     const bidPrice = ns.stock.getBidPrice(symbol);
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-    if (sharesLong > 0) return;
+    if (sharesLong === 0) return;
     // Not enough profit
     if((bidPrice * sharesLong) - (avgLongPrice * sharesLong) < minPotentialProfit()) return;
     // Not close enough to max
     if(bidPrice < max * .9) return;
-    ns.print(`Selling ${sharesLong} shares of ${symbol} at $${ns.formatNumber(bidPrice, 2)} for $${ns.formatNumber(sharesLong * bidPrice, 2)}`);
     ns.stock.sellStock(symbol, sharesLong);    
 }
 
