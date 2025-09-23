@@ -3,11 +3,15 @@ import { getBestServerToHack, getConfig, saveConfig, CONFIG_BUY_STOCKS, getAvail
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("sleep");
+    ns.disableLog("scan");
+    ns.disableLog("getServerRequiredHackingLevel");
+    ns.disableLog("getServerMaxMoney");
     ns.killall("home");
     let availableRam = getAvailableRam(ns, "home");
     let stillMoreToStart = true;
 
     while(stillMoreToStart) {
+        ns.print("LOOP")
         availableRam = getAvailableRam(ns, "home");
         let started = false;
         setStartupConfig(ns);
@@ -17,36 +21,43 @@ export async function main(ns) {
             await ns.sleep(10000);
             continue;
         }
-        started = startScriptOnHomeIfAble(ns, "servers/purchaseServers.js", availableRam);
-        if (!started) {
-            await ns.sleep(10000);
-            continue;
-        }
+        availableRam = getAvailableRam(ns, "home");
         started = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js", availableRam);
         if (!started) {
             await ns.sleep(10000);
             continue;
         }
+        availableRam = getAvailableRam(ns, "home");
         started = startScriptOnHomeIfAble(ns, "hacknet/upgradeNodes.js", availableRam);
         if (!started) {
             await ns.sleep(10000);
             continue;
         }
+        availableRam = getAvailableRam(ns, "home");
+        started = startScriptOnHomeIfAble(ns, "servers/purchaseServers.js", availableRam);
+        if (!started) {
+            await ns.sleep(10000);
+            continue;
+        }
+        availableRam = getAvailableRam(ns, "home");
         started = startScriptOnHomeIfAble(ns, "stocks/trackStockValues.js", availableRam);
         if (!started) {
             await ns.sleep(10000);
             continue;
         }
+        availableRam = getAvailableRam(ns, "home");
         started = startScriptOnHomeIfAble(ns, "stocks/playTheMarket.js", availableRam);
         if (!started) {
             await ns.sleep(10000);
             continue;
         }
+        availableRam = getAvailableRam(ns, "home");
         // started = startScriptOnHomeIfAble(ns, "control/homeRunner.js", availableRam);
         // if (!started) {
         //     await ns.sleep(10000);
         //     continue;
         // }
+        availableRam = getAvailableRam(ns, "home");
         started = startScriptOnHomeIfAble(ns, "control/makeMoneyFromTarget.js", availableRam, [getBestServerToHack(ns)]);
         if (!started) {
             await ns.sleep(10000);
