@@ -18,3 +18,15 @@ export function canTradeStocks(ns) {
 export function getStockCommission() {
     return 100_000;
 }
+
+/** @param {NS} ns */
+function iOwnStocks(ns) {
+    const symbols = ns.stock.getSymbols();
+    for (const symbol of symbols) {
+        const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
+        if (sharesLong || sharesShort) {
+            return true;
+        }
+    }
+    return false;
+}

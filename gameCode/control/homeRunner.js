@@ -8,7 +8,7 @@ export async function main(ns) {
     let thingsToDo = true;
     // TODO: restart makeMoneyFromTarget and servers when new best target exists
     while (thingsToDo) {
-        if (canTradeStocks(ns) && iOwnStocks(ns)) {
+        if (canTradeStocks(ns) && ns.getPlayer().skills.hacking > 100) {
             killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js");
             killScriptIfRunningOnHome(ns, "control/makeMoneyFromTarget.js");
             startScriptOnHomeIfAble(ns, "control/makeServersManipulateMarket.js", availableRam)
@@ -18,16 +18,4 @@ export async function main(ns) {
 
         await ns.sleep(10_000);
     }
-}
-
-/** @param {NS} ns */
-function iOwnStocks(ns) {
-    const symbols = ns.stock.getSymbols();
-    for (const symbol of symbols) {
-        const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-        if (sharesLong || sharesShort) {
-            return true;
-        }
-    }
-    return false;
 }
