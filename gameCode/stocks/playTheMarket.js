@@ -29,8 +29,8 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     // Not enough potential profit at current price
     if (askPrice > min * 1.1) return;
     // Already hold this stock
-    const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-    if (sharesLong > 0) return;
+    // const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
+    // if (sharesLong > 0) return;
 
     const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000_000) return;
@@ -53,5 +53,5 @@ function sellLongIfAppropriate(ns, symbol, min, max) {
 }
 
 function minPotentialProfit() {
-    return getStockCommission() * 200;
+    return getStockCommission() * 20;
 }
