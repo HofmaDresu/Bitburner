@@ -15,6 +15,6 @@ export async function main(ns) {
             ns.hacknet.purchaseNode();
         }
 
-        await ns.sleep(1000)
+        await ns.sleep(100)
     }
 }
