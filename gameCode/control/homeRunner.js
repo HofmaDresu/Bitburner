@@ -7,6 +7,8 @@ export async function main(ns) {
     let availableRam = getAvailableRam(ns, "home");   
     let thingsToDo = true;
     // TODO: restart makeMoneyFromTarget and servers when new best target exists
+    // TODO: improve with singularity
+    // TODO: move "make" commands into here instead of separate files
     while (true) {
         if (canTradeStocks(ns) && ns.getPlayer().skills.hacking > 100) {
             killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js");
