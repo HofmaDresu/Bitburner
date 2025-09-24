@@ -1,4 +1,4 @@
-import { getBestServerToHack, getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, getAvailableRam, startScriptOnHomeIfAble} from "helpers";
+import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, startScriptOnHomeIfAble} from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
