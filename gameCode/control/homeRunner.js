@@ -4,13 +4,19 @@ import { canTradeStocks } from "stocks/helpers";
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog("sleep");
-    // TODO: restart makeMoneyFromTarget and servers when new best target exists
     // TODO: improve with singularity
-    // TODO: move "make" commands into here instead of separate files
+    // buy TOR / files when able
+    // start at uni until hack >= 10?
+    // next create BruteSSH
+    // next rob store
     let higherPriorityItemsStarted = true;
     while (true) {
         const config = getConfig(ns);
 
+        // TODO: restart makeMoneyFromTarget and servers when new best target exists
+        // TODO: move "make" commands into here instead of separate files
+
+        // TODO: stop spending on hacknet at some point?
         if ([config[CONFIG_SPEND_ON_HACKNET]] && higherPriorityItemsStarted) {
             higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js");
             higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/makeServersSelfHack.js");
