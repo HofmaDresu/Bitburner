@@ -12,5 +12,7 @@ export async function main(ns) {
 function setWindDownConfig(ns) {
     const config = getConfig(ns);
     config[CONFIG_BUY_STOCKS] = false;
+    config[CONFIG_SPEND_ON_HACKNET] = false;
+    config[CONFIG_SPEND_ON_SERVERS] = false;
     saveConfig(ns, config);
 }

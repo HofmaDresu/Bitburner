@@ -52,6 +52,8 @@ export function availableSpendingMoney(ns, reserveAmount = .1) {
 
 export const CONFIG_FILE_NAME = "database/config.js";
 export const CONFIG_BUY_STOCKS = "buyStocks";
+export const CONFIG_SPEND_ON_HACKNET = "spendOnHacknet";
+export const CONFIG_SPEND_ON_SERVERS = "spendOnServers";
 
 /** @param {NS} ns */
 export function getConfig(ns) {    
@@ -151,8 +153,9 @@ export function killScriptIfRunningOnHome(ns, script) {
 }
 
 /** @param {NS} ns */
-export function startScriptOnHomeIfAble(ns, script, availableRam, args = []) {
+export function startScriptOnHomeIfAble(ns, script, args = []) {
     const requiredRam = ns.getScriptRam(script);
+    const availableRam = getAvailableRam(ns, "home");   
     if(ns.scriptRunning(script, "home")) {
         return true;
     } else if (requiredRam < availableRam) {
