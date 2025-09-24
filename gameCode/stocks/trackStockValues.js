@@ -3,7 +3,7 @@ import { STOCK_HISTORY_FILE_NAME, getStockHistory, canTradeStocks } from "stocks
 /** @param {NS} ns */
 export async function main(ns) {
     while (!canTradeStocks(ns)) {
-        await ns.stock.nextUpdate();
+        await ns.sleep(10_000);
     }
 
     const symbols = ns.stock.getSymbols();

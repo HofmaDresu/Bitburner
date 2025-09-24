@@ -5,7 +5,7 @@ import { availableSpendingMoney, getConfig, CONFIG_BUY_STOCKS } from "helpers";
 export async function main(ns) {
     ns.disableLog('getServerMoneyAvailable');
     while (!canTradeStocks(ns)) {
-        await ns.stock.nextUpdate();
+        await ns.sleep(10_000);
     }
 
     const symbols = ns.stock.getSymbols();
