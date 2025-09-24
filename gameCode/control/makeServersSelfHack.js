@@ -12,7 +12,6 @@ export async function main(ns) {
     ns.disableLog("getServerMaxRam");
 
     const servers = getServers(ns);
-    ns.print(servers);
 
     while(true) {
         startServers(ns, servers);
@@ -33,7 +32,11 @@ async function startServers(ns, servers) {
     if(!nukeServer(ns, server)) return;
     
     const mainScript = "control/makeMoneyFromTarget.js";
-    if (ns.scriptRunning(mainScript, server)) return;
+    if (ns.scriptRunning(mainScript, server)) {
+        return;
+    } else {
+        ns.killall(server);
+    }
     if (ns.getServerMaxRam(server) < ns.getScriptRam(mainScript)) return;
 
     ns.print(`Attempting to start server '${server}'`)

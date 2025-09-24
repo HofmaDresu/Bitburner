@@ -10,46 +10,10 @@ export async function main(ns) {
     let stillMoreToStart = true;
 
     while(stillMoreToStart) {
-        ns.print("LOOP")
         let started = false;
         setStartupConfig(ns);
 
-        started = startScriptOnHomeIfAble(ns, "control/makeServersSelfHack.js");
-        if (!started) {
-            await ns.sleep(10000);
-            continue;
-        }
-        started = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js");
-        if (!started) {
-            await ns.sleep(10000);
-            continue;
-        }
-        started = startScriptOnHomeIfAble(ns, "hacknet/upgradeNodes.js");
-        if (!started) {
-            await ns.sleep(10000);
-            continue;
-        }
-        started = startScriptOnHomeIfAble(ns, "servers/purchaseServers.js");
-        if (!started) {
-            await ns.sleep(10000);
-            continue;
-        }
-        started = startScriptOnHomeIfAble(ns, "stocks/trackStockValues.js");
-        if (!started) {
-            await ns.sleep(10000);
-            continue;
-        }
-        started = startScriptOnHomeIfAble(ns, "stocks/playTheMarket.js");
-        if (!started) {
-            await ns.sleep(10000);
-            continue;
-        }
-        // started = startScriptOnHomeIfAble(ns, "control/homeRunner.js");
-        // if (!started) {
-        //     await ns.sleep(10000);
-        //     continue;
-        // }
-        started = startScriptOnHomeIfAble(ns, "control/makeMoneyFromTarget.js", [getBestServerToHack(ns)]);
+        started = startScriptOnHomeIfAble(ns, "control/homeRunner.js");
         if (!started) {
             await ns.sleep(10000);
             continue;

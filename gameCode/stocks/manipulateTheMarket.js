@@ -41,7 +41,7 @@ const SYMBOL_TO_SERVERS = {
 export async function main(ns) {
     ns.disableLog('ALL');
     while (!canTradeStocks(ns)) {
-        await ns.stock.nextUpdate();
+        await ns.sleep(1_000);
     }
     const hostname = ns.getHostname();
 

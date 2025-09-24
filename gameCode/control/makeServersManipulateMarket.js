@@ -30,14 +30,13 @@ async function startServers(ns, servers) {
 /** @param {NS} ns */
  function startServerIfPossible(ns, server) {
     if(!nukeServer(ns, server)) return;
-    if(server.indexOf("pserv") !== -1) return;
     
-    const makeMoneyScript = "control/makeMoneyFromTarget.js";
-    if (ns.scriptRunning(makeMoneyScript, server)) {
-        ns.killall(server);
-    };
     const mainScript = "stocks/manipulateTheMarket.js";
-    if (ns.scriptRunning(mainScript, server)) return;
+    if (ns.scriptRunning(mainScript, server)) {
+        return;
+    } else {
+        ns.killall(server);
+    }
     if (ns.getServerMaxRam(server) < ns.getScriptRam(mainScript)) return;
 
     ns.print(`Attempting to start server '${server}'`)
