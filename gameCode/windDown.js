@@ -1,4 +1,4 @@
-import { getConfig, saveConfig, CONFIG_BUY_STOCKS, killScriptIfRunningOnHome } from "helpers";
+import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, killScriptIfRunningOnHome } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {

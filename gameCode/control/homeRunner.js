@@ -20,8 +20,11 @@ export async function main(ns) {
     // next create AutoLink (or buy)
     // next rob store until $ from hacking > 1_000_000
 
+    //TODO: buy WSE stuff
+
     // TODO: augments
     // get Sector12 cashroot starter kit
+    // get Tian Di Hui Neuroreceptor Management Implant
     while (true) {
         const config = getConfig(ns);
 
@@ -59,11 +62,11 @@ function startOrStopScripts(ns, config) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersSelfHack.js");
     }
 
-    if ([config[CONFIG_SPEND_ON_HACKNET]] && moneySources.hacknet * 100 <= moneySources.hacking) {
+    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources.hacknet * 100 <= moneySources.hacking) {
         config[CONFIG_SPEND_ON_HACKNET] = false;
         saveConfig(ns, config);
     }
-    if ([config[CONFIG_SPEND_ON_HACKNET]] && higherPriorityItemsStarted) {
+    if (config[CONFIG_SPEND_ON_HACKNET] && higherPriorityItemsStarted) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js");
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/upgradeNodes.js");
     } else {
@@ -71,7 +74,7 @@ function startOrStopScripts(ns, config) {
         killScriptIfRunningOnHome(ns, "hacknet/upgradeNodes.js")
     }
 
-    if ([config[CONFIG_SPEND_ON_SERVERS]] && higherPriorityItemsStarted) {
+    if (config[CONFIG_SPEND_ON_SERVERS] && higherPriorityItemsStarted) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "servers/purchaseServers.js");
     } else {
         killScriptIfRunningOnHome(ns, "servers/purchaseServers.js")
