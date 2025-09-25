@@ -1,4 +1,4 @@
-import { getServers, copyAndRunHackingScripts, nukeServer } from 'helpers';
+import { getServers, copyAndRunHackingScripts } from 'helpers';
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -28,9 +28,7 @@ async function startServers(ns, servers) {
 }
 
 /** @param {NS} ns */
- function startServerIfPossible(ns, server) {
-    if(!nukeServer(ns, server)) return;
-    
+ function startServerIfPossible(ns, server) {    
     const mainScript = "control/makeMoneyFromTarget.js";
     if (ns.scriptRunning(mainScript, server)) {
         return;

@@ -1,4 +1,4 @@
-import { getServers, copyAndRunMarketManipulationScripts, nukeServer } from 'helpers';
+import { getServers, copyAndRunMarketManipulationScripts } from 'helpers';
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -28,9 +28,7 @@ async function startServers(ns, servers) {
 }
 
 /** @param {NS} ns */
- function startServerIfPossible(ns, server) {
-    if(!nukeServer(ns, server)) return;
-    
+ function startServerIfPossible(ns, server) {    
     const mainScript = "stocks/manipulateTheMarket.js";
     if (ns.scriptRunning(mainScript, server)) {
         return;

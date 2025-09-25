@@ -1,4 +1,4 @@
-import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, getBestServerToHack } from "helpers";
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, getBestServerToHack, nukeServer, getServers } from "helpers";
 import { canTradeStocks } from "stocks/helpers";
 
 /** @param {NS} ns */
@@ -13,8 +13,9 @@ export async function main(ns) {
     // buy TOR / files when able
     // start at uni until hack >= 10?
     // next create BruteSSH (or buy)
-    // next create DeepLinkV1 (or buy)
-    // next rob store until can create FTPCrack
+    // next rob store until hacking >= 25
+    // next create DeepscankV1 (or buy)
+    // next rob store hack >= 100
     // next create FTPCrack (or buy)
     // next create AutoLink (or buy)
     // next rob store until $ from hacking > 1_000_000
@@ -24,6 +25,8 @@ export async function main(ns) {
     while (true) {
         const config = getConfig(ns);
 
+        crackServers(ns);
+
         const allRunnablesStared = startOrStopScripts(ns, config);
 
         if (allRunnablesStared) {
@@ -32,6 +35,14 @@ export async function main(ns) {
 
         await ns.sleep(10_000);
     }
+}
+
+function crackServers(ns) {    
+    const servers = getServers(ns);
+    for (let server of servers) {
+        nukeServer(ns, server);
+        // TODO: backdoor server in singularity
+    };
 }
 
 /** @param {NS} ns */

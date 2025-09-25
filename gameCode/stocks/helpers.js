@@ -20,7 +20,7 @@ export function getStockCommission() {
 }
 
 /** @param {NS} ns */
-function iOwnStocks(ns) {
+export function iOwnStocks(ns) {
     const symbols = ns.stock.getSymbols();
     for (const symbol of symbols) {
         const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
