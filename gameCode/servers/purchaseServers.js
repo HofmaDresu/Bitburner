@@ -3,13 +3,14 @@ import { getBestServerToHack, copyAndRunHackingScripts, availableSpendingMoney }
 /** @param {NS} ns */
 export async function main(ns) {
     let ram = 8;
+    const maxRam = 1_048_576;
     ns.disableLog("sleep");
     ns.disableLog("getServerMoneyAvailable");
     ns.disableLog("getServerMaxMoney");
 
     await purchaseServersToLimit(ns, ram);
 
-    while (ns.getPurchasedServerMaxRam() >= ram * 2) {
+    while (ns.getPurchasedServerMaxRam() >= ram * 2 && ram * 2 <= maxRam) {
         const oldRam = ram;
         const newRam = ram * 2;
         await upgradeServersToRam(ns, oldRam, newRam);
