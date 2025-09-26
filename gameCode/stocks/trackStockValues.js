@@ -3,6 +3,11 @@ import { STOCK_HISTORY_FILE_NAME, getStockHistory, canTradeStocks } from "stocks
 /** @param {NS} ns */
 export async function main(ns) {
     while (!canTradeStocks(ns)) {
+        ns.stock.purchaseWseAccount();
+        ns.stock.purchaseTixApi();
+        // Not using these right now, enable if we start looking at it
+        //ns.stock.purchase4SMarketData();
+        //ns.stock.purchase4SMarketDataTixApi();
         await ns.sleep(10_000);
     }
 

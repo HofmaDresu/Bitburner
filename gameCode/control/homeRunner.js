@@ -1,5 +1,5 @@
 import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, getBestServerToHack, nukeServer, getServers } from "helpers";
-import { canTradeStocks } from "stocks/helpers";
+import { canTradeStocks, iOwnStocks } from "stocks/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -14,13 +14,12 @@ export async function main(ns) {
     // start at uni until hack >= 10?
     // next create BruteSSH (or buy)
     // next rob store until hacking >= 25
+    // next create AutoLink (or buy)
+    // next rob store until hacking >= 75
     // next create DeepscankV1 (or buy)
     // next rob store hack >= 100
     // next create FTPCrack (or buy)
-    // next create AutoLink (or buy)
     // next rob store until $ from hacking > 1_000_000
-
-    //TODO: buy WSE stuff
 
     // TODO: augments
     // get Sector12 cashroot starter kit
@@ -29,6 +28,7 @@ export async function main(ns) {
         const config = getConfig(ns);
 
         crackServers(ns);
+        purchaseThings(ns);
 
         const allRunnablesStared = startOrStopScripts(ns, config);
 
@@ -40,12 +40,17 @@ export async function main(ns) {
     }
 }
 
+/** @param {NS} ns */
 function crackServers(ns) {    
     const servers = getServers(ns);
     for (let server of servers) {
         nukeServer(ns, server);
         // TODO: backdoor server in singularity
     };
+}
+
+/** @param {NS} ns */
+function purchaseThings(ns) {
 }
 
 /** @param {NS} ns */
@@ -58,11 +63,11 @@ function startOrStopScripts(ns, config) {
     // TODO: run something more primitave on n00dles
 
     if(higherPriorityItemsStarted && !shouldManipulateMarket) {
-        killScriptIfRunningOnHome(ns, "stocks/manipulateTheMarket.js")
+        killScriptIfRunningOnHome(ns, "control/makeServersManipulateMarket.js")
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersSelfHack.js");
     }
 
-    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources.hacknet * 100 <= moneySources.hacking) {
+    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources.hacknet > 1_000_000 && moneySources.hacknet * 100 <= moneySources.hacking) {
         config[CONFIG_SPEND_ON_HACKNET] = false;
         saveConfig(ns, config);
     }
@@ -88,7 +93,7 @@ function startOrStopScripts(ns, config) {
 
     if(higherPriorityItemsStarted && shouldManipulateMarket) {
         killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js")
-        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "stocks/manipulateTheMarket.js");
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersManipulateMarket.js");
     }
 
     return higherPriorityItemsStarted;
