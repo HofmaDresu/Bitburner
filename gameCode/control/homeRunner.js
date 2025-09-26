@@ -32,7 +32,7 @@ export async function main(ns) {
 
         const allRunnablesStared = startOrStopScripts(ns, config);
 
-        if (allRunnablesStared) {
+        if (allRunnablesStared && !config[CONFIG_SHARE_ALL_MEMORY]) {
             startScriptOnHomeIfAble(ns, "control/makeMoneyFromTarget.js", [getBestServerToHack(ns)]);
         }
 
@@ -62,7 +62,7 @@ function startOrStopScripts(ns, config) {
     // TODO: restart makeMoneyFromTarget and servers when new best target exists
     // TODO: run something more primitave on n00dles
 
-    if(higherPriorityItemsStarted && !shouldManipulateMarket && !config[CONFIG_SHARE_ALL_MEMORY]) {
+    if(higherPriorityItemsStarted && !shouldManipulateMarket) {
         killScriptIfRunningOnHome(ns, "control/makeServersManipulateMarket.js");
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersSelfHack.js");
     }
@@ -91,14 +91,13 @@ function startOrStopScripts(ns, config) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "stocks/playTheMarket.js");
     }
 
-    if(higherPriorityItemsStarted && shouldManipulateMarket && !config[CONFIG_SHARE_ALL_MEMORY]) {
+    if(higherPriorityItemsStarted && shouldManipulateMarket) {
         killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js");
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersManipulateMarket.js");
     }
 
-    if(config[CONFIG_SHARE_ALL_MEMORY]) {
-        killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js");
-        killScriptIfRunningOnHome(ns, "control/makeServersManipulateMarket.js");
+    if(higherPriorityItemsStarted && config[CONFIG_SHARE_ALL_MEMORY]) {
+        killScriptIfRunningOnHome(ns, "control/makeMoneyFromTarget.js");
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "factions/shareAllMemory.js");
     }
 
