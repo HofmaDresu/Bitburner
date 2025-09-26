@@ -1,4 +1,4 @@
-import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, getBestServerToHack, nukeServer, getServers } from "helpers";
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, getBestServerToHack, nukeServer, getServers } from "helpers";
 import { canTradeStocks, iOwnStocks } from "stocks/helpers";
 
 /** @param {NS} ns */
@@ -62,8 +62,8 @@ function startOrStopScripts(ns, config) {
     // TODO: restart makeMoneyFromTarget and servers when new best target exists
     // TODO: run something more primitave on n00dles
 
-    if(higherPriorityItemsStarted && !shouldManipulateMarket) {
-        killScriptIfRunningOnHome(ns, "control/makeServersManipulateMarket.js")
+    if(higherPriorityItemsStarted && !shouldManipulateMarket && !config[CONFIG_SHARE_ALL_MEMORY]) {
+        killScriptIfRunningOnHome(ns, "control/makeServersManipulateMarket.js");
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersSelfHack.js");
     }
 
@@ -75,14 +75,14 @@ function startOrStopScripts(ns, config) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js");
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/upgradeNodes.js");
     } else {
-        killScriptIfRunningOnHome(ns, "hacknet/purchaseNodes.js")
-        killScriptIfRunningOnHome(ns, "hacknet/upgradeNodes.js")
+        killScriptIfRunningOnHome(ns, "hacknet/purchaseNodes.js");
+        killScriptIfRunningOnHome(ns, "hacknet/upgradeNodes.js");
     }
 
     if (config[CONFIG_SPEND_ON_SERVERS] && higherPriorityItemsStarted) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "servers/purchaseServers.js");
     } else {
-        killScriptIfRunningOnHome(ns, "servers/purchaseServers.js")
+        killScriptIfRunningOnHome(ns, "servers/purchaseServers.js");
     }
     if(higherPriorityItemsStarted) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "stocks/trackStockValues.js");
@@ -91,9 +91,15 @@ function startOrStopScripts(ns, config) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "stocks/playTheMarket.js");
     }
 
-    if(higherPriorityItemsStarted && shouldManipulateMarket) {
-        killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js")
+    if(higherPriorityItemsStarted && shouldManipulateMarket && !config[CONFIG_SHARE_ALL_MEMORY]) {
+        killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js");
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersManipulateMarket.js");
+    }
+
+    if(config[CONFIG_SHARE_ALL_MEMORY]) {
+        killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js");
+        killScriptIfRunningOnHome(ns, "control/makeServersManipulateMarket.js");
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "factions/shareAllMemory.js");
     }
 
     return higherPriorityItemsStarted;

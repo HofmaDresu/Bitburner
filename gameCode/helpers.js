@@ -54,6 +54,7 @@ export const CONFIG_FILE_NAME = "database/config.js";
 export const CONFIG_BUY_STOCKS = "buyStocks";
 export const CONFIG_SPEND_ON_HACKNET = "spendOnHacknet";
 export const CONFIG_SPEND_ON_SERVERS = "spendOnServers";
+export const CONFIG_SHARE_ALL_MEMORY = "shareAllMemory";
 
 /** @param {NS} ns */
 export function getConfig(ns) {    

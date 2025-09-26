@@ -1,4 +1,4 @@
-import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, startScriptOnHomeIfAble} from "helpers";
+import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, startScriptOnHomeIfAble} from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -31,5 +31,6 @@ function setStartupConfig(ns) {
     config[CONFIG_BUY_STOCKS] = true;
     config[CONFIG_SPEND_ON_HACKNET] = true;
     config[CONFIG_SPEND_ON_SERVERS] = true;
+    config[CONFIG_SHARE_ALL_MEMORY] = false;
     saveConfig(ns, config);
 }
