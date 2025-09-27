@@ -67,7 +67,7 @@ function joinNonCityFactions(ns) {
 async function crackServers(ns) {    
     const servers = getServers(ns);
     for (let server of servers) {
-        if(nukeServer(ns, server)) {
+        if(nukeServer(ns, server) && !ns.getServer(server).backdoorInstalled) {
             await ns.singularity.installBackdoor();
         }
     };
