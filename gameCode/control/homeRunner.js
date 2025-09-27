@@ -9,21 +9,6 @@ export async function main(ns) {
     ns.disableLog("getServerMaxMoney");
     ns.disableLog("getServerMaxRam");
     ns.disableLog("getServerUsedRam");
-    // TODO: improve with singularity
-    // buy TOR / files when able
-    // start at uni until hack >= 10?
-    // next create BruteSSH (or buy)
-    // next rob store until hacking >= 25
-    // next create AutoLink (or buy)
-    // next rob store until hacking >= 75
-    // next create DeepscankV1 (or buy)
-    // next rob store hack >= 100
-    // next create FTPCrack (or buy)
-    // next rob store until $ from hacking > 1_000_000
-
-    // TODO: augments
-    // get Sector12 cashroot starter kit
-    // get Tian Di Hui Neuroreceptor Management Implant
     while (true) {
         const config = getConfig(ns);
 
@@ -45,7 +30,6 @@ function crackServers(ns) {
     const servers = getServers(ns);
     for (let server of servers) {
         nukeServer(ns, server);
-        // TODO: backdoor server in singularity
     };
 }
 
