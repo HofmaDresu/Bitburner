@@ -7,20 +7,11 @@ export async function main(ns) {
     ns.disableLog("getServerRequiredHackingLevel");
     ns.disableLog("getServerMaxMoney");
     ns.killall("home");
-    let stillMoreToStart = true;
+    
+    setStartupConfig(ns);
 
-    while(stillMoreToStart) {
-        let started = false;
-        setStartupConfig(ns);
-
-        started = startScriptOnHomeIfAble(ns, "control/homeRunner.js");
-        if (!started) {
-            await ns.sleep(10000);
-            continue;
-        }
-
-        await ns.sleep(1000);
-        stillMoreToStart = false;
+    if(!startScriptOnHomeIfAble(ns, "control/homeRunnerSingularity.js")) {
+        startScriptOnHomeIfAble(ns, "control/homeRunner.js");
     }
 }
 

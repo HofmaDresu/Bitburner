@@ -1,0 +1,138 @@
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, getBestServerToHack, nukeServer, getServers } from "helpers";
+import { canTradeStocks, iOwnStocks } from "stocks/helpers";
+
+/** @param {NS} ns */
+export async function main(ns) {
+    ns.disableLog("sleep");
+    ns.disableLog("scan");
+    ns.disableLog("getServerRequiredHackingLevel");
+    ns.disableLog("getServerMaxMoney");
+    ns.disableLog("getServerMaxRam");
+    ns.disableLog("getServerUsedRam");
+
+    // TODO: augments
+    // get Sector12 cashroot starter kit
+    // get Tian Di Hui Neuroreceptor Management Implant
+    while (true) {
+        const config = getConfig(ns);
+
+        await earlyGameSetUp(ns);
+        await crackServers(ns);
+        purchaseThings(ns);
+        joinNonCityFactions(ns);
+
+        const allRunnablesStared = startOrStopScripts(ns, config);
+
+        if (allRunnablesStared && !config[CONFIG_SHARE_ALL_MEMORY]) {
+            startScriptOnHomeIfAble(ns, "control/makeMoneyFromTarget.js", [getBestServerToHack(ns)]);
+        }
+
+
+        await ns.sleep(10_000);
+    }
+}
+
+/** @param {NS} ns */
+async function earlyGameSetUp(ns) {
+    const player = ns.getPlayer();
+    const hackSkill = player.skills.hacking;
+    const moneySources = ns.getMoneySources().sinceInstall;
+
+    if (hackSkill <= 10) {
+        ns.singularity.universityCourse("rothman university", "Stucy Computer Scienc", true);
+    } else if (hackSkill <= 50) {
+        ns.singularity.commitCrime("Rob Store", true);
+    } else if (!ns.fileExists("BruteSSH.exe", "home")) {
+        ns.singularity.createProgram("BruteSSH.exe", true);
+    } else if (hackSkill <= 100) {
+        ns.singularity.commitCrime("Rob Store", true);
+    } else if (!ns.fileExists("FTPCrack.exe", "home")) {
+        ns.singularity.createProgram("FTPCrack.exe", true);
+    } else if (moneySources.hacking < 1_000_000) {
+        ns.singularity.commitCrime("Rob Store", true);
+    }
+}
+
+
+/** @param {NS} ns */
+function joinNonCityFactions(ns) {
+    const factionInvites = ns.singularity.checkFactionInvitations();
+    const cityFactions = ["Sector-12", "Chongqing", "New Tokyo", "Ishima", "Aevum", "Volhaven"];
+    const nonCityFactionInvites = factionInvites.filter((f) => cityFactions.indexOf(f) === -1);
+
+    nonCityFactionInvites.forEach((f) => ns.singularity.joinFaction(f));
+}
+
+/** @param {NS} ns */
+async function crackServers(ns) {    
+    const servers = getServers(ns);
+    for (let server of servers) {
+        if(nukeServer(ns, server)) {
+            await ns.singularity.installBackdoor();
+        }
+    };
+}
+
+/** @param {NS} ns */
+function purchaseThings(ns) {
+    ns.singularity.purchaseTor();
+    ns.singularity.purchaseProgram("BruteSSH.exe");
+    ns.singularity.purchaseProgram("FTPCrack.exe");
+    ns.singularity.purchaseProgram("relaySMTP.exe");
+    ns.singularity.purchaseProgram("HTTPWorm.exe");
+    ns.singularity.purchaseProgram("SQLInject.exe");
+    ns.singularity.purchaseProgram("DeepscanV2.exe");
+    ns.singularity.purchaseProgram("AutoLink.exe");
+    ns.singularity.purchaseProgram("Formulas.exe");
+}
+
+/** @param {NS} ns */
+function startOrStopScripts(ns, config) {    
+    let higherPriorityItemsStarted = true;
+    const moneySources = ns.getMoneySources().sinceInstall;
+    const shouldManipulateMarket = canTradeStocks(ns) && iOwnStocks(ns);
+
+    // TODO: restart makeMoneyFromTarget and servers when new best target exists
+    // TODO: run something more primitave on n00dles
+
+    if(higherPriorityItemsStarted && !shouldManipulateMarket) {
+        killScriptIfRunningOnHome(ns, "control/makeServersManipulateMarket.js");
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersSelfHack.js");
+    }
+
+    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources.hacknet > 1_000_000 && moneySources.hacknet * 100 <= moneySources.hacking) {
+        config[CONFIG_SPEND_ON_HACKNET] = false;
+        saveConfig(ns, config);
+    }
+    if (config[CONFIG_SPEND_ON_HACKNET] && higherPriorityItemsStarted) {
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js");
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/upgradeNodes.js");
+    } else {
+        killScriptIfRunningOnHome(ns, "hacknet/purchaseNodes.js");
+        killScriptIfRunningOnHome(ns, "hacknet/upgradeNodes.js");
+    }
+
+    if (config[CONFIG_SPEND_ON_SERVERS] && higherPriorityItemsStarted) {
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "servers/purchaseServers.js");
+    } else {
+        killScriptIfRunningOnHome(ns, "servers/purchaseServers.js");
+    }
+    if(higherPriorityItemsStarted) {
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "stocks/trackStockValues.js");
+    }
+    if(higherPriorityItemsStarted) {
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "stocks/playTheMarket.js");
+    }
+
+    if(higherPriorityItemsStarted && shouldManipulateMarket) {
+        killScriptIfRunningOnHome(ns, "control/makeServersSelfHack.js");
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersManipulateMarket.js");
+    }
+
+    if(higherPriorityItemsStarted && config[CONFIG_SHARE_ALL_MEMORY]) {
+        killScriptIfRunningOnHome(ns, "control/makeMoneyFromTarget.js");
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "factions/shareAllMemory.js");
+    }
+
+    return higherPriorityItemsStarted;
+}
