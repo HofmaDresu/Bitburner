@@ -10,9 +10,9 @@ export async function main(ns) {
     
     setStartupConfig(ns);
 
-    //if(!startScriptOnHomeIfAble(ns, "control/homeRunnerSingularity.js")) {
+    if(!startScriptOnHomeIfAble(ns, "control/homeRunnerSingularity.js")) {
         startScriptOnHomeIfAble(ns, "control/homeRunner.js");
-    //}
+    }
 }
 
 /** @param {NS} ns */
