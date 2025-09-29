@@ -13,7 +13,6 @@ export async function main(ns) {
         const config = getConfig(ns);
 
         crackServers(ns);
-        purchaseThings(ns);
 
         const allRunnablesStared = startOrStopScripts(ns, config);
 
@@ -34,10 +33,6 @@ function crackServers(ns) {
 }
 
 /** @param {NS} ns */
-function purchaseThings(ns) {
-}
-
-/** @param {NS} ns */
 function startOrStopScripts(ns, config) {    
     let higherPriorityItemsStarted = true;
     const moneySources = ns.getMoneySources().sinceInstall;
@@ -51,7 +46,7 @@ function startOrStopScripts(ns, config) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersSelfHack.js");
     }
 
-    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources.hacknet > 1_000_000 && moneySources.hacknet * 100 <= moneySources.hacking) {
+    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources["hacknet"] > 1_000_000 && moneySources["hacknet"] * 100 <= moneySources.hacking) {
         config[CONFIG_SPEND_ON_HACKNET] = false;
         saveConfig(ns, config);
     }

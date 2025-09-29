@@ -100,7 +100,7 @@ function startOrStopScripts(ns, config) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersSelfHack.js");
     }
 
-    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources.hacknet > 1_000_000 && moneySources.hacknet * 100 <= moneySources.hacking) {
+    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources["hacknet"] > 1_000_000 && moneySources["hacknet"] * 100 <= moneySources.hacking) {
         config[CONFIG_SPEND_ON_HACKNET] = false;
         saveConfig(ns, config);
     }
