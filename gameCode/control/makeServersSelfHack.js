@@ -29,8 +29,7 @@ async function startServers(ns, servers) {
 
 /** @param {NS} ns */
  function startServerIfPossible(ns, server) {    
-    // TODO: run something more primitave on n00dles
-    const mainScript = "control/makeMoneyFromTarget.js";
+    const mainScript = server === "n00dles" ? "control/simpleMakeMoneyFromTarget.js" : "control/makeMoneyFromTarget.js";
     if (ns.scriptRunning(mainScript, server)) {
         return;
     } else {

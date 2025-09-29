@@ -46,8 +46,8 @@ function startOrStopScripts(ns, config) {
         saveConfig(ns, config);
     }
     if (config[CONFIG_SPEND_ON_HACKNET] && higherPriorityItemsStarted) {
-        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js");
-        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/upgradeNodes.js");
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js", ["--canUseAllMoney"]);
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/upgradeNodes.js", ["--canUseAllMoney"]);
     } else {
         killScriptIfRunningOnHome(ns, "hacknet/purchaseNodes.js");
         killScriptIfRunningOnHome(ns, "hacknet/upgradeNodes.js");

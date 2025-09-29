@@ -31,7 +31,8 @@ export function getServers(ns) {
 /** @param {NS} ns */
 export function copyAndRunHackingScripts(ns, hostname, target) {
     copyAllScripts(ns, hostname);
-    ns.exec("control/makeMoneyFromTarget.js", hostname, 1, target);
+    const mainScript = server === "n00dles" ? "control/simpleMakeMoneyFromTarget.js" : "control/makeMoneyFromTarget.js";
+    ns.exec(mainScript, hostname, 1, target);
 }
 
 /** @param {NS} ns */
@@ -41,7 +42,7 @@ export function copyAndRunMarketManipulationScripts(ns, hostname) {
 }
 
 function copyAllScripts(ns, hostname) {
-    ns.scp(["control/makeMoneyFromTarget.js", "growing/growTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js", "weakening/weakenTarget.js", "stocks/manipulateTheMarket.js", "helpers.js", "stocks/helpers.js"], hostname);
+    ns.scp(["control/simpleMakeMoneyFromTarget.js", "control/makeMoneyFromTarget.js", "growing/growTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js", "weakening/weakenTarget.js", "stocks/manipulateTheMarket.js", "helpers.js", "stocks/helpers.js"], hostname);
 }
 
 /** @param {NS} ns */

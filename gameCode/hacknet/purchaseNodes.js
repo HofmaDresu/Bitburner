@@ -7,9 +7,9 @@ export async function main(ns) {
     ns.disableLog("getServerMaxMoney");
 
     const maxNodes = ns.hacknet.maxNumNodes();
+    const canUseAllMoney = ns.flags([["canUseAllMoney", false]])["canUseAllMoney"];
     while (ns.hacknet.numNodes() < maxNodes) {
-        // TODO: param for no reserve
-        const availableMoney = availableSpendingMoney(ns, .9);
+        const availableMoney = availableSpendingMoney(ns, canUseAllMoney ? 0 : .9);
         const purchaseCost = ns.hacknet.getPurchaseNodeCost();
 
         if (availableMoney > purchaseCost) {
