@@ -8,6 +8,7 @@ export async function main(ns) {
 
     const maxNodes = ns.hacknet.maxNumNodes();
     while (ns.hacknet.numNodes() < maxNodes) {
+        // TODO: param for no reserve
         const availableMoney = availableSpendingMoney(ns, .9);
         const purchaseCost = ns.hacknet.getPurchaseNodeCost();
 

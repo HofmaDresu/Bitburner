@@ -39,5 +39,5 @@ async function startServers(ns, servers) {
     if (ns.getServerMaxRam(server) < ns.getScriptRam(mainScript)) return;
 
     ns.print(`Attempting to start server '${server}'`)
-    copyAndRunHackingScripts(ns, server, server)
+    copyAndRunHackingScripts(ns, server, "n00dles")
 }

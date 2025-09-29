@@ -1,6 +1,11 @@
+import { getConfig } from "helpers";
+
+
+
 /** @param {NS} ns */
 export async function main(ns) {
-    let hostname = "joesguns";
-    ns.scp(["control/makeMoneyFromTarget.js", "growing/growTargetToMax.js", "hacking/hackTarget.js", "weakening/weakenTargetToMin.js"], hostname);
-    ns.exec("control/makeMoneyFromTarget.js", hostname, 1, "joesguns");
+    ns.ui.openTail();
+    const foo = getConfig(ns);
+    ns.print(ns.getMoneySources().sinceInstall.hacknet * 100);
+    ns.print(ns.getMoneySources().sinceInstall.hacking);
 }

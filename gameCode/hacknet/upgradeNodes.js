@@ -45,6 +45,7 @@ function isAnyUpgradeAvailable(ns, numberOfNodes) {
 
 /** @param {NS} ns */
 function upgradeIfPossible(ns, nodeIndex, upgradeType) {
+    // TODO: param for no reserve
     const availableMoney = availableSpendingMoney(ns, .9);
     function upgrade(priceCheckFn, upgradeFn) {
         if(priceCheckFn(nodeIndex, 1) < availableMoney) {

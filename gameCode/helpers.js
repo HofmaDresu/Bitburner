@@ -99,6 +99,7 @@ function calculateThreads(ns, script, hostname) {
 export function getAvailableRam(ns, hostname) {
     const maxServerRam = ns.getServerMaxRam(hostname);
     const usedServerRam = ns.getServerUsedRam(hostname);
+    // TODO: no reserve if 32gb
     const reservedMemory = hostname === "home" ? Math.min(maxServerRam * .1, 20) : 0;
     return Math.max(0, maxServerRam - usedServerRam - reservedMemory);
 }

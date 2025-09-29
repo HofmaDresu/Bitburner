@@ -10,8 +10,12 @@ export async function main(ns) {
     
     setStartupConfig(ns);
 
-    if(!startScriptOnHomeIfAble(ns, "control/homeRunnerSingularity.js")) {
-        startScriptOnHomeIfAble(ns, "control/homeRunner.js");
+    if(ns.getServerMaxRam("home") <= 64) {
+        startScriptOnHomeIfAble(ns, "control/homeRunnerLowRam.js");
+    } else {
+        if(!startScriptOnHomeIfAble(ns, "control/homeRunnerSingularity.js")) {
+            startScriptOnHomeIfAble(ns, "control/homeRunner.js");
+        }
     }
 }
 
