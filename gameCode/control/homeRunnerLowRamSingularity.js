@@ -34,27 +34,27 @@ async function earlyGameSetUp(ns) {
     const currentWork = ns.singularity.getCurrentWork();
 
     if (hackSkill <= 10) {
-        if(currentWork.type !== "CLASS") {
+        if(currentWork?.type !== "CLASS") {
             ns.singularity.universityCourse("rothman university", "Stucy Computer Science", true);
         }
     } else if (hackSkill <= 50) {
-        if(currentWork.type !== "CRIME") {
+        if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }
     } else if (!ns.fileExists("BruteSSH.exe", "home")) {
-        if(currentWork.type !== "CREATE_PROGRAM") {
+        if(currentWork?.type !== "CREATE_PROGRAM") {
             ns.singularity.createProgram("BruteSSH.exe", true);
         }
     } else if (hackSkill <= 100) {
-        if(currentWork.type !== "CLASS") {
+        if(currentWork?.type !== "CLASS") {
             ns.singularity.commitCrime("Rob Store", true);
         }
     } else if (!ns.fileExists("FTPCrack.exe", "home")) {
-        if(currentWork.type !== "CREATE_PROGRAM") {
+        if(currentWork?.type !== "CREATE_PROGRAM") {
             ns.singularity.createProgram("FTPCrack.exe", true);
         }
     } else if (moneySources.hacking < 1_000_000) {
-        if(currentWork.type !== "CRIME") {
+        if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }
     }
