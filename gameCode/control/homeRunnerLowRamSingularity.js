@@ -1,5 +1,5 @@
 import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS } from "helpers";
-import { crackServers } from "control/helper";
+import { crackServers } from "control/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {

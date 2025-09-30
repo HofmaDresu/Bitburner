@@ -1,6 +1,6 @@
 import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, getBestServerToHack } from "helpers";
 import { canTradeStocks, iOwnStocks } from "stocks/helpers";
-import { crackServers } from "control/helper";
+import { crackServers } from "control/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
