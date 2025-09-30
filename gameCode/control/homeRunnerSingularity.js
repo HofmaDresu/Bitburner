@@ -39,7 +39,7 @@ async function earlyGameSetUp(ns) {
     const moneySources = ns.getMoneySources().sinceInstall;
 
     if (hackSkill <= 10) {
-        ns.singularity.universityCourse("rothman university", "Stucy Computer Scienc", true);
+        ns.singularity.universityCourse("rothman university", "Stucy Computer Science", true);
     } else if (hackSkill <= 50) {
         ns.singularity.commitCrime("Rob Store", true);
     } else if (!ns.fileExists("BruteSSH.exe", "home")) {
