@@ -1,5 +1,6 @@
-import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, getBestServerToHack, nukeServer, getServers } from "helpers";
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, getBestServerToHack } from "helpers";
 import { canTradeStocks, iOwnStocks } from "stocks/helpers";
+import { crackServers } from "control/helper";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -61,21 +62,6 @@ function joinNonCityFactions(ns) {
     const nonCityFactionInvites = factionInvites.filter((f) => cityFactions.indexOf(f) === -1);
 
     nonCityFactionInvites.forEach((f) => ns.singularity.joinFaction(f));
-}
-
-/** @param {NS} ns */
-async function crackServers(ns) {
-    //TODO: need servers ordered in a way we can connect via neighbors
-    const servers = getServers(ns);
-    for (let server of servers) {
-        if(nukeServer(ns, server) && !ns.getServer(server).backdoorInstalled && server !== "home") {           
-            
-            if(ns.singularity.connect(server)) {
-                await ns.singularity.installBackdoor();
-            }
-        }
-    };
-    ns.singularity.connect("home");
 }
 
 /** @param {NS} ns */

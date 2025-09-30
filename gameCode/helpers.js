@@ -29,6 +29,19 @@ export function getServers(ns) {
 }
 
 /** @param {NS} ns */
+export function getServersTree(ns, currentServer, parentServer) {
+    const serversTree = {};
+    const connectedServers = ns.scan(currentServer).filter((s) => s.indexOf("pserv") === -1 && s !== parentServer);
+    if(connectedServers.length === 0) {
+        return {};
+    }
+    for (let server of connectedServers) {
+        serversTree[server] = getServersTree(ns, server, currentServer)
+    }
+    return serversTree;
+}
+
+/** @param {NS} ns */
 export function copyAndRunHackingScripts(ns, hostname, target) {
     copyAllScripts(ns, hostname);
     const mainScript = hostname === "n00dles" ? "control/simpleMakeMoneyFromTarget.js" : "control/makeMoneyFromTarget.js";
@@ -115,7 +128,7 @@ export function nukeServer(ns, server) {
     ns.disableLog("relaysmtp");
     ns.disableLog("httpworm");
     ns.disableLog("sqlinject");
-    ns.disableLog("nuke");
+    // ns.disableLog("nuke");
     const player = ns.getPlayer();
     const requiredHackingLevel = ns.getServerRequiredHackingLevel(server);
     const requiredNumPorts = ns.getServerNumPortsRequired(server);
