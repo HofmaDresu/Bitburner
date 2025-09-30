@@ -26,12 +26,15 @@ export async function main(ns) {
 }
 
 /** @param {NS} ns */
-async function crackServers(ns) {    
+async function crackServers(ns) {
+    //TODO: need servers ordered in a way we can connect via neighbors
     const servers = getServers(ns);
     for (let server of servers) {
-        if(nukeServer(ns, server) && !ns.getServer(server).backdoorInstalled) {
-            ns.singularity.connect(server);
-            await ns.singularity.installBackdoor();
+        if(nukeServer(ns, server) && !ns.getServer(server).backdoorInstalled && server !== "home") {           
+            
+            if(ns.singularity.connect(server)) {
+                await ns.singularity.installBackdoor();
+            }
         }
     };
     ns.singularity.connect("home");
