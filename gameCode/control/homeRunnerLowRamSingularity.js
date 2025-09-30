@@ -84,7 +84,7 @@ function startOrStopScripts(ns, config) {
     }
 
     if (config[CONFIG_SPEND_ON_SERVERS] && higherPriorityItemsStarted) {
-        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "servers/purchaseServers8gb.js");
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "servers/purchaseServers.js");
     } else {
         killScriptIfRunningOnHome(ns, "servers/purchaseServers.js");
     }
