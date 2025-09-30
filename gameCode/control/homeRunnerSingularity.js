@@ -68,9 +68,11 @@ async function crackServers(ns) {
     const servers = getServers(ns);
     for (let server of servers) {
         if(nukeServer(ns, server) && !ns.getServer(server).backdoorInstalled) {
+            ns.singularity.connect(server);
             await ns.singularity.installBackdoor();
         }
     };
+    ns.singularity.connect("home");
 }
 
 /** @param {NS} ns */
