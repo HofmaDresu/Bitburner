@@ -31,8 +31,9 @@ export function getServers(ns) {
 /** @param {NS} ns */
 export function copyAndRunHackingScripts(ns, hostname, target) {
     copyAllScripts(ns, hostname);
-    const mainScript = server === "n00dles" ? "control/simpleMakeMoneyFromTarget.js" : "control/makeMoneyFromTarget.js";
-    ns.exec(mainScript, hostname, 1, target);
+    const mainScript = hostname === "n00dles" ? "control/simpleMakeMoneyFromTarget.js" : "control/makeMoneyFromTarget.js";
+    const threads = hostname === "n00dles" ? 2 : 1;
+    ns.exec(mainScript, hostname, threads, target);
 }
 
 /** @param {NS} ns */
