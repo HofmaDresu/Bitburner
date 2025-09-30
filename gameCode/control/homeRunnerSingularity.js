@@ -38,19 +38,32 @@ async function earlyGameSetUp(ns) {
     const player = ns.getPlayer();
     const hackSkill = player.skills.hacking;
     const moneySources = ns.getMoneySources().sinceInstall;
+    const currentWork = ns.singularity.getCurrentWork();
 
     if (hackSkill <= 10) {
-        ns.singularity.universityCourse("rothman university", "Stucy Computer Science", true);
+        if(currentWork.type !== "CLASS") {
+            ns.singularity.universityCourse("rothman university", "Stucy Computer Science", true);
+        }
     } else if (hackSkill <= 50) {
-        ns.singularity.commitCrime("Rob Store", true);
+        if(currentWork.type !== "CRIME") {
+            ns.singularity.commitCrime("Rob Store", true);
+        }
     } else if (!ns.fileExists("BruteSSH.exe", "home")) {
-        ns.singularity.createProgram("BruteSSH.exe", true);
+        if(currentWork.type !== "CREATE_PROGRAM") {
+            ns.singularity.createProgram("BruteSSH.exe", true);
+        }
     } else if (hackSkill <= 100) {
-        ns.singularity.commitCrime("Rob Store", true);
+        if(currentWork.type !== "CLASS") {
+            ns.singularity.commitCrime("Rob Store", true);
+        }
     } else if (!ns.fileExists("FTPCrack.exe", "home")) {
-        ns.singularity.createProgram("FTPCrack.exe", true);
+        if(currentWork.type !== "CREATE_PROGRAM") {
+            ns.singularity.createProgram("FTPCrack.exe", true);
+        }
     } else if (moneySources.hacking < 1_000_000) {
-        ns.singularity.commitCrime("Rob Store", true);
+        if(currentWork.type !== "CRIME") {
+            ns.singularity.commitCrime("Rob Store", true);
+        }
     }
 }
 
