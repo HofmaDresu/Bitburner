@@ -40,6 +40,7 @@ async function earlyGameSetUp(ns) {
     const hackSkill = player.skills.hacking;
     const moneySources = ns.getMoneySources().sinceInstall;
     const currentWork = ns.singularity.getCurrentWork();
+    //TODO: only focus if we don't have Neuroreceptor Management Implant
 
     if (hackSkill <= 10) {
         if(currentWork?.type !== "CLASS") {
@@ -89,6 +90,8 @@ function purchaseThings(ns) {
     ns.singularity.purchaseProgram("DeepscanV2.exe");
     ns.singularity.purchaseProgram("AutoLink.exe");
     ns.singularity.purchaseProgram("Formulas.exe");
+    ns.singularity.upgradeHomeRam();
+    ns.singularity.upgradeHomeCores();
 }
 
 /** @param {NS} ns */
