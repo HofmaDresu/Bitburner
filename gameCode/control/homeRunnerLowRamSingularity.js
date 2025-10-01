@@ -57,6 +57,8 @@ async function earlyGameSetUp(ns) {
         if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }
+    } else if (!currentWork) {
+        ns.singularity.commitCrime("Rob Store", false);
     }
 }
 
