@@ -92,7 +92,7 @@ function purchaseThings(ns) {
     ns.singularity.purchaseProgram("SQLInject.exe");
     ns.singularity.purchaseProgram("DeepscanV2.exe");
     ns.singularity.purchaseProgram("AutoLink.exe");
-    ns.singularity.purchaseProgram("Formulas.exe");
+    //ns.singularity.purchaseProgram("Formulas.exe");
     ns.singularity.upgradeHomeRam();
     ns.singularity.upgradeHomeCores();
 }
