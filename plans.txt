@@ -1,1 +1,2 @@
-* Share from servers with $0
+* Share memory from servers with $0
+* Make stock stuff use 4s market data
