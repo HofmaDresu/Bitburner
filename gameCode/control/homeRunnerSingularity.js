@@ -19,6 +19,7 @@ export async function main(ns) {
         const config = getConfig(ns);
 
         await earlyGameSetUp(ns);
+        //TODO: break out into its own script for async work
         await crackServers(ns);
         purchaseThings(ns);
         joinNonCityFactions(ns);
@@ -68,7 +69,8 @@ async function earlyGameSetUp(ns) {
         }
     } else if (!currentWork) {
         // TODO: something, something, check stats and Homicide or Assassination if good enough
-        ns.singularity.commitCrime("Rob Store", false);
+        // ns.singularity.commitCrime("Rob Store", false);
+        ns.singularity.commitCrime("Homicide", false);
     }
 }
 
