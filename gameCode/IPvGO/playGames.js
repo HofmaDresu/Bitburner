@@ -1,15 +1,19 @@
 
+const OPPONENTS = ["Netburners", "Slum Snakes", "The Black Hand", "Tetrads", "Daedalus", "Illuminati"];
+
 /** @param {NS} ns */
 export async function main(ns) {
     while(true) {
-        ns.go.resetBoardState("Netburners", 5);
-        await ns.sleep(1000);
-        await playRandomGame(ns);
+        for (const opponent of OPPONENTS) {
+            ns.go.resetBoardState(opponent, 5);
+            await ns.sleep(1000);
+            await playGame(ns);
+        }
     }
 }
 
 /** @param {NS} ns */
-async function playRandomGame(ns) {
+async function playGame(ns) {
   let result, x, y;
 
   do {
@@ -38,9 +42,6 @@ async function playRandomGame(ns) {
 
     // Keep looping as long as the opponent is playing moves
   } while (result?.type !== "gameOver");
-
-  // TODO: add a loop to keep playing
-  // TODO: reset board, e.g. `ns.go.resetBoardState("Netburners", 7)`
 }
 
 /**
