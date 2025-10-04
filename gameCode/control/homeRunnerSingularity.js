@@ -147,5 +147,9 @@ function startOrStopScripts(ns, config) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "factions/shareAllMemory.js");
     }
 
+    if(higherPriorityItemsStarted) {
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "IPvGO/playGames.js");
+    }
+
     return higherPriorityItemsStarted;
 }
