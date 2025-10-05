@@ -6,7 +6,7 @@ export async function main(ns) {
     while (true) {
         for (const opponent of OPPONENTS) {
             ns.go.resetBoardState(opponent, 5);
-            await ns.sleep(1000);
+            //await ns.sleep(1000);
             await playGame(ns);
         }
     }
