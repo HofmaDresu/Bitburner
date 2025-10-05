@@ -26,9 +26,10 @@ export async function main(ns) {
 /** @param {NS} ns */
 function setStartupConfig(ns) {
     const config = getConfig(ns);
+    const mulitpliers = ns.getBitNodeMultipliers();
     // TODO only start things if multiplier is high enough
     config[CONFIG_BUY_STOCKS] = true;
-    config[CONFIG_SPEND_ON_HACKNET] = true;
+    config[CONFIG_SPEND_ON_HACKNET] = mulitpliers.HacknetNodeMoney >= .5;
     config[CONFIG_SPEND_ON_SERVERS] = true;
     config[CONFIG_SHARE_ALL_MEMORY] = false;
     saveConfig(ns, config);
