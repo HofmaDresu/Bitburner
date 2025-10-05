@@ -41,8 +41,6 @@ async function playGame(ns) {
         // Log opponent's next move, once it happens
         await ns.go.opponentNextTurn();
 
-        await ns.sleep(100);
-
         // Keep looping as long as the opponent is playing moves
     } while (result?.type !== "gameOver");
 }
