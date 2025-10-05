@@ -70,6 +70,7 @@ export const CONFIG_BUY_STOCKS = "buyStocks";
 export const CONFIG_SPEND_ON_HACKNET = "spendOnHacknet";
 export const CONFIG_SPEND_ON_SERVERS = "spendOnServers";
 export const CONFIG_SHARE_ALL_MEMORY = "shareAllMemory";
+export const CONFIG_NODE_MULTIPLIERS = "configNodeMultipliers";
 
 /** @param {NS} ns */
 export function getConfig(ns) {    

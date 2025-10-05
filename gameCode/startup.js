@@ -1,4 +1,4 @@
-import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, startScriptOnHomeIfAble} from "helpers";
+import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_NODE_MULTIPLIERS, startScriptOnHomeIfAble} from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -29,7 +29,8 @@ function setStartupConfig(ns) {
     const mulitpliers = ns.getBitNodeMultipliers();
     config[CONFIG_BUY_STOCKS] = true;
     config[CONFIG_SPEND_ON_HACKNET] = mulitpliers.HacknetNodeMoney >= .5;
-    config[CONFIG_SPEND_ON_SERVERS] = true;
+    config[CONFIG_SPEND_ON_SERVERS] = mulitpliers.ScriptHackMoney > 0 && mulitpliers.ScriptHackMoneyGain > 0 && mulitpliers.PurchasedServerLimit > 0 && mulitpliers.ServerMaxMoney > 0;
     config[CONFIG_SHARE_ALL_MEMORY] = false;
+    config[CONFIG_NODE_MULTIPLIERS] = mulitpliers;
     saveConfig(ns, config);
 }
