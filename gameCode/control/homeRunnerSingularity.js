@@ -20,12 +20,12 @@ export async function main(ns) {
     while (true) {
         const config = getConfig(ns);
 
-        await earlyGameSetUp(ns);
+        const setupComplete = await earlyGameSetUp(ns);
         //TODO: break out into its own script for async work
         await crackServers(ns);
         purchaseThings(ns);
         joinNonCityFactions(ns);
-        advanceThroughHacking(ns);
+        if (setupComplete) advanceThroughHacking(ns);
 
         const allRunnablesStared = startOrStopScripts(ns, config);
 
@@ -50,31 +50,35 @@ async function earlyGameSetUp(ns) {
         if(currentWork?.type !== "CLASS") {
             ns.singularity.universityCourse("rothman university", "Stucy Computer Science", true);
         }
+        return false;
     } else if (hackSkill <= 50) {
         if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }
+        return false;
     } else if (!ns.fileExists("BruteSSH.exe", "home")) {
         if(currentWork?.type !== "CREATE_PROGRAM") {
             ns.singularity.createProgram("BruteSSH.exe", true);
         }
+        return false;
     } else if (hackSkill <= 100) {
         if(currentWork?.type !== "CLASS") {
             ns.singularity.commitCrime("Rob Store", true);
         }
+        return false;
     } else if (!ns.fileExists("FTPCrack.exe", "home")) {
         if(currentWork?.type !== "CREATE_PROGRAM") {
             ns.singularity.createProgram("FTPCrack.exe", true);
         }
+        return false;
     } else if (moneySources.hacking < 1_000_000) {
         if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }
-    } else if (!currentWork) {
-        // TODO: something, something, check stats and Homicide or Assassination if good enough
-        // ns.singularity.commitCrime("Rob Store", false);
-        ns.singularity.commitCrime("Homicide", false);
-    }
+        return false;
+    } 
+    
+    return true;
 }
 
 
