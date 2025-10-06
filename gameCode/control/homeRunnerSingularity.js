@@ -7,6 +7,7 @@ import advanceThroughHacking from "control/advanceThroughHacking";
 export async function main(ns) {
     ns.disableLog("disableLog");
     ns.disableLog("sleep");
+    ns.disableLog("nuke");
     ns.disableLog("scan");
     ns.disableLog("getServerRequiredHackingLevel");
     ns.disableLog("getServerMaxMoney");
