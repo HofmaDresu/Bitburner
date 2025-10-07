@@ -73,6 +73,33 @@ export default async function advanceThroughHacking(ns) {
             installAugments(ns);
         }
     }
+    if(hasAugment(ns, "Cranial Signal Processors - Gen IV") && !hasAugment(ns, "Neural Accelerator")) {
+        const faction = "BitRunners";
+        ns.print("Starting faction " + faction + " 1");
+        if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
+            if(totalMoney < getAugmentPrice(ns, "Artificial Bio-neural Network Implant")) return;
+            if(ns.singularity.getFactionFavor(faction) + ns.singularity.getFactionFavorGain(faction) < ns.getFavorToDonate()) return;
+            if(!(hasAugment(ns, "Artificial Bio-neural Network Implant", true) || ns.singularity.purchaseAugmentation(faction, "Artificial Bio-neural Network Implant"))) return;
+            if(!(hasAugment(ns, "Cranial Signal Processors - Gen V", true) || ns.singularity.purchaseAugmentation(faction, "Cranial Signal Processors - Gen V"))) return;
+            if(!(hasAugment(ns, "Neural Accelerator", true) || ns.singularity.purchaseAugmentation(faction, "Neural Accelerator"))) return;
+            maxOutNeuroFlux(ns, faction);
+            installAugments(ns);
+        }
+    }
+    if(hasAugment(ns, "Neural Accelerator") && !hasAugment(ns, "BitRunners Neurolink")) {
+        const faction = "BitRunners";
+        ns.print("Starting faction " + faction + " 2");
+        if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
+            const highestRepCost = ns.singularity.getAugmentationRepReq("Embedded Netburner Module Core V2 Upgrade")
+            if (!ns.fileExists("Formulas.exe")) return;
+            const requiredDonation = ns.formulas.reputation.donationForRep(highestRepCost - ns.singularity.getFactionRep(faction), ns.getPlayer())
+            if(!(totalMoney >= requiredDonation && ns.singularity.donateToFaction(faction, requiredDonation))) return;
+            if(!(hasAugment(ns, "Embedded Netburner Module Core V2 Upgrade", true) || ns.singularity.purchaseAugmentation(faction, "Embedded Netburner Module Core V2 Upgrade"))) return;
+            if(!(hasAugment(ns, "BitRunners Neurolink", true) || ns.singularity.purchaseAugmentation(faction, "BitRunners Neurolink"))) return;
+            maxOutNeuroFlux(ns, faction);
+            installAugments(ns);
+        }
+    }
 
 }
 
