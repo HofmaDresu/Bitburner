@@ -76,7 +76,12 @@ async function earlyGameSetUp(ns) {
             ns.singularity.commitCrime("Rob Store", true);
         }
         return false;
-    } 
+    } else if(!currentWork) {
+        // TODO: Homicide if high enough chance
+        ns.singularity.commitCrime("Rob Store", true);
+        return true;
+    }
+    
     
     return true;
 }
