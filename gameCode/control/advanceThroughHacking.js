@@ -1,3 +1,5 @@
+import { startScriptOnHomeIfAble} from "helpers";
+
 /** @param {NS} ns */
 export default async function advanceThroughHacking(ns) {
     const currentWork = ns.singularity.getCurrentWork();
@@ -16,6 +18,7 @@ export default async function advanceThroughHacking(ns) {
         ns.print("Starting faction " + faction);
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             if(totalMoney < getAugmentPrice(ns, "Cranial Signal Processors - Gen II")) return;
+            startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
             if(!(hasAugment(ns, "Cranial Signal Processors - Gen I", true) || ns.singularity.purchaseAugmentation(faction, "Cranial Signal Processors - Gen I"))) return;
             if(!(hasAugment(ns, "Cranial Signal Processors - Gen II", true) || ns.singularity.purchaseAugmentation(faction, "Cranial Signal Processors - Gen II"))) return;
             if(!(hasAugment(ns, "BitWire", true) || ns.singularity.purchaseAugmentation(faction, "BitWire"))) return;
@@ -29,6 +32,7 @@ export default async function advanceThroughHacking(ns) {
         ns.print("Starting faction " + faction);
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             if(totalMoney < getAugmentPrice(ns, "CashRoot Starter Kit")) return;
+            startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
             if(!(hasAugment(ns, "CashRoot Starter Kit", true) || ns.singularity.purchaseAugmentation(faction, "CashRoot Starter Kit"))) return;
             maxOutNeuroFlux(ns, faction);
             installAugments(ns);
@@ -39,6 +43,7 @@ export default async function advanceThroughHacking(ns) {
         ns.print("Starting faction " + faction);
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             if(totalMoney < getAugmentPrice(ns, "Neural-Retention Enhancement") + 1.9 * getAugmentPrice(ns, "CRTX42-AA Gene Modification")) return;
+            startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
             if(!(hasAugment(ns, "Neural-Retention Enhancement", true) || ns.singularity.purchaseAugmentation(faction, "Neural-Retention Enhancement"))) return;
             if(!(hasAugment(ns, "CRTX42-AA Gene Modification", true) || ns.singularity.purchaseAugmentation(faction, "CRTX42-AA Gene Modification"))) return;
             if(!(hasAugment(ns, "Artificial Synaptic Potentiation", true) || ns.singularity.purchaseAugmentation(faction, "Artificial Synaptic Potentiation"))) return;
@@ -52,6 +57,7 @@ export default async function advanceThroughHacking(ns) {
         ns.print("Starting faction " + faction + " 1");
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             if(totalMoney < getAugmentPrice(ns, "The Black Hand")) return;
+            startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
             if(!(hasAugment(ns, "The Black Hand", true) || ns.singularity.purchaseAugmentation(faction, "The Black Hand"))) return;
             if(!(hasAugment(ns, "Cranial Signal Processors - Gen III", true) || ns.singularity.purchaseAugmentation(faction, "Cranial Signal Processors - Gen III"))) return;
             if(!(hasAugment(ns, "DataJack", true) || ns.singularity.purchaseAugmentation(faction, "DataJack"))) return;
@@ -65,6 +71,7 @@ export default async function advanceThroughHacking(ns) {
         ns.print("Starting faction " + faction + " 2");
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             if(totalMoney < getAugmentPrice(ns, "Neuralstimulator")) return;
+            startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
             if(!(hasAugment(ns, "Neuralstimulator", true) || ns.singularity.purchaseAugmentation(faction, "Neuralstimulator"))) return;
             if(!(hasAugment(ns, "Embedded Netburner Module Core Implant", true) || ns.singularity.purchaseAugmentation(faction, "Embedded Netburner Module Core Implant"))) return;
             if(!(hasAugment(ns, "Enhanced Myelin Sheathing", true) || ns.singularity.purchaseAugmentation(faction, "Enhanced Myelin Sheathing"))) return;
@@ -78,6 +85,7 @@ export default async function advanceThroughHacking(ns) {
         ns.print("Starting faction " + faction + " 1");
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             if(totalMoney < getAugmentPrice(ns, "Artificial Bio-neural Network Implant")) return;
+            startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
             if(ns.singularity.getFactionFavor(faction) + ns.singularity.getFactionFavorGain(faction) < ns.getFavorToDonate()) return;
             if(!(hasAugment(ns, "Artificial Bio-neural Network Implant", true) || ns.singularity.purchaseAugmentation(faction, "Artificial Bio-neural Network Implant"))) return;
             if(!(hasAugment(ns, "Cranial Signal Processors - Gen V", true) || ns.singularity.purchaseAugmentation(faction, "Cranial Signal Processors - Gen V"))) return;
@@ -93,7 +101,10 @@ export default async function advanceThroughHacking(ns) {
             const highestRepCost = ns.singularity.getAugmentationRepReq("Embedded Netburner Module Core V2 Upgrade")
             if (!ns.fileExists("Formulas.exe")) return;
             const requiredDonation = ns.formulas.reputation.donationForRep(highestRepCost - ns.singularity.getFactionRep(faction), ns.getPlayer())
-            if(!(totalMoney >= requiredDonation && ns.singularity.donateToFaction(faction, requiredDonation))) return;
+            if(totalMoney < requiredDonation) return;
+            // Not sharing memory because we're purchasing rep
+            startScriptOnHomeIfAble(ns, "windDown.js");
+            if(!ns.singularity.donateToFaction(faction, requiredDonation)) return;
             if(!(hasAugment(ns, "Embedded Netburner Module Core V2 Upgrade", true) || ns.singularity.purchaseAugmentation(faction, "Embedded Netburner Module Core V2 Upgrade"))) return;
             if(!(hasAugment(ns, "BitRunners Neurolink", true) || ns.singularity.purchaseAugmentation(faction, "BitRunners Neurolink"))) return;
             maxOutNeuroFlux(ns, faction);
