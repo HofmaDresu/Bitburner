@@ -7,11 +7,11 @@ export default async function advanceThroughHacking(ns) {
     // TODO: Eventually add more money sources like gangs, corporations, bladeburner, etc as we get them
     const totalMoney = moneySinceInstall.hacking + moneySinceInstall.hacknet + moneySinceInstall.crime + Math.max(0, moneySinceInstall.stock);
 
-    // 1
+    // 1 (this probably will never be automated unless I cheat)
     // Save until total produced = $$ of 128 GB
     // Get to 128 GB home
     // Join CyberSec
-    // Buy 7 NeuroFlux
+    // Buy max NeuroFlux
     // install augments
     if (ns.getServerMaxRam("home") >= 128 && !hasAugment(ns, "Synaptic Enhancement Implant")) {
         const faction = "CyberSec";
