@@ -113,12 +113,14 @@ export default async function advanceThroughHacking(ns) {
         ns.print("Starting faction " + faction + " 2");
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             const highestRepCost = ns.singularity.getAugmentationRepReq("Embedded Netburner Module Core V2 Upgrade")
+            const currentRep = ns.singularity.getFactionRep(faction);
+            const haveEnoughRep = currentRep < highestRepCost;
             if (!ns.fileExists("Formulas.exe")) return;
-            const requiredDonation = ns.formulas.reputation.donationForRep(highestRepCost - ns.singularity.getFactionRep(faction), ns.getPlayer())
-            if(totalMoney < requiredDonation) return;
-            // Not sharing memory because we're purchasing rep
+            const requiredDonation = ns.formulas.reputation.donationForRep(highestRepCost - currentRep, ns.getPlayer())
+            if(totalMoney < requiredDonation && haveEnoughRep) return;
+            // Not sharing memory because we're purchasing rep OR we've got enough
             startScriptOnHomeIfAble(ns, "windDown.js");
-            if(!ns.singularity.donateToFaction(faction, requiredDonation)) return;
+            if(!(haveEnoughRep || ns.singularity.donateToFaction(faction, requiredDonation))) return;
             if(!(getAugmentIfAble(ns, faction, "Embedded Netburner Module Core V2 Upgrade"))) return;
             if(!(getAugmentIfAble(ns, faction, "BitRunners Neurolink"))) return;
             maxOutNeuroFlux(ns, faction);
