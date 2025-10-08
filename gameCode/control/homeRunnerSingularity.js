@@ -1,7 +1,7 @@
 import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, getBestServerToHack } from "helpers";
 import { canTradeStocks, iOwnStocks } from "stocks/helpers";
 import { crackServers } from "control/helpers";
-import advanceThroughHacking from "control/advanceThroughHacking";
+import advanceThroughHacking, {hasAugment} from "control/advanceThroughHacking";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -77,11 +77,14 @@ async function earlyGameSetUp(ns) {
         }
         return false;
     } else if(!currentWork) {
-        // TODO: Homicide if high enough chance
-        ns.singularity.commitCrime("Rob Store", true);
+        if(hasAugment(ns, "The Red Pill")) {
+            ns.singularity.commitCrime("Homicide", true);
+
+        } else {
+            ns.singularity.commitCrime("Rob Store", true);
+        }
         return true;
-    }
-    
+    }    
     
     return true;
 }

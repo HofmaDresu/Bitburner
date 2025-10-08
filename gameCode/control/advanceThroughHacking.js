@@ -255,7 +255,7 @@ function getAugmentPrice(ns, augment) {
 }
 
 /** @param {NS} ns */
-function hasAugment(ns, augment, includePurchased = false) {
+export function hasAugment(ns, augment, includePurchased = false) {
     const installedAugments = ns.singularity.getOwnedAugmentations(includePurchased);
     return installedAugments.indexOf(augment) !== -1
 }
