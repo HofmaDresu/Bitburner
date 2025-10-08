@@ -164,7 +164,7 @@ export default async function advanceThroughHacking(ns) {
                 installAugments(ns);
             }
         }
-        if(hasAugment(ns, "Augmented Targeting I") && !hasAugment(ns, "")) {
+        if(hasAugment(ns, "Augmented Targeting I") && !hasAugment(ns, "NutriGen Implant")) {
             const faction = "New Tokyo";
             ns.print("Starting faction " + faction);
             ns.singularity.travelToCity("New Tokyo");
@@ -176,8 +176,20 @@ export default async function advanceThroughHacking(ns) {
                 installAugments(ns);
             }
         }
+        if(hasAugment(ns, "NutriGen Implant") && !hasAugment(ns, "DermaForce Particle Barrier")) {
+            const faction = "Volhaven";
+            ns.print("Starting faction " + faction);
+            ns.singularity.travelToCity("Volhaven");
+            if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
+                if(totalMoney < getAugmentPrice(ns, "Neuregen Gene Modification")) return;
+                startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
+                if(!(getAugmentIfAble(ns, faction, "Combat Rib II"))) return;
+                if(!(getAugmentIfAble(ns, faction, "DermaForce Particle Barrier"))) return;
+                maxOutNeuroFlux(ns, faction);
+                installAugments(ns);
+            }
+        }
 
-        // Travel to Volhaven
         // Travel to Aevum
 
         return;
