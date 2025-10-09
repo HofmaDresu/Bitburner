@@ -11,7 +11,7 @@ export async function main(ns) {
     
     setStartupConfig(ns);
     // Reset stock values
-    ns.write(STOCK_HISTORY_FILE_NAME, JSON.stringify(stockHistoryData), "w");
+    ns.write(STOCK_HISTORY_FILE_NAME, JSON.stringify({}), "w");
 
     if(ns.getServerMaxRam("home") < 64) {
         startScriptOnHomeIfAble(ns, "control/homeRunnerLowRam.js");
