@@ -28,8 +28,9 @@ export default async function advanceThroughHacking(ns) {
         }
     }
     if(hasAugment(ns, "Cranial Signal Processors - Gen II") && !hasAugment(ns, "CashRoot Starter Kit")) {
-        const faction = "Sector 12";
+        const faction = "Sector-12";
         ns.print("Starting faction " + faction);
+        ns.singularity.joinFaction(faction);
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             if(totalMoney < getAugmentPrice(ns, "CashRoot Starter Kit")) return;
             startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
@@ -84,7 +85,7 @@ export default async function advanceThroughHacking(ns) {
         const faction = "Chongqing";
         ns.print("Starting faction " + faction);
         ns.singularity.travelToCity("Chongqing");
-            ns.singularity.joinFaction(faction);
+        ns.singularity.joinFaction(faction);
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
             if(totalMoney < getAugmentPrice(ns, "Neuregen Gene Modification")) return;
             startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
