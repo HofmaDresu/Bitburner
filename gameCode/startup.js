@@ -1,4 +1,5 @@
 import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_NODE_MULTIPLIERS, startScriptOnHomeIfAble} from "helpers";
+import { STOCK_HISTORY_FILE_NAME } from "stocks/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -9,6 +10,8 @@ export async function main(ns) {
     ns.killall("home");
     
     setStartupConfig(ns);
+    // Reset stock values
+    ns.write(STOCK_HISTORY_FILE_NAME, JSON.stringify(stockHistoryData), "w");
 
     if(ns.getServerMaxRam("home") < 64) {
         startScriptOnHomeIfAble(ns, "control/homeRunnerLowRam.js");
