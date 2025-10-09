@@ -17,12 +17,13 @@ export default async function advanceThroughHacking(ns) {
         const faction = "CyberSec";
         ns.print("Starting faction " + faction);
         if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
-            if(totalMoney < getAugmentPrice(ns, "Cranial Signal Processors - Gen II")) return;
+            if(totalMoney < getAugmentPrice(ns, "Neurotrainer I")) return;
             startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
             if(!(getAugmentIfAble(ns, faction, "Cranial Signal Processors - Gen I"))) return;
             if(!(getAugmentIfAble(ns, faction, "Cranial Signal Processors - Gen II"))) return;
             if(!(getAugmentIfAble(ns, faction, "BitWire"))) return;
             if(!(getAugmentIfAble(ns, faction, "Synaptic Enhancement Implant"))) return;
+            if(!(getAugmentIfAble(ns, faction, "Neurotrainer I"))) return;
             maxOutNeuroFlux(ns, faction);
             installAugments(ns);
         }
