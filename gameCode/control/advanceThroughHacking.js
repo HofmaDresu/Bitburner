@@ -132,7 +132,7 @@ export default async function advanceThroughHacking(ns) {
     }
 
     const requiredAugs = getConfig(ns)[CONFIG_NODE_MULTIPLIERS]["DaedalusAugsRequirement"];
-    if(ns.singularity.getOwnedAugmentations().length < requiredAugs.length) {
+    if(ns.singularity.getOwnedAugmentations().length < requiredAugs) {
         if(hasAugment(ns, "BitRunners Neurolink") && !hasAugment(ns, "Wired Reflexes")) {
             const faction = "Tian Di Hui";
             ns.print("Starting faction " + faction);
