@@ -266,18 +266,56 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && theSyndicate(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && speakersForTheDead(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && theDarkArmy(ns, currentWork, totalMoney);
-    prevFactionIsDone = prevFactionIsDone && workForMegaCorp(ns, currentWork);
+    prevFactionIsDone = prevFactionIsDone && megaCorp(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && eCorp(ns, currentWork, totalMoney);
+    if (currentWork?.type !== "FACTION") {
+        ns.singularity.commitCrime("Kidnap", false);
+    }
 }
 
 /** @param {NS} ns */
-function workForMegaCorp(ns, currentWork) {
-    const company = "MegaCorp";
-    ns.singularity.applyToCompany(company, "IT");
-    if (currentWork?.type !== "FACTION") {
-        ns.singularity.workForCompany(company);
-    }
+function eCorp(ns, currentWork, totalMoney) {
+    const faction = "ECorp";
+    const description = null;
+    const prepWork = [
+        () => { return workITForCompany(ns, faction, currentWork)}
+    ];
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", false)},
+        () => {return totalMoney > getAugmentPrice(ns, "CordiARC Fusion Reactor")},
+    ];
+    const buyRep = () => {return true;};
+    const whenToStartBuying = [];
+    const orderedAugs = ["CordiARC Fusion Reactor", "Graphene Bionic Legs Upgrade"];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
+}
 
-    return true;
+/** @param {NS} ns */
+function megaCorp(ns, currentWork, totalMoney) {
+    const faction = "MegaCorp";
+    const description = null;
+    const prepWork = [
+        () => { return workITForCompany(ns, faction, currentWork)}
+    ];
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", false)},
+        () => {return totalMoney > getAugmentPrice(ns, "CordiARC Fusion Reactor")},
+    ];
+    const buyRep = () => {return true;};
+    const whenToStartBuying = [];
+    const orderedAugs = ["CordiARC Fusion Reactor", "Graphene Bionic Legs Upgrade"];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
+}
+
+/** @param {NS} ns */
+function workITForCompany(ns, currentWork, company) {
+    ns.singularity.applyToCompany(company, "IT");
+    if (currentWork?.type !== "FACTION" && currentWork?.type !== "COMPANY" && currentWork?.companyName !== company && ns.singularity.getCompanyRep(company) < 400_000 ) {
+        ns.singularity.workForCompany(company, false);
+        return false;
+    } else {
+        return true;
+    }
 }
 
 /** @param {NS} ns */
