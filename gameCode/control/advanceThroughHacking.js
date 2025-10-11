@@ -258,8 +258,11 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && volhaven(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && aevum(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && sector12_2(ns, currentWork, totalMoney);
-    ns.singularity.commitCrime("Homicide", false);
+    if (currentWork?.type !== "FACTION") {
+        ns.singularity.commitCrime("Homicide", false);
+    }
     prevFactionIsDone = prevFactionIsDone && slumSnakes(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && tetrads(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && theSyndicate(ns, currentWork, totalMoney);
 }
 
@@ -274,7 +277,24 @@ function theSyndicate(ns, currentWork, totalMoney) {
     ];
     const buyRep = () => {return true;};
     const whenToStartBuying = [];
-    const orderedAugs = ["The Shadow's Simulacrum", "Bionic Legs", "Power Recirculation Core", "Bionic Spine", "Combat Rib III", "Augmented Targeting III", "BrachiBlades", "HemoRecirculator"];
+    const orderedAugs = ["The Shadow's Simulacrum", "Bionic Legs", "Bionic Spine", "Combat Rib III", "Augmented Targeting III", "BrachiBlades"];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
+}
+
+/** @param {NS} ns */
+function tetrads(ns, currentWork, totalMoney) {
+    const faction = "Tetrads";
+    const description = null;
+    const prepWork = [
+        () => {return ns.singularity.travelToCity("Chongqing");}
+    ];
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "security", true)},
+        () => {return totalMoney > getAugmentPrice(ns, "Bionic Arms")}
+    ];
+    const buyRep = () => {return true;};
+    const whenToStartBuying = [];
+    const orderedAugs = ["Bionic Arms", "Power Recirculation Core", "HemoRecirculator"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
