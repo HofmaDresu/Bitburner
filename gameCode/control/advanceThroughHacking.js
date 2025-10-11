@@ -266,6 +266,18 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && theSyndicate(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && speakersForTheDead(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && theDarkArmy(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && workForMegaCorp(ns, currentWork);
+}
+
+/** @param {NS} ns */
+function workForMegaCorp(ns, currentWork) {
+    const company = "MegaCorp";
+    ns.singularity.applyToCompany(company, "IT");
+    if (currentWork?.type !== "FACTION") {
+        ns.singularity.workForCompany(company);
+    }
+
+    return true;
 }
 
 /** @param {NS} ns */
