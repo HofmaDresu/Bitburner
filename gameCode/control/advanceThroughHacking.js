@@ -264,6 +264,40 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && slumSnakes(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && tetrads(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && theSyndicate(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && speakersForTheDead(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && theDarkArmy(ns, currentWork, totalMoney);
+}
+
+/** @param {NS} ns */
+function speakersForTheDead(ns, currentWork, totalMoney) {
+    const faction = "Speakers for the Dead";
+    const description = null;
+    const prepWork = [];
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
+        () => {return totalMoney > getAugmentPrice(ns, "Unstable Circadian Modulator")},
+    ];
+    const buyRep = () => {return true;};
+    const whenToStartBuying = [];
+    const orderedAugs = ["Unstable Circadian Modulator", "Graphene BrachiBlades Upgrade"];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
+}
+
+/** @param {NS} ns */
+function theDarkArmy(ns, currentWork, totalMoney) {
+    const faction = "The Dark Army";
+    const description = null;
+    const prepWork = [
+        () => {return ns.singularity.travelToCity("Chongqing");}
+    ];
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
+        () => {return totalMoney > getAugmentPrice(ns, "Graphene Bionic Arms Upgrade")},
+    ];
+    const buyRep = () => {return true;};
+    const whenToStartBuying = [];
+    const orderedAugs = ["Graphene Bionic Arms Upgrade"];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
 /** @param {NS} ns */
