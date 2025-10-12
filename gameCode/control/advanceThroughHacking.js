@@ -259,8 +259,8 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && volhaven(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && aevum(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && sector12_2(ns, currentWork, totalMoney);
-    if (currentWork?.type !== "FACTION" && currentWork?.type !== "CRIME" && !hasAugment(ns, "Graphene Bionic Arms Upgrade")) {
-        ns.singularity.commitCrime("Kidnap", false);
+    if (prevFactionIsDone && currentWork?.type !== "FACTION" && currentWork?.type !== "CRIME" && !hasAugment(ns, "Graphene Bionic Arms Upgrade")) {
+        ns.singularity.commitCrime("Homicide", false);
     }
     prevFactionIsDone = prevFactionIsDone && slumSnakes(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && tetrads(ns, currentWork, totalMoney);
@@ -269,8 +269,10 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && theDarkArmy(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && megaCorp(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && eCorp(ns, currentWork, totalMoney);
-    prevFactionIsDone = prevFactionIsDone && workITForCompany(ns, "KuaiGong International", currentWork);
-    prevFactionIsDone = kuaiGongInternational(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && kuaiGongInternational(ns, currentWork, totalMoney);
+    if (prevFactionIsDone && currentWork?.type !== "FACTION" && currentWork?.type !== "CRIME") {
+        ns.singularity.commitCrime("Kidnap", false);
+    }
 }
 
 /** @param {NS} ns */
@@ -282,11 +284,11 @@ function kuaiGongInternational(ns, currentWork, totalMoney) {
     ];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", false)},
-        () => {return totalMoney > getAugmentPrice(ns, "Graphene Bionic Spine Upgrade")},
+        () => {return totalMoney > getAugmentPrice(ns, "Photosynthetic Cells")},
     ];
     const buyRep = () => {return true;};
     const whenToStartBuying = [];
-    const orderedAugs = ["Graphene Bionic Spine Upgrade", "ECorp HVMind Implant", "PC Direct-Neural Interface", "PC Direct-Neural Interface Optimization Submodule"];
+    const orderedAugs = ["Photosynthetic Cells", "HyperSight Corneal Implant", "FocusWire"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
