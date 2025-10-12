@@ -1,4 +1,5 @@
 import { startScriptOnHomeIfAble, getConfig, CONFIG_NODE_MULTIPLIERS} from "helpers";
+import { sellAll } from "stocks/sellAll";
 
 /** @param {NS} ns */
 export default async function advanceThroughHacking(ns) {
@@ -268,6 +269,25 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && theDarkArmy(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && megaCorp(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && eCorp(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && workITForCompany(ns, "KuaiGong International", currentWork);
+    prevFactionIsDone = kuaiGongInternational(ns, currentWork, totalMoney);
+}
+
+/** @param {NS} ns */
+function kuaiGongInternational(ns, currentWork, totalMoney) {
+    const faction = "KuaiGong International";
+    const description = null;
+    const prepWork = [
+        () => { return workITForCompany(ns, faction, currentWork)}
+    ];
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", false)},
+        () => {return totalMoney > getAugmentPrice(ns, "Graphene Bionic Spine Upgrade")},
+    ];
+    const buyRep = () => {return true;};
+    const whenToStartBuying = [];
+    const orderedAugs = ["Graphene Bionic Spine Upgrade", "ECorp HVMind Implant", "PC Direct-Neural Interface", "PC Direct-Neural Interface Optimization Submodule"];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
 /** @param {NS} ns */
@@ -723,6 +743,7 @@ function getAugmentIfAble(ns, faction, augment) {
 
 /** @param {NS} ns */
 function maxOutNeuroFlux(ns, faction) {
+    sellAll(ns);
     let success = false;
     do {
         success = ns.singularity.purchaseAugmentation(faction, "NeuroFlux Governor");

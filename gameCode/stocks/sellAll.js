@@ -2,9 +2,17 @@ import { canTradeStocks } from "stocks/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
-    ns.disableLog('getServerMoneyAvailable');
     while (!canTradeStocks(ns)) {
         await ns.stock.nextUpdate();
+    }
+
+    sellAll(ns);
+}
+
+/** @param {NS} ns */
+export function sellAll(ns) {
+    if (!canTradeStocks(ns)) {
+       return;
     }
 
     const symbols = ns.stock.getSymbols();
@@ -17,4 +25,5 @@ export async function main(ns) {
             ns.stock.sellShort(symbol, sharesShort);
         }
     });
+
 }
