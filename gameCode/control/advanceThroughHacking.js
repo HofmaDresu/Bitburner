@@ -259,8 +259,8 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && volhaven(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && aevum(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && sector12_2(ns, currentWork, totalMoney);
-    if (currentWork?.type !== "FACTION" && currentWork?.type !== "CRIME") {
-        //ns.singularity.commitCrime("Kidnap", false);
+    if (currentWork?.type !== "FACTION" && currentWork?.type !== "CRIME" && !hasAugment(ns, "Graphene Bionic Arms Upgrade")) {
+        ns.singularity.commitCrime("Kidnap", false);
     }
     prevFactionIsDone = prevFactionIsDone && slumSnakes(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && tetrads(ns, currentWork, totalMoney);
