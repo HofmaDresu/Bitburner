@@ -258,8 +258,8 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && volhaven(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && aevum(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && sector12_2(ns, currentWork, totalMoney);
-    if (currentWork?.type !== "FACTION") {
-        ns.singularity.commitCrime("Homicide", false);
+    if (currentWork?.type !== "FACTION" && currentWork?.type !== "CRIME") {
+        //ns.singularity.commitCrime("Kidnap", false);
     }
     prevFactionIsDone = prevFactionIsDone && slumSnakes(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && tetrads(ns, currentWork, totalMoney);
@@ -268,9 +268,6 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && theDarkArmy(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && megaCorp(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && eCorp(ns, currentWork, totalMoney);
-    if (currentWork?.type !== "FACTION") {
-        ns.singularity.commitCrime("Kidnap", false);
-    }
 }
 
 /** @param {NS} ns */
@@ -282,11 +279,11 @@ function eCorp(ns, currentWork, totalMoney) {
     ];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", false)},
-        () => {return totalMoney > getAugmentPrice(ns, "CordiARC Fusion Reactor")},
+        () => {return totalMoney > getAugmentPrice(ns, "Graphene Bionic Spine Upgrade")},
     ];
     const buyRep = () => {return true;};
     const whenToStartBuying = [];
-    const orderedAugs = ["CordiARC Fusion Reactor", "Graphene Bionic Legs Upgrade"];
+    const orderedAugs = ["Graphene Bionic Spine Upgrade", "ECorp HVMind Implant", "PC Direct-Neural Interface", "PC Direct-Neural Interface Optimization Submodule"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -308,7 +305,7 @@ function megaCorp(ns, currentWork, totalMoney) {
 }
 
 /** @param {NS} ns */
-function workITForCompany(ns, currentWork, company) {
+function workITForCompany(ns, company, currentWork) {
     ns.singularity.applyToCompany(company, "IT");
     if (currentWork?.type !== "FACTION" && currentWork?.type !== "COMPANY" && currentWork?.companyName !== company && ns.singularity.getCompanyRep(company) < 400_000 ) {
         ns.singularity.workForCompany(company, false);
