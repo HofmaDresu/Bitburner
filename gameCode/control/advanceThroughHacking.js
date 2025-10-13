@@ -17,34 +17,9 @@ export default async function advanceThroughHacking(ns) {
     // install augments
     if (ns.getServerMaxRam("home") >= 128) {
         prevFactionIsDone = true;
-        // const faction = "CyberSec";
-        // ns.print("Starting faction " + faction);
-        // if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
-        //     if(totalMoney < getAugmentPrice(ns, "Neurotrainer I")) return;
-        //     startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
-        //     if(!(getAugmentIfAble(ns, faction, "Cranial Signal Processors - Gen I"))) return;
-        //     if(!(getAugmentIfAble(ns, faction, "Cranial Signal Processors - Gen II"))) return;
-        //     if(!(getAugmentIfAble(ns, faction, "BitWire"))) return;
-        //     if(!(getAugmentIfAble(ns, faction, "Synaptic Enhancement Implant"))) return;
-        //     if(!(getAugmentIfAble(ns, faction, "Neurotrainer I"))) return;
-        //     maxOutNeuroFlux(ns, faction);
-        //     installAugments(ns);
-        // }
     }
     prevFactionIsDone = prevFactionIsDone && cyberSec(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && sector12_1(ns, currentWork, totalMoney);
-    if(hasAugment(ns, "Cranial Signal Processors - Gen II") && !hasAugment(ns, "CashRoot Starter Kit")) {
-        const faction = "Sector-12";
-        ns.print("Starting faction " + faction);
-        ns.singularity.joinFaction(faction);
-        if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
-            if(totalMoney < getAugmentPrice(ns, "CashRoot Starter Kit")) return;
-            startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
-            if(!(getAugmentIfAble(ns, faction, "CashRoot Starter Kit"))) return;
-            maxOutNeuroFlux(ns, faction);
-            installAugments(ns);
-        }
-    }
     prevFactionIsDone = prevFactionIsDone && niteSec(ns, currentWork, totalMoney);
     // if(hasAugment(ns, "CashRoot Starter Kit") && !hasAugment(ns, "Neurotrainer II")) {
     //     const faction = "NiteSec";
@@ -286,7 +261,7 @@ function kuaiGongInternational(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", false)},
         () => {return totalMoney > getAugmentPrice(ns, "Photosynthetic Cells")},
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Photosynthetic Cells", "HyperSight Corneal Implant", "FocusWire"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -303,7 +278,7 @@ function eCorp(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", false)},
         () => {return totalMoney > getAugmentPrice(ns, "Graphene Bionic Spine Upgrade")},
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Graphene Bionic Spine Upgrade", "ECorp HVMind Implant", "PC Direct-Neural Interface", "PC Direct-Neural Interface Optimization Submodule"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -320,7 +295,7 @@ function megaCorp(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", false)},
         () => {return totalMoney > getAugmentPrice(ns, "CordiARC Fusion Reactor")},
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["CordiARC Fusion Reactor", "Graphene Bionic Legs Upgrade"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -346,7 +321,7 @@ function speakersForTheDead(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Unstable Circadian Modulator")},
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Unstable Circadian Modulator", "Graphene BrachiBlades Upgrade"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -363,7 +338,7 @@ function theDarkArmy(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Graphene Bionic Arms Upgrade")},
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Graphene Bionic Arms Upgrade"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -378,7 +353,7 @@ function theSyndicate(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "The Shadow's Simulacrum")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["The Shadow's Simulacrum", "Bionic Legs", "Bionic Spine", "Combat Rib III", "Augmented Targeting III", "BrachiBlades"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -395,7 +370,7 @@ function tetrads(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "security", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Bionic Arms")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Bionic Arms", "Power Recirculation Core", "HemoRecirculator"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -410,7 +385,7 @@ function slumSnakes(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "security", true)},
         () => {return totalMoney > getAugmentPrice(ns, "SmartSonar Implant")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["SmartSonar Implant", "LuminCloaking-V1 Skin Implant", "LuminCloaking-V2 Skin Implant"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -425,7 +400,7 @@ function cyberSec(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Cranial Signal Processors - Gen I")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Cranial Signal Processors - Gen I", "Cranial Signal Processors - Gen II", "BitWire", "Synaptic Enhancement Implant", "Neurotrainer I"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -442,7 +417,7 @@ function sector12_1(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "CashRoot Starter Kit")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["CashRoot Starter Kit"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -457,7 +432,7 @@ function niteSec(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Neural-Retention Enhancement")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Neural-Retention Enhancement", "CRTX42-AA Gene Modification", "Artificial Synaptic Potentiation", "Neurotrainer II"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -472,7 +447,7 @@ function theBlackHand1(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "The Black Hand")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["The Black Hand", "Cranial Signal Processors - Gen III", "DataJack", "Embedded Netburner Module"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -487,7 +462,7 @@ function theBlackHand2(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Neuralstimulator")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Neuralstimulator", "Embedded Netburner Module Core Implant", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen IV"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -505,7 +480,7 @@ function chongqing(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Neuregen Gene Modification")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Neuregen Gene Modification", "Speech Processor Implant", "Nuoptimal Nootropic Injector Implant"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -520,7 +495,7 @@ function bitRunners1(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Artificial Bio-neural Network Implant")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [
         () => ns.singularity.getFactionFavor(faction) + ns.singularity.getFactionFavorGain(faction) > ns.getFavorToDonate(),
     ];
@@ -559,7 +534,7 @@ function tianDiHui(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Neuroreceptor Management Implant")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Neuroreceptor Management Implant", "Nanofiber Weave", "Social Negotiation Assistant (S.N.A)", "ADR-V1 Pheromone Gene", "Speech Enhancement", "Wired Reflexes"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -577,7 +552,7 @@ function ishima(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "INFRARET Enhancement")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["INFRARET Enhancement", "Combat Rib I", "Augmented Targeting I"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -595,7 +570,7 @@ function newTokyo(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "NutriGen Implant")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["NutriGen Implant"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -613,7 +588,7 @@ function volhaven(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Combat Rib II")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Combat Rib II", "DermaForce Particle Barrier"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -631,7 +606,7 @@ function aevum(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "PCMatrix")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["PCMatrix"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -648,7 +623,7 @@ function sector12_2(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Augmented Targeting II")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [];
     const orderedAugs = ["Augmented Targeting II"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
@@ -663,7 +638,7 @@ function daedalus1(ns, currentWork, totalMoney) {
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return totalMoney > getAugmentPrice(ns, "Synfibril Muscle")}
     ];
-    const buyRep = () => {return true;};
+    const buyRep = null;
     const whenToStartBuying = [
         () => ns.singularity.getFactionFavor(faction) + ns.singularity.getFactionFavorGain(faction) > ns.getFavorToDonate(),
     ];
