@@ -14,9 +14,6 @@ export async function main(ns) {
     ns.disableLog("getServerMaxRam");
     ns.disableLog("getServerUsedRam");
 
-    // TODO: augments
-    // get Sector12 cashroot starter kit
-    // get Tian Di Hui Neuroreceptor Management Implant
     while (true) {
         const config = getConfig(ns);
 
