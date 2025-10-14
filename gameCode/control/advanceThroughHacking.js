@@ -48,7 +48,7 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && volhaven(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && aevum(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && sector12_2(ns, currentWork, totalMoney);
-    if (prevFactionIsDone && currentWork?.type !== "FACTION" && currentWork?.type !== "CRIME" && !hasAugment(ns, "Graphene Bionic Arms Upgrade")) {
+    if (prevFactionIsDone && currentWork?.type !== "FACTION" && (currentWork?.type !== "CRIME" || currentWork.crimeType !== "Homicide") && !hasAugment(ns, "Graphene Bionic Arms Upgrade")) {
         ns.singularity.commitCrime("Homicide", false);
     }
     prevFactionIsDone = prevFactionIsDone && slumSnakes(ns, currentWork, totalMoney);
@@ -59,7 +59,7 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     prevFactionIsDone = prevFactionIsDone && megaCorp(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && eCorp(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && kuaiGongInternational(ns, currentWork, totalMoney);
-    if (prevFactionIsDone && currentWork?.type !== "FACTION" && currentWork?.type !== "CRIME") {
+    if (prevFactionIsDone && currentWork?.type !== "FACTION" && (currentWork?.type !== "CRIME" || currentWork.crimeType !== "Kidnap")) {
         ns.singularity.commitCrime("Kidnap", false);
     }
 }
