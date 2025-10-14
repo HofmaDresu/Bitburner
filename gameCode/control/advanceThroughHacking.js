@@ -21,66 +21,9 @@ export default async function advanceThroughHacking(ns) {
     prevFactionIsDone = prevFactionIsDone && cyberSec(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && sector12_1(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && niteSec(ns, currentWork, totalMoney);
-    // if(hasAugment(ns, "CashRoot Starter Kit") && !hasAugment(ns, "Neurotrainer II")) {
-    //     const faction = "NiteSec";
-    //     ns.print("Starting faction " + faction);
-    //     if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
-    //         if(totalMoney < getAugmentPrice(ns, "Neural-Retention Enhancement") + 1.9 * getAugmentPrice(ns, "CRTX42-AA Gene Modification")) return;
-    //         startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
-    //         if(!(getAugmentIfAble(ns, faction, "Neural-Retention Enhancement"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "CRTX42-AA Gene Modification"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Artificial Synaptic Potentiation"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Neurotrainer II"))) return;
-    //         maxOutNeuroFlux(ns, faction);
-    //         installAugments(ns);
-    //     }
-    // }
     prevFactionIsDone = prevFactionIsDone && theBlackHand1(ns, currentWork, totalMoney);
-    // if(hasAugment(ns, "Neurotrainer II") && !hasAugment(ns, "Embedded Netburner Module")) {
-    //     const faction = "The Black Hand";
-    //     ns.print("Starting faction " + faction + " 1");
-    //     if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
-    //         if(totalMoney < getAugmentPrice(ns, "The Black Hand")) return;
-    //         startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
-    //         if(!(getAugmentIfAble(ns, faction, "The Black Hand"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Cranial Signal Processors - Gen III"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "DataJack"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Embedded Netburner Module"))) return;
-    //         maxOutNeuroFlux(ns, faction);
-    //         installAugments(ns);
-    //     }
-    // }
     prevFactionIsDone = prevFactionIsDone && theBlackHand2(ns, currentWork, totalMoney);
-    // if(hasAugment(ns, "Embedded Netburner Module") && !hasAugment(ns, "Cranial Signal Processors - Gen IV")) {
-    //     const faction = "The Black Hand";
-    //     ns.print("Starting faction " + faction + " 2");
-    //     if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
-    //         if(totalMoney < getAugmentPrice(ns, "Neuralstimulator")) return;
-    //         startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
-    //         if(!(getAugmentIfAble(ns, faction, "Neuralstimulator"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Embedded Netburner Module Core Implant"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Enhanced Myelin Sheathing"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Cranial Signal Processors - Gen IV"))) return;
-    //         maxOutNeuroFlux(ns, faction);
-    //         installAugments(ns);
-    //     }
-    // }    
     prevFactionIsDone = prevFactionIsDone && chongqing(ns, currentWork, totalMoney);
-    // if(hasAugment(ns, "Cranial Signal Processors - Gen IV") && !hasAugment(ns, "Nuoptimal Nootropic Injector Implant")) {
-    //     const faction = "Chongqing";
-    //     ns.print("Starting faction " + faction);
-    //     ns.singularity.travelToCity("Chongqing");
-    //     ns.singularity.joinFaction(faction);
-    //     if ((currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)) {
-    //         if(totalMoney < getAugmentPrice(ns, "Neuregen Gene Modification")) return;
-    //         startScriptOnHomeIfAble(ns, "windDown.js", ["--shareMemory"]);
-    //         if(!(getAugmentIfAble(ns, faction, "Neuregen Gene Modification"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Speech Processor Implant"))) return;
-    //         if(!(getAugmentIfAble(ns, faction, "Nuoptimal Nootropic Injector Implant"))) return;
-    //         maxOutNeuroFlux(ns, faction);
-    //         installAugments(ns);
-    //     }
-    // }    
     prevFactionIsDone = prevFactionIsDone && bitRunners1(ns, currentWork, totalMoney);
     // if(hasAugment(ns, "Nuoptimal Nootropic Injector Implant") && !hasAugment(ns, "Neural Accelerator")) {
     //     const faction = "BitRunners";
