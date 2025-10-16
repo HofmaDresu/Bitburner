@@ -1,3 +1,7 @@
 * Share memory from servers with $0
 * Make stock stuff use 4s market data
 * only play IPvGO on servers we care about the rewards
+* Log stock transactions to database (one per line)
+** buy + position + shares + $$
+** sell + position + shares + profit
+** clear on startup
