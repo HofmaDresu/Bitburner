@@ -62,6 +62,84 @@ function extraAugments(ns, currentWork, totalMoney, prevFactionIsDone) {
     if (prevFactionIsDone && currentWork?.type !== "FACTION" && (currentWork?.type !== "CRIME" || currentWork.crimeType !== "Kidnap")) {
         ns.singularity.commitCrime("Kidnap", false);
     }
+    prevFactionIsDone = prevFactionIsDone && theCovenant1(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && theCovenant2(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && illuminati1(ns, currentWork, totalMoney);
+    prevFactionIsDone = prevFactionIsDone && illuminati2(ns, currentWork, totalMoney);
+}
+
+/** @param {NS} ns */
+function illuminati1(ns, currentWork, totalMoney) {
+    const faction = "Illuminati";
+    const description = null;
+    const prepWork = [];
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
+        () => {return totalMoney > 1_000_000_000_000}
+    ];
+    const buyRep = null;
+    const whenToStartBuying = [
+        () => ns.singularity.getFactionFavor(faction) + ns.singularity.getFactionFavorGain(faction) > ns.getFavorToDonate(),
+    ];
+    const orderedAugs = [];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
+}
+
+/** @param {NS} ns */
+function illuminati2(ns, currentWork, totalMoney) {
+    const faction = "Illuminati";
+    const description = "Round 2";
+    const prepWork = [];
+    const highestRepCost = ns.singularity.getAugmentationRepReq("QLink")
+    const currentRep = ns.singularity.getFactionRep(faction);
+    const haveEnoughRep = currentRep >= highestRepCost;
+    const getRequiredDonation = () => {return ns.formulas.reputation.donationForRep(highestRepCost - currentRep, ns.getPlayer())};
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
+        () => {return ns.fileExists("Formulas.exe")},
+        () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
+    ];
+    const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
+    const whenToStartBuying = [];
+    const orderedAugs = ["QLink"];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
+}
+
+/** @param {NS} ns */
+function theCovenant1(ns, currentWork, totalMoney) {
+    const faction = "The Covenant";
+    const description = null;
+    const prepWork = [];
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
+        () => {return totalMoney > 1_000_000_000_000}
+    ];
+    const buyRep = null;
+    const whenToStartBuying = [
+        () => ns.singularity.getFactionFavor(faction) + ns.singularity.getFactionFavorGain(faction) > ns.getFavorToDonate(),
+    ];
+    const orderedAugs = [];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
+}
+
+/** @param {NS} ns */
+function theCovenant2(ns, currentWork, totalMoney) {
+    const faction = "The Covenant";
+    const description = "Round 2";
+    const prepWork = [];
+    const highestRepCost = ns.singularity.getAugmentationRepReq("SPTN-97 Gene Modification")
+    const currentRep = ns.singularity.getFactionRep(faction);
+    const haveEnoughRep = currentRep >= highestRepCost;
+    const getRequiredDonation = () => {return ns.formulas.reputation.donationForRep(highestRepCost - currentRep, ns.getPlayer())};
+    const whenToWindDown = [
+        () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
+        () => {return ns.fileExists("Formulas.exe")},
+        () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
+    ];
+    const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
+    const whenToStartBuying = [];
+    const orderedAugs = ["SPTN-97 Gene Modification", "Graphene Bone Lacings"];
+    return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
 /** @param {NS} ns */
@@ -329,7 +407,7 @@ function bitRunners2(ns, currentWork, totalMoney) {
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
-        () => {return totalMoney > getRequiredDonation() && !haveEnoughRep}
+        () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
     ];
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
     const whenToStartBuying = [];
@@ -472,7 +550,7 @@ function daedalus2(ns, currentWork, totalMoney) {
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
-        () => {return totalMoney > getRequiredDonation() && !haveEnoughRep}
+        () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
     ];
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
     const whenToStartBuying = [];
