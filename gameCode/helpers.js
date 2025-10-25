@@ -115,8 +115,12 @@ function calculateThreads(ns, script, hostname) {
 export function getAvailableRam(ns, hostname) {
     const maxServerRam = ns.getServerMaxRam(hostname);
     const usedServerRam = ns.getServerUsedRam(hostname);
-    // TODO: no reserve if 32gb
-    const reservedMemory = hostname === "home" ? Math.min(maxServerRam * .1, 20) : 0;
+    let reservedMemory = 0;
+    if (hostname === "home") {
+        if (maxServerRam > 32) {
+            reservedMemory = Math.min(maxServerRam * .1, 20);
+        }
+    }
     return Math.max(0, maxServerRam - usedServerRam - reservedMemory);
 }
 
@@ -155,6 +159,34 @@ export function nukeServer(ns, server) {
     }
     if (ns.fileExists("SQLInject.exe", "home")) {
         ns.sqlinject(server);
+        portCount++;
+    }
+
+    if (portCount < requiredNumPorts) return false;
+    ns.nuke(server);
+    
+    return true;
+}
+
+/** @param {NS} ns */
+export function nukeServerSmall(ns, server) {
+    ns.disableLog("getServerRequiredHackingLevel");
+    ns.disableLog("getServerNumPortsRequired");
+    ns.disableLog("brutessh");
+    ns.disableLog("ftpcrack");
+    const player = ns.getPlayer();
+    const requiredHackingLevel = ns.getServerRequiredHackingLevel(server);
+    const requiredNumPorts = ns.getServerNumPortsRequired(server);
+
+    if (player.skills.hacking < requiredHackingLevel) return false;
+
+    let portCount = 0;
+    if (ns.fileExists("BruteSSH.exe", "home")) {
+        ns.brutessh(server);
+        portCount++;
+    }
+    if (ns.fileExists("FTPCrack.exe", "home")) {
+        ns.ftpcrack(server);
         portCount++;
     }
 

@@ -9,7 +9,5 @@ export async function main(ns) {
     ns.disableLog("disableLog")
     ns.disableLog("scan")
     ns.ui.openTail();
-    ns.print(getConfig(ns)[CONFIG_NODE_MULTIPLIERS]["DaedalusAugsRequirement"]);
-    ns.print(ns.singularity.getOwnedAugmentations().length)
-    ns.print(ns.singularity.getOwnedAugmentations().length < requiredAugs.length)
+    ns.print(ns.singularity.getCurrentWork())
 }

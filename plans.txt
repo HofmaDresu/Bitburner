@@ -5,3 +5,6 @@
 ** buy + position + shares + $$
 ** sell + position + shares + profit
 ** clear on startup
+* Get favor when building up rep
+** 50k first target, then 2x each time
+** only bounce if highest aug costs more than the next interval

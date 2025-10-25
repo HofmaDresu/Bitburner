@@ -13,12 +13,8 @@ export async function main(ns) {
     // Reset stock values
     ns.write(STOCK_HISTORY_FILE_NAME, JSON.stringify({}), "w");
 
-    if(ns.getServerMaxRam("home") < 64) {
-        startScriptOnHomeIfAble(ns, "control/homeRunnerLowRam.js");
-    } else if(ns.getServerMaxRam("home") < 128) {
-        if(!startScriptOnHomeIfAble(ns, "control/homeRunnerLowRamSingularity.js")) {
-            startScriptOnHomeIfAble(ns, "control/homeRunnerLowRam.js");
-        }
+    if(ns.getServerMaxRam("home") < 128) {
+        ns.spawn("control/homeRunnerLowRamSingularity.js",  {threads: 1, spawnDelay: 500});
     } else {
         if(!startScriptOnHomeIfAble(ns, "control/homeRunnerSingularity.js")) {
             startScriptOnHomeIfAble(ns, "control/homeRunner.js");

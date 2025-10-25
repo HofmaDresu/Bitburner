@@ -1,5 +1,5 @@
-import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS } from "helpers";
-import { crackServers } from "control/helpers";
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS } from "helpers";
+import { crackServersNoBackdoor } from "control/helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -13,7 +13,7 @@ export async function main(ns) {
     while (true) {
         const config = getConfig(ns);
 
-        await crackServers(ns);
+        await crackServersNoBackdoor(ns);
         await earlyGameSetUp(ns);
 
         const allRunnablesStared = startOrStopScripts(ns, config);
@@ -22,6 +22,12 @@ export async function main(ns) {
             startScriptOnHomeIfAble(ns, "control/makeMoneyFromTarget.js", ["n00dles"]);
         }
 
+        purchaseThings(ns);
+
+        // TODO: if home ram >= 128 run startup.js (and close this)
+        if (ns.getServerMaxRam("home") >= 128) {
+            ns.spawn("startup.js",  {threads: 1, spawnDelay: 500});
+        }
         await ns.sleep(10_000);
     }
 }
@@ -30,14 +36,9 @@ export async function main(ns) {
 async function earlyGameSetUp(ns) {
     const player = ns.getPlayer();
     const hackSkill = player.skills.hacking;
-    const moneySources = ns.getMoneySources().sinceInstall;
     const currentWork = ns.singularity.getCurrentWork();
 
-    if (hackSkill <= 10) {
-        if(currentWork?.type !== "CLASS") {
-            ns.singularity.universityCourse("rothman university", "Stucy Computer Science", true);
-        }
-    } else if (hackSkill <= 50) {
+    if (hackSkill <= 50) {
         if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }
@@ -53,28 +54,19 @@ async function earlyGameSetUp(ns) {
         if(currentWork?.type !== "CREATE_PROGRAM") {
             ns.singularity.createProgram("FTPCrack.exe", true);
         }
-    } else if (moneySources.hacking < 1_000_000) {
-        if(currentWork?.type !== "CRIME") {
-            ns.singularity.commitCrime("Rob Store", true);
-        }
-    } else if (!currentWork) {
-        ns.singularity.commitCrime("Rob Store", false);
+    } else if(currentWork?.type !== "CRIME") {
+        ns.singularity.commitCrime("Rob Store", true);
     }
 }
 
 /** @param {NS} ns */
 function startOrStopScripts(ns, config) {    
     let higherPriorityItemsStarted = true;
-    const moneySources = ns.getMoneySources().sinceInstall;
 
-
-    if(higherPriorityItemsStarted) {
-        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersHackN00dles.js");
-    }
-
-    if (config[CONFIG_SPEND_ON_HACKNET] && moneySources["hacknet"] > 100_000) {
-        config[CONFIG_SPEND_ON_HACKNET] = false;
-        saveConfig(ns, config);
+    if (config[CONFIG_SPEND_ON_SERVERS] && higherPriorityItemsStarted) {
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "servers/purchaseServers8gb.js");
+    } else {
+        killScriptIfRunningOnHome(ns, "servers/purchaseServers8gb.js");
     }
     if (config[CONFIG_SPEND_ON_HACKNET] && higherPriorityItemsStarted) {
         higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "hacknet/purchaseNodes.js", ["--canUseAllMoney"]);
@@ -83,12 +75,14 @@ function startOrStopScripts(ns, config) {
         killScriptIfRunningOnHome(ns, "hacknet/purchaseNodes.js");
         killScriptIfRunningOnHome(ns, "hacknet/upgradeNodes.js");
     }
-
-    if (config[CONFIG_SPEND_ON_SERVERS] && higherPriorityItemsStarted) {
-        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "servers/purchaseServers.js");
-    } else {
-        killScriptIfRunningOnHome(ns, "servers/purchaseServers.js");
+    if(higherPriorityItemsStarted) {
+        higherPriorityItemsStarted = startScriptOnHomeIfAble(ns, "control/makeServersHackN00dles.js");
     }
 
     return higherPriorityItemsStarted;
+}
+
+/** @param {NS} ns */
+function purchaseThings(ns) {
+    ns.singularity.upgradeHomeRam();
 }
