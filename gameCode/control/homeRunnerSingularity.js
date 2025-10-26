@@ -31,7 +31,7 @@ export async function main(ns) {
         }
 
 
-        await ns.sleep(10_000);
+        await ns.sleep(1_000);
     }
 }
 
@@ -68,7 +68,7 @@ async function earlyGameSetUp(ns) {
             ns.singularity.createProgram("FTPCrack.exe", true);
         }
         return false;
-    } else if (moneySources.hacking < 1_000_000) {
+    } else if (moneySources.hacking < 1_000_000 && Math.abs(moneySources.stock) < 1_000_000 && moneySources.corporation < 1_000_000 && moneySources.gang < 1_000_000) {
         if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }

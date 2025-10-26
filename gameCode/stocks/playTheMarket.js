@@ -33,7 +33,7 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     // if (sharesLong > 0) return;
 
     const availableMoney = availableSpendingMoney(ns, .5);
-    if (availableMoney < 1_000_000_000) return;
+    if (availableMoney < 1_000_000) return;
     const sharesICanBuy = Math.floor(availableMoney / askPrice);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit()) return;
