@@ -321,13 +321,13 @@ function niteSec(ns, currentWork, totalMoney) {
     const faction = "NiteSec";
     const description = null;
     const prepWork = [];
+    const orderedAugs = ["Neural-Retention Enhancement", "CRTX42-AA Gene Modification", "Artificial Synaptic Potentiation", "Neurotrainer II"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Neural-Retention Enhancement")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["Neural-Retention Enhancement", "CRTX42-AA Gene Modification", "Artificial Synaptic Potentiation", "Neurotrainer II"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -336,13 +336,13 @@ function theBlackHand1(ns, currentWork, totalMoney) {
     const faction = "The Black Hand";
     const description = null;
     const prepWork = [];
+    const orderedAugs = ["The Black Hand", "Cranial Signal Processors - Gen III", "DataJack", "Embedded Netburner Module"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "The Black Hand")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["The Black Hand", "Cranial Signal Processors - Gen III", "DataJack", "Embedded Netburner Module"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -624,6 +624,20 @@ function maxOutNeuroFlux(ns, faction) {
 function installAugments(ns) {
     ns.singularity.installAugmentations("startup.js");
 }
+
+/** @param {NS} ns */
+function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
+    let multiplier = 1;
+    let totalCost = 0;
+    for (const augment of augmentList) {
+        totalCost = totalCost + (multiplier * getAugmentPrice(ns, augment));
+        multiplier += .9;
+    }
+    ns.print(`Required money for augments: \t$${ns.formatNumber(totalCost, 2)}`)
+    ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`)
+    return totalCost < totalMoney;
+}
+
 
 /** @param {NS} ns */
 function getAugmentPrice(ns, augment) {
