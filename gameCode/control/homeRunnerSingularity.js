@@ -59,18 +59,13 @@ async function earlyGameSetUp(ns) {
         }
         return false;
     } else if (hackSkill <= 100) {
-        if(currentWork?.type !== "CLASS") {
+        if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }
         return false;
     } else if (!ns.fileExists("FTPCrack.exe", "home")) {
         if(currentWork?.type !== "CREATE_PROGRAM") {
             ns.singularity.createProgram("FTPCrack.exe", true);
-        }
-        return false;
-    } else if (moneySources.hacking < 1_000_000 && Math.abs(moneySources.stock) < 1_000_000 && moneySources.corporation < 1_000_000 && moneySources.gang < 1_000_000) {
-        if(currentWork?.type !== "CRIME") {
-            ns.singularity.commitCrime("Rob Store", true);
         }
         return false;
     } else if(!currentWork) {
