@@ -1,5 +1,6 @@
 import { startScriptOnHomeIfAble, getConfig, CONFIG_NODE_MULTIPLIERS} from "helpers";
 import { sellAll } from "stocks/sellAll";
+import { getStockSellValue } from "stocks/helpers";
 
 /** @param {NS} ns */
 export default async function advanceThroughHacking(ns) {
@@ -7,7 +8,7 @@ export default async function advanceThroughHacking(ns) {
     const currentWork = ns.singularity.getCurrentWork();
     const moneySinceInstall = ns.getMoneySources().sinceInstall
     // TODO: Eventually add more money sources like gangs, corporations, bladeburner, etc as we get them
-    const totalMoney = Math.max(moneySinceInstall.total, moneySinceInstall.hacking + moneySinceInstall.hacknet + moneySinceInstall.crime + Math.abs(moneySinceInstall.stock));
+    const totalMoney =  Math.max(ns.getServerMoneyAvailable("home"), moneySinceInstall.hacking + moneySinceInstall.hacknet + moneySinceInstall.crime + getStockSellValue(ns));
 
     // 1 (this probably will never be automated unless I cheat)
     // Save until total produced = $$ of 128 GB
@@ -598,6 +599,7 @@ function getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStar
     }
     if(!whenToStartBuying.reduce((isSuccess, fn) => isSuccess && fn(), true)) return false;
     ns.print("\t Ready to start buying");
+    sellAll(ns);
     if(!orderedAugs.reduce((isSuccess, aug) => isSuccess && getAugmentIfAble(ns, faction, aug), true)) return false;
     ns.print("\t Ready to max out neuro flux");
     maxOutNeuroFlux(ns, faction);
@@ -612,7 +614,6 @@ function getAugmentIfAble(ns, faction, augment) {
 
 /** @param {NS} ns */
 function maxOutNeuroFlux(ns, faction) {
-    sellAll(ns);
     let success = false;
     do {
         success = ns.singularity.purchaseAugmentation(faction, "NeuroFlux Governor");

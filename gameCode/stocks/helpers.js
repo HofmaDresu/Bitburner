@@ -30,3 +30,21 @@ export function iOwnStocks(ns) {
     }
     return false;
 }
+
+/** @param {NS} ns */
+export function getStockSellValue(ns) {
+    if (!iOwnStocks(ns)) return 0;
+    const symbols = ns.stock.getSymbols();
+    return symbols.reduce((total, symbol) => {
+        const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
+        if (sharesLong) {
+            const bidPrice = ns.stock.getBidPrice(symbol);
+            return total + ((bidPrice * sharesLong) - getStockCommission());
+        }
+        if (sharesShort) {
+            const askPrice = ns.stock.getAskPrice(symbol);
+            return total + ((askPrice * sharesShort) - getStockCommission());
+        }
+        return total;
+    }, 0)
+}
