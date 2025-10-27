@@ -1,4 +1,4 @@
-import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_NODE_MULTIPLIERS, startScriptOnHomeIfAble} from "helpers";
+import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_NODE_MULTIPLIERS, CONFIG_PURCHASE_ITEMS, startScriptOnHomeIfAble} from "helpers";
 import { STOCK_HISTORY_FILE_NAME } from "stocks/helpers";
 
 /** @param {NS} ns */
@@ -31,5 +31,6 @@ function setStartupConfig(ns) {
     config[CONFIG_SPEND_ON_SERVERS] = mulitpliers.ScriptHackMoney > 0 && mulitpliers.ScriptHackMoneyGain > 0 && mulitpliers.PurchasedServerLimit > 0 && mulitpliers.ServerMaxMoney > 0;
     config[CONFIG_SHARE_ALL_MEMORY] = false;
     config[CONFIG_NODE_MULTIPLIERS] = mulitpliers;
+    config[CONFIG_PURCHASE_ITEMS] = true;
     saveConfig(ns, config);
 }

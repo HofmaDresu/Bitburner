@@ -1,4 +1,4 @@
-import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, getBestServerToHack } from "helpers";
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_PURCHASE_ITEMS, getBestServerToHack } from "helpers";
 import { canTradeStocks, iOwnStocks } from "stocks/helpers";
 import { crackServers } from "control/helpers";
 import advanceThroughHacking, {hasAugment} from "control/advanceThroughHacking";
@@ -20,7 +20,7 @@ export async function main(ns) {
         const setupComplete = await earlyGameSetUp(ns);
         //TODO: break out into its own script for async work
         await crackServers(ns);
-        purchaseThings(ns);
+        if(config[CONFIG_PURCHASE_ITEMS]) purchaseThings(ns);
         joinNonCityFactions(ns);
         if (setupComplete) advanceThroughHacking(ns);
 

@@ -1,4 +1,4 @@
-import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, killScriptIfRunningOnHome } from "helpers";
+import { getConfig, saveConfig, CONFIG_BUY_STOCKS, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_PURCHASE_ITEMS, killScriptIfRunningOnHome } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -15,6 +15,7 @@ function setWindDownConfig(ns) {
     config[CONFIG_BUY_STOCKS] = false;
     config[CONFIG_SPEND_ON_HACKNET] = false;
     config[CONFIG_SPEND_ON_SERVERS] = false;
+    config[CONFIG_PURCHASE_ITEMS] = false;
     config[CONFIG_SHARE_ALL_MEMORY] = shareMemory;
     saveConfig(ns, config);
 }
