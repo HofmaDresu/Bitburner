@@ -39,7 +39,6 @@ export async function main(ns) {
 async function earlyGameSetUp(ns) {
     const player = ns.getPlayer();
     const hackSkill = player.skills.hacking;
-    const moneySources = ns.getMoneySources().sinceInstall;
     const currentWork = ns.singularity.getCurrentWork();
     //TODO: only focus if we don't have Neuroreceptor Management Implant
 
