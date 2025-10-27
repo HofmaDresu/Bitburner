@@ -104,6 +104,10 @@ function purchaseThings(ns) {
     ns.singularity.purchaseProgram("Formulas.exe");
     ns.singularity.upgradeHomeRam();
     ns.singularity.upgradeHomeCores();
+    ns.stock.purchaseWseAccount();
+    ns.stock.purchaseTixApi();
+    ns.stock.purchase4SMarketData();
+    ns.stock.purchase4SMarketDataTixApi();
 }
 
 /** @param {NS} ns */
