@@ -36,6 +36,8 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     const sharesICanBuy = Math.floor(availableMoney / askPrice);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit()) return;
+    // Don't buy if we know it's more likely to decrease than increase
+    if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) < .5) return;
     ns.stock.buyStock(symbol, sharesICanBuy);
 }
 
@@ -46,6 +48,8 @@ function sellLongIfAppropriate(ns, symbol, min, max) {
     if (sharesLong === 0) return;
     // Not close enough to max
     if(bidPrice < max * .9) return;
+    // Don't sell if we know it's more likely to increase than decrease
+    if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) > .5) return;
     ns.stock.sellStock(symbol, sharesLong);    
 }
 
@@ -63,6 +67,8 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     const sharesICanBuy = Math.floor(availableMoney / bidPrice);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * bidPrice) - (sharesICanBuy * min * 1.1) < minPotentialProfit()) return;
+    // Don't buy if we know it's more likely to increase than decrease
+    if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) > .5) return;
     ns.stock.buyShort(symbol, sharesICanBuy);
 }
 
@@ -73,6 +79,8 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
     if (sharesShort === 0) return;
     // Not close enough to max
     if(askPrice > min * 1.1) return;
+    // Don't sell if we know it's more likely to decrease than increase
+    if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) < .5) return;
     ns.stock.sellShort(symbol, sharesShort);    
 }
 
