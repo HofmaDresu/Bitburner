@@ -1,6 +1,5 @@
 import { canTradeStocks } from "stocks/helpers";
 import { runScriptAtMaxThreads } from "helpers";
-import { growTargetToMax } from "growing/growTargetToMax"
 
 const SYMBOL_TO_SERVERS = {
     "ECP": ["ecorp"],
@@ -60,7 +59,7 @@ export async function main(ns) {
                         if (ns.getServerMoneyAvailable(target) < .1 * ns.getServerMaxMoney(target)) {
                             await grow(ns, hostname, [target, true]);
                         } else {
-                            await hackTargetToMin(ns, target);
+                            await hackTargetToMin(ns, hostname, target);
                         }
                     } 
                 } else {
@@ -70,7 +69,7 @@ export async function main(ns) {
                         if (ns.getServerMoneyAvailable(target) > .1 * ns.getServerMaxMoney(target)) {
                             await hack(ns, hostname, [target, true]);
                         } else {
-                            await growTargetToMax(ns, target);
+                            await growTargetToMax(ns, hostname, target);
                         }
                     }                
                 }
@@ -106,7 +105,7 @@ async function weaken(ns, hostname, args) {
 }
 
 /** @param {NS} ns */
-async function growTargetToMax(ns, target) {
+async function growTargetToMax(ns, hostname, target) {
     const moneyThresh = ns.getServerMaxMoney(target);
     const securityThresh = ns.getServerMinSecurityLevel(target);
 
@@ -120,7 +119,7 @@ async function growTargetToMax(ns, target) {
 }
 
 /** @param {NS} ns */
-async function hackTargetToMin(ns, target) {
+async function hackTargetToMin(ns, hostname, target) {
     const moneyThresh = ns.getServerMaxMoney(target);
     const securityThresh = ns.getServerMinSecurityLevel(target);
 
