@@ -13,6 +13,16 @@ export async function main(ns) {
     ns.disableLog("getServerMaxMoney");
     ns.disableLog("getServerMaxRam");
     ns.disableLog("getServerUsedRam");
+    ns.disableLog("getServerMoneyAvailable");
+    ns.disableLog("singularity.purchaseProgram");
+    ns.disableLog("singularity.upgradeHomeRam");
+    ns.disableLog("singularity.upgradeHomeCores");
+    ns.disableLog("singularity.purchaseTor");
+    ns.disableLog("stock.purchaseWseAccount");
+    ns.disableLog("stock.purchaseTixApi");
+    ns.disableLog("stock.purchase4SMarketData");
+    ns.disableLog("stock.purchase4SMarketDataTixApi");
+
 
     while (true) {
         const config = getConfig(ns);
