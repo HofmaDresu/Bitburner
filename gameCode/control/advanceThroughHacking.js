@@ -630,8 +630,10 @@ function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
     let multiplier = 1;
     let totalCost = 0;
     for (const augment of augmentList) {
-        totalCost = totalCost + (multiplier * getAugmentPrice(ns, augment));
-        multiplier += .9;
+        if (!hasAugment(ns, augment, true)) {
+            totalCost = totalCost + (multiplier * getAugmentPrice(ns, augment));
+            multiplier += .9;
+        }
     }
     ns.print(`Required money for augments: \t$${ns.formatNumber(totalCost, 2)}`)
     ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`)
