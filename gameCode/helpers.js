@@ -1,3 +1,6 @@
+
+import { getStockSellValue } from "stocks/helpers";
+
 /** @param {NS} ns */
 export function getBestServerToHack(ns) {
     const serversToHack = getServers(ns);
@@ -215,4 +218,10 @@ export function startScriptOnHomeIfAble(ns, script, args = []) {
     }
 
     return false;
+}
+
+/** @param {NS} ns */
+export function moneyHeldIncludingStocks(ns) {
+    const moneySinceInstall = ns.getMoneySources().sinceInstall;
+    return ns.getServerMoneyAvailable("home") + getStockSellValue(ns);
 }

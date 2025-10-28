@@ -1,5 +1,5 @@
 import { getStockHistory, canTradeStocks, getStockCommission } from "stocks/helpers";
-import { availableSpendingMoney, getConfig, CONFIG_BUY_STOCKS } from "helpers";
+import { availableSpendingMoney, getConfig, CONFIG_BUY_STOCKS, moneyHeldIncludingStocks } from "helpers";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -88,5 +88,5 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
 
 /** @param {NS} ns */
 function minPotentialProfit(ns) {
-    return getStockCommission(ns) * 20;
+    return Math.max(getStockCommission(ns) * 20, moneyHeldIncludingStocks(ns) * .1);
 }

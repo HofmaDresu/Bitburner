@@ -8,6 +8,7 @@ export default async function advanceThroughHacking(ns) {
     const currentWork = ns.singularity.getCurrentWork();
     const moneySinceInstall = ns.getMoneySources().sinceInstall
     // TODO: Eventually add more money sources like gangs, corporations, bladeburner, etc as we get them
+    // NOTE: this is total produced money, not actual money
     const totalMoney =  Math.max(ns.getServerMoneyAvailable("home"), moneySinceInstall.hacking + moneySinceInstall.hacknet + moneySinceInstall.crime + getStockSellValue(ns));
 
     // 1 (this probably will never be automated unless I cheat)
