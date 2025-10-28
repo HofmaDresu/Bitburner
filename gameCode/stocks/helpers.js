@@ -51,3 +51,20 @@ export function getStockSellValue(ns) {
         return total;
     }, 0)
 }
+
+/** @param {NS} ns */
+export function getSingleStockSellValue(ns, symbol) {
+    if (!iOwnStocks(ns)) return 0;    
+    const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
+    if (sharesLong) {
+        const bidPrice = ns.stock.getBidPrice(symbol);
+        // ns.print(`${symbol}: long ${ns.formatNumber ((bidPrice * sharesLong) - getStockCommission(ns))}`)
+        return ((bidPrice * sharesLong) - getStockCommission(ns));
+    }
+    if (sharesShort) {
+        const askPrice = ns.stock.getAskPrice(symbol);
+        // ns.print(`${symbol}: short ${ns.formatNumber(((sharesShort * (2 * avgShortPrice - askPrice)) - getStockCommission(ns)))}`)
+        return ((sharesShort * (2 * avgShortPrice - askPrice)) - getStockCommission(ns));
+    }
+    return 0;
+}
