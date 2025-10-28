@@ -15,8 +15,9 @@ export function canTradeStocks(ns) {
     return ns.stock.hasWSEAccount() && ns.stock.hasTIXAPIAccess();
 }
 
-export function getStockCommission() {
-    return 100_000;
+/** @param {NS} ns */
+export function getStockCommission(ns) {
+    return ns.stock.getConstants().StockMarketCommission;
 }
 
 /** @param {NS} ns */
@@ -39,13 +40,13 @@ export function getStockSellValue(ns) {
         const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
         if (sharesLong) {
             const bidPrice = ns.stock.getBidPrice(symbol);
-            // ns.print(`${symbol}: long ${ns.formatNumber ((bidPrice * sharesLong) - getStockCommission())}`)
-            return total + ((bidPrice * sharesLong) - getStockCommission());
+            // ns.print(`${symbol}: long ${ns.formatNumber ((bidPrice * sharesLong) - getStockCommission(ns))}`)
+            return total + ((bidPrice * sharesLong) - getStockCommission(ns));
         }
         if (sharesShort) {
             const askPrice = ns.stock.getAskPrice(symbol);
-            // ns.print(`${symbol}: short ${ns.formatNumber(((sharesShort * (2 * avgShortPrice - askPrice)) - getStockCommission()))}`)
-            return total + ((sharesShort * (2 * avgShortPrice - askPrice)) - getStockCommission());
+            // ns.print(`${symbol}: short ${ns.formatNumber(((sharesShort * (2 * avgShortPrice - askPrice)) - getStockCommission(ns)))}`)
+            return total + ((sharesShort * (2 * avgShortPrice - askPrice)) - getStockCommission(ns));
         }
         return total;
     }, 0)

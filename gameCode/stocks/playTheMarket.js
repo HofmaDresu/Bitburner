@@ -26,7 +26,7 @@ export async function main(ns) {
 function buyLongIfAppropriate(ns, symbol, min, max) {
     if (!getConfig(ns)[CONFIG_BUY_STOCKS]) return;
     // Not enough potential profit in spread
-    if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit()) return;
+    if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit(ns)) return;
     const askPrice = ns.stock.getAskPrice(symbol)
     // Not enough potential profit at current price
     if (askPrice > min * 1.1) return;
@@ -35,7 +35,7 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     if (availableMoney < 1_000_000) return;
     const sharesICanBuy = Math.floor(availableMoney / askPrice);
     // Not enough potential profit given current monies
-    if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit()) return;
+    if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to decrease than increase
     if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) < .5) return;
     ns.stock.buyStock(symbol, sharesICanBuy);
@@ -58,7 +58,7 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     if (!getConfig(ns)[CONFIG_BUY_STOCKS]) return;
     // if (!ns.stock.has4SDataTIXAPI()) return;
     // Not enough potential profit in spread
-    if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit()) return;
+    if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit(ns)) return;
     const bidPrice = ns.stock.getBidPrice(symbol)
     // Not enough potential profit at current price
     if (bidPrice < max * .9) return;
@@ -67,7 +67,7 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     if (availableMoney < 1_000_000) return;
     const sharesICanBuy = Math.floor(availableMoney / bidPrice);
     // Not enough potential profit given current monies
-    if ((sharesICanBuy * bidPrice) - (sharesICanBuy * min * 1.1) < minPotentialProfit()) return;
+    if ((sharesICanBuy * bidPrice) - (sharesICanBuy * min * 1.1) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to increase than decrease
     if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) > .5) return;
     ns.stock.buyShort(symbol, sharesICanBuy);
@@ -86,6 +86,7 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
 }
 
 
-function minPotentialProfit() {
-    return getStockCommission() * 20;
+/** @param {NS} ns */
+function minPotentialProfit(ns) {
+    return getStockCommission(ns) * 20;
 }
