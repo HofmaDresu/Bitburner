@@ -1,5 +1,6 @@
 import { canTradeStocks } from "stocks/helpers";
 import { runScriptAtMaxThreads } from "helpers";
+import { growTargetToMax } from "growing/growTargetToMax"
 
 const SYMBOL_TO_SERVERS = {
     "ECP": ["ecorp"],
@@ -54,15 +55,23 @@ export async function main(ns) {
                 if(!ns.hasRootAccess(target)) continue;
                 if (sharesLong) {
                     if (ns.getServerSecurityLevel(target) > securityThresh) {
-                        await weaken(ns, hostname, [target]);
+                        await weaken(ns, hostname, [target, true]);
                     } else  {
-                        await grow(ns, hostname, [target]);
+                        if (ns.getServerMoneyAvailable(target) < .1 * ns.getServerMaxMoney(target)) {
+                            await grow(ns, hostname, [target, true]);
+                        } else {
+                            await hackTargetToMin(ns, target);
+                        }
                     } 
                 } else {
                     if (ns.getServerSecurityLevel(target) > securityThresh) {
-                        await weaken(ns, hostname, [target]);
+                        await weaken(ns, hostname, [target, true]);
                     } else {        
-                        await hack(ns, hostname, [target]);
+                        if (ns.getServerMoneyAvailable(target) > .1 * ns.getServerMaxMoney(target)) {
+                            await hack(ns, hostname, [target, true]);
+                        } else {
+                            await growTargetToMax(ns, target);
+                        }
                     }                
                 }
             }
@@ -94,4 +103,32 @@ async function weaken(ns, hostname, args) {
     const script = "/weakening/weakenTarget.js";
     ns.print("weakening " + args[0]);
     await runScriptAtMaxThreads(ns, script, hostname, args);
+}
+
+/** @param {NS} ns */
+async function growTargetToMax(ns, target) {
+    const moneyThresh = ns.getServerMaxMoney(target);
+    const securityThresh = ns.getServerMinSecurityLevel(target);
+
+    while(ns.getServerMoneyAvailable(target) < moneyThresh) {
+        if (ns.getServerSecurityLevel(target) > securityThresh) {
+            await weaken(ns, hostname, [target]);
+        } else {
+            await grow(ns, hostname, [target]);
+        }
+    } 
+}
+
+/** @param {NS} ns */
+async function hackTargetToMin(ns, target) {
+    const moneyThresh = ns.getServerMaxMoney(target);
+    const securityThresh = ns.getServerMinSecurityLevel(target);
+
+    while(ns.getServerMoneyAvailable(target) < moneyThresh) {
+        if (ns.getServerSecurityLevel(target) > securityThresh) {
+            await weaken(ns, hostname, [target]);
+        } else {
+            await hack(ns, hostname, [target]);
+        }
+    } 
 }
