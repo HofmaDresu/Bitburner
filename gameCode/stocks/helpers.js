@@ -39,11 +39,13 @@ export function getStockSellValue(ns) {
         const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
         if (sharesLong) {
             const bidPrice = ns.stock.getBidPrice(symbol);
+            // ns.print(`${symbol}: long ${ns.formatNumber ((bidPrice * sharesLong) - getStockCommission())}`)
             return total + ((bidPrice * sharesLong) - getStockCommission());
         }
         if (sharesShort) {
             const askPrice = ns.stock.getAskPrice(symbol);
-            return total + ((askPrice * sharesShort) - getStockCommission());
+            // ns.print(`${symbol}: short ${ns.formatNumber(((sharesShort * (2 * avgShortPrice - askPrice)) - getStockCommission()))}`)
+            return total + ((sharesShort * (2 * avgShortPrice - askPrice)) - getStockCommission());
         }
         return total;
     }, 0)

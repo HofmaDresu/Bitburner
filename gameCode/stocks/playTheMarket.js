@@ -56,6 +56,7 @@ function sellLongIfAppropriate(ns, symbol, min, max) {
 /** @param {NS} ns */
 function buyShortIfAppropriate(ns, symbol, min, max) {
     if (!getConfig(ns)[CONFIG_BUY_STOCKS]) return;
+    // if (!ns.stock.has4SDataTIXAPI()) return;
     // Not enough potential profit in spread
     if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit()) return;
     const bidPrice = ns.stock.getBidPrice(symbol)
