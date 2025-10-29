@@ -56,7 +56,7 @@ export async function main(ns) {
                     if (ns.getServerSecurityLevel(target) > securityThresh) {
                         await weaken(ns, hostname, [target]);
                     } else  {
-                        if (ns.getServerMoneyAvailable(target) < .1 * ns.getServerMaxMoney(target)) {
+                        if (ns.getServerMoneyAvailable(target) < .5 * ns.getServerMaxMoney(target)) {
                             await grow(ns, hostname, [target, true]);
                         } else {
                             await hackTargetToMin(ns, hostname, target);
@@ -66,7 +66,7 @@ export async function main(ns) {
                     if (ns.getServerSecurityLevel(target) > securityThresh) {
                         await weaken(ns, hostname, [target]);
                     } else {        
-                        if (ns.getServerMoneyAvailable(target) > .1 * ns.getServerMaxMoney(target)) {
+                        if (ns.getServerMoneyAvailable(target) > .5 * ns.getServerMaxMoney(target)) {
                             await hack(ns, hostname, [target, true]);
                         } else {
                             await growTargetToMax(ns, hostname, target);
