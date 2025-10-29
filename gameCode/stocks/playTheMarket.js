@@ -4,12 +4,22 @@ import { availableSpendingMoney, getConfig, CONFIG_BUY_STOCKS, moneyHeldIncludin
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog('getServerMoneyAvailable');
+    let tickCounter = 0;
+    const tickMax = 10 * 60;
     while (!canTradeStocks(ns)) {
-        await ns.sleep(10_000);
+        await ns.sleep(6_000);
+        tickCounter++;
     }
 
     const symbols = ns.stock.getSymbols();
     while(true) {
+        // 10 minutes, but because each tick is 4-6 seconds it's 40-60 in-game minutes
+        if (!ns.stock.has4SDataTIXAPI() && tickCounter < tickMax) {
+            tickCounter++;
+            ns.print(`Not ready for market, tick is ${tickCounter} / ${tickMax}`);
+            await ns.stock.nextUpdate();
+            continue;
+        }
         let stockHistoryData = getStockHistory(ns);
 
         symbols.forEach(symbol => {
