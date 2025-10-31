@@ -41,7 +41,8 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
 
     const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000) return;
-    const sharesICanBuy = Math.floor(availableMoney / askPrice);
+    const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
+    const sharesICanBuy = Math.min(Math.floor(availableMoney / askPrice), ns.stock.getMaxShares(symbol) - sharesLong);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to decrease than increase
@@ -57,7 +58,7 @@ function sellLongIfAppropriate(ns, symbol, min, max) {
     // Don't sell if we know it's more likely to increase than decrease
     if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) > .5) return;
     // Don't sell if we haven't made enough profit
-    if (getSingleStockSellValue(ns, symbol) - (sharesLong * avgLongPrice) < minPotentialProfit(ns)) return;
+    if (getSingleStockSellValue(ns, symbol) - (sharesLong * avgLongPrice) < (sharesLong * avgLongPrice) * .2) return;
     ns.stock.sellStock(symbol, sharesLong);    
 }
 
@@ -71,7 +72,8 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
 
     const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000) return;
-    const sharesICanBuy = Math.floor(availableMoney / bidPrice);
+    const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
+    const sharesICanBuy = Math.min(Math.floor(availableMoney / bidPrice), ns.stock.getMaxShares(symbol) - sharesShort);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * bidPrice) - (sharesICanBuy * min * 1.1) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to increase than decrease
@@ -86,7 +88,7 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
     // Don't sell if we know it's more likely to decrease than increase
     if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) < .5) return;
     // Don't sell if we haven't made enough profit
-    if (getSingleStockSellValue(ns, symbol) - (sharesShort * avgShortPrice) < minPotentialProfit(ns)) return;
+    if (getSingleStockSellValue(ns, symbol) - (sharesShort * avgShortPrice) < (sharesShort * avgShortPrice) * .2) return;
     ns.stock.sellShort(symbol, sharesShort);    
 }
 
