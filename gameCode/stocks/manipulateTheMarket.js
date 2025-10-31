@@ -52,26 +52,21 @@ export async function main(ns) {
                 const securityThresh = ns.getServerMinSecurityLevel(target);
                 const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
                 if(!ns.hasRootAccess(target)) continue;
+                if (ns.getServerSecurityLevel(target) > securityThresh) {
+                    await weaken(ns, hostname, [target]);
+                }
                 if (sharesLong) {
-                    if (ns.getServerSecurityLevel(target) > securityThresh) {
-                        await weaken(ns, hostname, [target]);
-                    } else  {
-                        if (ns.getServerMoneyAvailable(target) < .5 * ns.getServerMaxMoney(target)) {
-                            await grow(ns, hostname, [target, true]);
-                        } else {
-                            await hackTargetToMin(ns, hostname, target);
-                        }
-                    } 
-                } else {
-                    if (ns.getServerSecurityLevel(target) > securityThresh) {
-                        await weaken(ns, hostname, [target]);
-                    } else {        
-                        if (ns.getServerMoneyAvailable(target) > .5 * ns.getServerMaxMoney(target)) {
-                            await hack(ns, hostname, [target, true]);
-                        } else {
-                            await growTargetToMax(ns, hostname, target);
-                        }
-                    }                
+                    if (ns.getServerMoneyAvailable(target) < .5 * ns.getServerMaxMoney(target)) {
+                        await grow(ns, hostname, [target, true]);
+                    } else {
+                        await hack(ns, hostname, [target]);
+                    }
+                } else {    
+                    if (ns.getServerMoneyAvailable(target) > .5 * ns.getServerMaxMoney(target)) {
+                        await hack(ns, hostname, [target, true]);
+                    } else {
+                        await grow(ns, hostname, [target]);
+                    }            
                 }
             }
         }
@@ -100,32 +95,4 @@ async function weaken(ns, hostname, args) {
     const script = "/weakening/weakenTarget.js";
     ns.print("weakening " + args[0]);
     await runScriptAtMaxThreads(ns, script, hostname, args);
-}
-
-/** @param {NS} ns */
-async function growTargetToMax(ns, hostname, target) {
-    const moneyThresh = ns.getServerMaxMoney(target);
-    const securityThresh = ns.getServerMinSecurityLevel(target);
-
-    while(ns.getServerMoneyAvailable(target) < moneyThresh) {
-        if (ns.getServerSecurityLevel(target) > securityThresh) {
-            await weaken(ns, hostname, [target]);
-        } else {
-            await grow(ns, hostname, [target]);
-        }
-    } 
-}
-
-/** @param {NS} ns */
-async function hackTargetToMin(ns, hostname, target) {
-    const moneyThresh = ns.getServerMaxMoney(target);
-    const securityThresh = ns.getServerMinSecurityLevel(target);
-
-    while(ns.getServerMoneyAvailable(target) < moneyThresh) {
-        if (ns.getServerSecurityLevel(target) > securityThresh) {
-            await weaken(ns, hostname, [target]);
-        } else {
-            await hack(ns, hostname, [target]);
-        }
-    } 
 }
