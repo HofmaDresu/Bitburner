@@ -16,8 +16,8 @@ export function sellAll(ns) {
     }
 
     const symbols = ns.stock.getSymbols();
-    symbols.forEach(symbol => {
-        if (getSingleStockSellValue(ns, symbol) < 0) next;
+    for (const symbol of symbols) {
+        if (getSingleStockSellValue(ns, symbol) < 0) continue;
         const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
         if(sharesLong) {
             ns.stock.sellStock(symbol, sharesLong);
@@ -25,6 +25,5 @@ export function sellAll(ns) {
         if(sharesShort) {
             ns.stock.sellShort(symbol, sharesShort);
         }
-    });
-
+    };
 }
