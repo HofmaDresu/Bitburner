@@ -26,11 +26,19 @@ export async function main(ns) {
             sellLongIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || 0, stockHistoryData[symbol]?.max || Infinity);
             sellShortIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || 0, stockHistoryData[symbol]?.max || Infinity);
         });
-        // TODO: order by raw diff between max and current price desc
-        symbols.forEach(symbol => {
-            buyLongIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
-            buyShortIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
-        });
+        // Loop from greatest diff between current and max
+        symbols
+            .sort((a, b) => ((stockHistoryData[b]?.max || ns.stock.getPrice(b)) - ns.stock.getPrice(b)) - ((stockHistoryData[a]?.max || ns.stock.getPrice(a)) - ns.stock.getPrice(a)))
+            .forEach(symbol => {
+                buyLongIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
+            });
+        await ns.stock.nextUpdate();
+        // Loop from greatest diff between current and min
+        symbols
+            .sort((a, b) => (ns.stock.getPrice(b) - (stockHistoryData[b]?.min || ns.stock.getPrice(b))) - (ns.stock.getPrice(a) - (stockHistoryData[a]?.min || ns.stock.getPrice(a))))
+            .forEach(symbol => {
+                buyShortIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
+            });
         await ns.stock.nextUpdate();
     }
 }
