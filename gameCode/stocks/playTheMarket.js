@@ -4,6 +4,8 @@ import { availableSpendingMoney, getConfig, CONFIG_BUY_STOCKS, moneyHeldIncludin
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog('getServerMoneyAvailable');
+    ns.ui.openTail();
+
     let tickCounter = 0;
     const tickMax = 10 * 60;
     while (!canTradeStocks(ns)) {
@@ -57,7 +59,7 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     // Not enough potential profit given current monies
     if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to decrease than increase
-    if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) < .5) return;
+    if (isTrendingDown(ns, symbol)) return;
     ns.stock.buyStock(symbol, sharesICanBuy);
 }
 
@@ -67,7 +69,7 @@ function sellLongIfAppropriate(ns, symbol, min, max) {
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
     if (sharesLong === 0) return;
     // Don't sell if we know it's more likely to increase than decrease
-    if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) > .5) return;
+    if (isTrendingUp(ns, symbol)) return;
     // Don't sell if we haven't made enough profit
     if (getSingleStockSellValue(ns, symbol) - (sharesLong * avgLongPrice) < Math.max((sharesLong * avgLongPrice) * .2, getStockCommission(ns) * 2)) return;
     ns.stock.sellStock(symbol, sharesLong);    
@@ -88,7 +90,7 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     // Not enough potential profit given current monies
     if ((sharesICanBuy * bidPrice) - (sharesICanBuy * min * 1.1) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to increase than decrease
-    if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) > .5) return;
+    if (isTrendingUp(ns, symbol)) return;
     ns.stock.buyShort(symbol, sharesICanBuy);
 }
 
@@ -97,7 +99,7 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
     if (sharesShort === 0) return;
     // Don't sell if we know it's more likely to decrease than increase
-    if (ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) < .5) return;
+    if (isTrendingDown(ns, symbol)) return;
     // Don't sell if we haven't made enough profit
     if (getSingleStockSellValue(ns, symbol) - (sharesShort * avgShortPrice) < Math.max((sharesShort * avgShortPrice) * .2, getStockCommission(ns) * 2)) return;
     ns.stock.sellShort(symbol, sharesShort);    
@@ -107,4 +109,13 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
 /** @param {NS} ns */
 function minPotentialProfit(ns) {
     return Math.max(getStockCommission(ns) * 20, moneyHeldIncludingStocks(ns) * .1);
+}
+
+/** @param {NS} ns */
+function isTrendingUp(ns, symbol) {
+    return ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) > .5;
+}
+
+function isTrendingDown(ns, symbol) {
+    return ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) < .5;
 }
