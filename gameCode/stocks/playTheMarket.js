@@ -118,9 +118,21 @@ function minPotentialProfit(ns) {
 
 /** @param {NS} ns */
 function isTrendingUp(ns, symbol) {
-    return ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) > .5;
+    if (ns.stock.has4SDataTIXAPI()) {
+        return ns.stock.getForecast(symbol) > .5;
+    } else if (mostRecentStockValues[symbol] !== null && mostRecentStockValues[symbol] !== undefined) {
+        return mostRecentStockValues[symbol] < ns.stock.getPrice(symbol);
+    } else {
+        return false;
+    }
 }
 
 function isTrendingDown(ns, symbol) {
-    return ns.stock.has4SDataTIXAPI() && ns.stock.getForecast(symbol) < .5;
+    if (ns.stock.has4SDataTIXAPI()) {
+        return ns.stock.getForecast(symbol) < .5;
+    } else if (mostRecentStockValues[symbol] !== null && mostRecentStockValues[symbol] !== undefined) {
+        return mostRecentStockValues[symbol] > ns.stock.getPrice(symbol);
+    } else {
+        return false;
+    }
 }
