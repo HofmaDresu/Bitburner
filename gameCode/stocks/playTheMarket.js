@@ -1,6 +1,8 @@
 import { getStockHistory, canTradeStocks, getStockCommission, getSingleStockSellValue, iOwnStocks } from "stocks/helpers";
 import { availableSpendingMoney, getConfig, CONFIG_BUY_STOCKS, moneyHeldIncludingStocks } from "helpers";
 
+const mostRecentStockValues = {};
+
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog('getServerMoneyAvailable');
@@ -34,13 +36,16 @@ export async function main(ns) {
             .forEach(symbol => {
                 buyLongIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
             });
-        await ns.stock.nextUpdate();
         // Loop from greatest diff between current and min
         symbols
             .sort((a, b) => (ns.stock.getPrice(b) - (stockHistoryData[b]?.min || ns.stock.getPrice(b))) - (ns.stock.getPrice(a) - (stockHistoryData[a]?.min || ns.stock.getPrice(a))))
             .forEach(symbol => {
                 buyShortIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
             });
+            
+        symbols.forEach(symbol => {    
+            mostRecentStockValues[symbol] = ns.stock.getPrice(symbol);
+        });
         await ns.stock.nextUpdate();
     }
 }
