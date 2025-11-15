@@ -9,7 +9,8 @@ export async function main(ns) {
     ns.ui.openTail();
 
     let tickCounter = 0;
-    const tickMax = 10 * 60;
+    const ticksToStartLong = 10 * 60;
+    const ticksToStartShort = ticksToStartLong * 3;
     while (!canTradeStocks(ns)) {
         await ns.sleep(6_000);
         tickCounter++;
@@ -17,10 +18,12 @@ export async function main(ns) {
 
     const symbols = ns.stock.getSymbols();
     while(true) {
-        // 10 minutes, but because each tick is 4-6 seconds it's 40-60 in-game minutes
-        if (!iOwnStocks(ns) && !ns.stock.has4SDataTIXAPI() && tickCounter < tickMax) {
+        if (tickCounter < Math.max(ticksToStartLong, ticksToStartShort)) {            
             tickCounter++;
-            ns.print(`Not ready for market, tick is ${tickCounter} / ${tickMax}`);
+        }
+        // 10 minutes, but because each tick is 4-6 seconds it's 40-60 in-game minutes
+        if (!iOwnStocks(ns) && !ns.stock.has4SDataTIXAPI() && tickCounter < ticksToStartLong) {
+            ns.print(`Not ready for market, tick is ${tickCounter} / ${ticksToStartLong}`);
             await ns.stock.nextUpdate();
             continue;
         }
@@ -36,12 +39,14 @@ export async function main(ns) {
             .forEach(symbol => {
                 buyLongIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
             });
-        // Loop from greatest diff between current and min
-        symbols
-            .sort((a, b) => (ns.stock.getPrice(b) - (stockHistoryData[b]?.min || ns.stock.getPrice(b))) - (ns.stock.getPrice(a) - (stockHistoryData[a]?.min || ns.stock.getPrice(a))))
-            .forEach(symbol => {
-                buyShortIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
-            });
+        if (tickCounter >= ticksToStartShort) {
+            // Loop from greatest diff between current and min
+            symbols
+                .sort((a, b) => (ns.stock.getPrice(b) - (stockHistoryData[b]?.min || ns.stock.getPrice(b))) - (ns.stock.getPrice(a) - (stockHistoryData[a]?.min || ns.stock.getPrice(a))))
+                .forEach(symbol => {
+                    buyShortIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || -1, stockHistoryData[symbol]?.max || -1);
+                });
+        }
             
         symbols.forEach(symbol => {    
             mostRecentStockValues[symbol] = ns.stock.getPrice(symbol);
