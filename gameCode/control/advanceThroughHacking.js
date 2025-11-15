@@ -352,13 +352,13 @@ function theBlackHand2(ns, currentWork, totalMoney) {
     const faction = "The Black Hand";
     const description = "Round 2";
     const prepWork = [];
+    const orderedAugs = ["Neuralstimulator", "Embedded Netburner Module Core Implant", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen IV"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Neuralstimulator")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["Neuralstimulator", "Embedded Netburner Module Core Implant", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen IV"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -370,13 +370,13 @@ function chongqing(ns, currentWork, totalMoney) {
         () => {return ns.singularity.travelToCity("Chongqing");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
+    const orderedAugs = ["Neuregen Gene Modification", "Speech Processor Implant", "Nuoptimal Nootropic Injector Implant"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Neuregen Gene Modification")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["Neuregen Gene Modification", "Speech Processor Implant", "Nuoptimal Nootropic Injector Implant"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -385,15 +385,15 @@ function bitRunners1(ns, currentWork, totalMoney) {
     const faction = "BitRunners";
     const description = null;
     const prepWork = [];
+    const orderedAugs = ["Artificial Bio-neural Network Implant", "Cranial Signal Processors - Gen V", "Neural Accelerator"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Artificial Bio-neural Network Implant")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [
         () => ns.singularity.getFactionFavor(faction) + ns.singularity.getFactionFavorGain(faction) > ns.getFavorToDonate(),
     ];
-    const orderedAugs = ["Artificial Bio-neural Network Implant", "Cranial Signal Processors - Gen V", "Neural Accelerator"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -424,13 +424,13 @@ function tianDiHui(ns, currentWork, totalMoney) {
     const prepWork = [
         () => {return ns.singularity.travelToCity("Ishima");}
     ];
+    const orderedAugs = ["Neuroreceptor Management Implant", "Nanofiber Weave", "Social Negotiation Assistant (S.N.A)", "ADR-V1 Pheromone Gene", "Speech Enhancement", "Wired Reflexes"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Neuroreceptor Management Implant")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["Neuroreceptor Management Implant", "Nanofiber Weave", "Social Negotiation Assistant (S.N.A)", "ADR-V1 Pheromone Gene", "Speech Enhancement", "Wired Reflexes"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -442,13 +442,13 @@ function ishima(ns, currentWork, totalMoney) {
         () => {return ns.singularity.travelToCity("Ishima");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
+    const orderedAugs = ["INFRARET Enhancement", "Combat Rib I", "Augmented Targeting I"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "INFRARET Enhancement")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["INFRARET Enhancement", "Combat Rib I", "Augmented Targeting I"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -460,13 +460,13 @@ function newTokyo(ns, currentWork, totalMoney) {
         () => {return ns.singularity.travelToCity("New Tokyo");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
+    const orderedAugs = ["NutriGen Implant"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "NutriGen Implant")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["NutriGen Implant"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -478,13 +478,13 @@ function volhaven(ns, currentWork, totalMoney) {
         () => {return ns.singularity.travelToCity("Volhaven");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
+    const orderedAugs = ["Combat Rib II", "DermaForce Particle Barrier"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Combat Rib II")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["Combat Rib II", "DermaForce Particle Barrier"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -496,13 +496,13 @@ function aevum(ns, currentWork, totalMoney) {
         () => {return ns.singularity.travelToCity("Aevum");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
+    const orderedAugs = ["PCMatrix"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "PCMatrix")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["PCMatrix"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -513,13 +513,13 @@ function sector12_2(ns, currentWork, totalMoney) {
     const prepWork = [
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
+    const orderedAugs = ["Augmented Targeting II"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Augmented Targeting II")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["Augmented Targeting II"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -528,15 +528,15 @@ function daedalus1(ns, currentWork, totalMoney) {
     const faction = "Daedalus";
     const description = null;
     const prepWork = [];
+    const orderedAugs = ["Synfibril Muscle"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Synfibril Muscle")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [
         () => ns.singularity.getFactionFavor(faction) + ns.singularity.getFactionFavorGain(faction) > ns.getFavorToDonate(),
     ];
-    const orderedAugs = ["Synfibril Muscle"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
