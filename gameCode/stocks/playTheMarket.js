@@ -1,4 +1,4 @@
-import { getStockHistory, canTradeStocks, getStockCommission, getSingleStockSellValue, iOwnStocks } from "stocks/helpers";
+import { getStockHistory, canTradeStocks, getStockCommission, getSingleStockSellValue, iOwnStocks, getStockSellValue } from "stocks/helpers";
 import { availableSpendingMoney, getConfig, CONFIG_BUY_STOCKS, moneyHeldIncludingStocks } from "helpers";
 
 const mostRecentStockValues = {};
@@ -74,6 +74,8 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     if (isTrendingDown(ns, symbol)) return;
     // Don't buy if over half known value or under 1
     if (askPrice > .5 * max || askPrice < 1) return;
+    // TODO: Don't buy if this would bring my exposure to > 55%
+    if ((sharesICanBuy * askPrice) + (sharesLong * avgLongPrice) > .55 * getNetWorth(ns)) return;
     ns.stock.buyStock(symbol, sharesICanBuy);
 }
 
@@ -117,6 +119,8 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     if (isTrendingUp(ns, symbol)) return;
     // Don't buy if under half known value
     if (askPrice < .5 * max) return;
+    // TODO: Don't buy if this would bring my exposure to > 55%
+    if ((sharesICanBuy * bidPrice) + (sharesShort * avgShortPrice) > .55 * getNetWorth(ns)) return;
     ns.stock.buyShort(symbol, sharesICanBuy);
 }
 
@@ -157,6 +161,7 @@ function isTrendingUp(ns, symbol) {
     }
 }
 
+/** @param {NS} ns */
 function isTrendingDown(ns, symbol) {
     if (ns.stock.has4SDataTIXAPI()) {
         return ns.stock.getForecast(symbol) < .5;
@@ -165,4 +170,9 @@ function isTrendingDown(ns, symbol) {
     } else {
         return false;
     }
+}
+
+/** @param {NS} ns */
+function getNetWorth(ns) {
+    return getStockSellValue(ns) + availableSpendingMoney(ns, 1);
 }
