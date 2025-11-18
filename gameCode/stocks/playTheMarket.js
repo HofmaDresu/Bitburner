@@ -31,7 +31,9 @@ export async function main(ns) {
 
         symbols.forEach(symbol => {     
             sellLongIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || 0, stockHistoryData[symbol]?.max || Infinity);
+            cutLongLosses(ns, symbol);
             sellShortIfAppropriate(ns, symbol, stockHistoryData[symbol]?.min || 0, stockHistoryData[symbol]?.max || Infinity);
+            cutShortLosses(ns, symbol);
         });
         // Loop from greatest diff between current and max
         symbols
@@ -65,11 +67,13 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000) return;
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-    const sharesICanBuy = Math.min(Math.floor(availableMoney / askPrice), ns.stock.getMaxShares(symbol) * .4 - sharesLong);
+    const sharesICanBuy = Math.min(Math.floor(availableMoney / askPrice), ns.stock.getMaxShares(symbol) * .10 - sharesLong);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to decrease than increase
     if (isTrendingDown(ns, symbol)) return;
+    // Don't buy if over half known value or under 1
+    if (askPrice > .5 * max || askPrice < 1) return;
     ns.stock.buyStock(symbol, sharesICanBuy);
 }
 
@@ -82,7 +86,17 @@ function sellLongIfAppropriate(ns, symbol, min, max) {
     if (isTrendingUp(ns, symbol)) return;
     // Don't sell if we haven't made enough profit
     if (getSingleStockSellValue(ns, symbol) - (sharesLong * avgLongPrice) < Math.max((sharesLong * avgLongPrice) * .2, getStockCommission(ns) * 2)) return;
-    ns.stock.sellStock(symbol, sharesLong);    
+    ns.stock.sellStock(symbol, sharesLong);
+}
+
+/** @param {NS} ns */
+function cutLongLosses(ns, symbol) {
+    const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
+    if (sharesLong === 0) return;
+    if (getSingleStockSellValue(ns, symbol) >= (sharesLong * avgLongPrice) / 2) return;
+    if (isTrendingUp(ns, symbol)) return;
+    ns.print(`Cutting long losses ${getSingleStockSellValue(ns, symbol)} ${(sharesLong * avgLongPrice) / 2}`)
+    ns.stock.sellStock(symbol, sharesLong);
 }
 
 /** @param {NS} ns */
@@ -96,11 +110,13 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000) return;
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-    const sharesICanBuy = Math.min(Math.floor(availableMoney / bidPrice), ns.stock.getMaxShares(symbol) * .4 - sharesShort);
+    const sharesICanBuy = Math.min(Math.floor(availableMoney / bidPrice), ns.stock.getMaxShares(symbol) * .10 - sharesShort);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * bidPrice) - (sharesICanBuy * min * 1.1) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to increase than decrease
     if (isTrendingUp(ns, symbol)) return;
+    // Don't buy if under half known value
+    if (askPrice < .5 * max) return;
     ns.stock.buyShort(symbol, sharesICanBuy);
 }
 
@@ -115,6 +131,15 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
     ns.stock.sellShort(symbol, sharesShort);    
 }
 
+/** @param {NS} ns */
+function cutShortLosses(ns, symbol) {
+    const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
+    if (sharesShort === 0) return;
+    if (getSingleStockSellValue(ns, symbol) < -0.5 * sharesShort * avgShortPrice) return;
+    if (isTrendingDown(ns, symbol)) return;
+    ns.print(`Cutting short losses ${getSingleStockSellValue(ns, symbol)} ${-0.5 * sharesShort * avgShortPrice}`)
+    ns.stock.sellStock(symbol, sharesShort);
+}
 
 /** @param {NS} ns */
 function minPotentialProfit(ns) {
