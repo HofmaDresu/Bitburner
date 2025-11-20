@@ -67,7 +67,7 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000) return;
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-    const sharesICanBuy = Math.min(Math.floor(availableMoney / askPrice), ns.stock.getMaxShares(symbol) * .10 - sharesLong);
+    const sharesICanBuy = Math.min(Math.floor(availableMoney / askPrice), ns.stock.getMaxShares(symbol) * .40 - sharesLong);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to decrease than increase
@@ -112,13 +112,13 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000) return;
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-    const sharesICanBuy = Math.min(Math.floor(availableMoney / bidPrice), ns.stock.getMaxShares(symbol) * .10 - sharesShort);
+    const sharesICanBuy = Math.min(Math.floor(availableMoney / bidPrice), ns.stock.getMaxShares(symbol) * .40 - sharesShort);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * bidPrice) - (sharesICanBuy * min * 1.1) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to increase than decrease
     if (isTrendingUp(ns, symbol)) return;
     // Don't buy if under half known value
-    if (askPrice < .5 * max) return;
+    if (bidPrice < .5 * max) return;
     // TODO: Don't buy if this would bring my exposure to > 55%
     if ((sharesICanBuy * bidPrice) + (sharesShort * avgShortPrice) > .55 * getNetWorth(ns)) return;
     ns.stock.buyShort(symbol, sharesICanBuy);
