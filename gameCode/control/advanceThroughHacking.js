@@ -633,11 +633,9 @@ function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
     for (const augment of augmentList) {
         if (!hasAugment(ns, augment, true)) {
             totalCost = totalCost + (multiplier * getAugmentPrice(ns, augment));
-            multiplier += .9;
+            multiplier += 1;
         }
     }
-    // Buffer
-    totalCost = totalCost * 1.2;
     ns.print(`Required money for augments: \t$${ns.formatNumber(totalCost, 2)}`)
     ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`)
     return totalCost < totalMoney;
