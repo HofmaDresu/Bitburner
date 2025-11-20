@@ -115,7 +115,7 @@ function purchaseThings(ns) {
     ns.singularity.upgradeHomeCores();
     ns.stock.purchaseWseAccount();
     ns.stock.purchaseTixApi();
-    ns.stock.purchase4SMarketData();
+    // ns.stock.purchase4SMarketData();
     ns.stock.purchase4SMarketDataTixApi();
 }
 
