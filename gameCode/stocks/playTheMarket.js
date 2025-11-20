@@ -174,5 +174,5 @@ function isTrendingDown(ns, symbol) {
 
 /** @param {NS} ns */
 function getNetWorth(ns) {
-    return getStockSellValue(ns) + availableSpendingMoney(ns, 1);
+    return getStockSellValue(ns) + availableSpendingMoney(ns, 0);
 }
