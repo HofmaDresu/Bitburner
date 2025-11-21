@@ -22,6 +22,7 @@ export async function main(ns) {
     ns.disableLog("stock.purchaseTixApi");
     ns.disableLog("stock.purchase4SMarketData");
     ns.disableLog("stock.purchase4SMarketDataTixApi");
+    ns.ui.openTail();
 
 
     while (true) {
