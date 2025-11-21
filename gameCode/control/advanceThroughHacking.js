@@ -655,7 +655,6 @@ export function hasAugment(ns, augment, includePurchased = false) {
 
 /** @param {NS} ns */
 function travelToCity(ns, city) {
-    ns.print(ns.getPlayer().city);
     if (ns.getPlayer().city !== city) {
         ns.singularity.travelToCity(city);
     }
