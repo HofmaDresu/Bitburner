@@ -226,7 +226,7 @@ function theDarkArmy(ns, currentWork, totalMoney) {
     const faction = "The Dark Army";
     const description = null;
     const prepWork = [
-        () => {return ns.singularity.travelToCity("Chongqing");}
+        () => {return travelToCity(ns, "Chongqing");}
     ];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
@@ -258,7 +258,7 @@ function tetrads(ns, currentWork, totalMoney) {
     const faction = "Tetrads";
     const description = null;
     const prepWork = [
-        () => {return ns.singularity.travelToCity("Chongqing");}
+        () => {return travelToCity(ns, "Chongqing");}
     ];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "security", true)},
@@ -367,7 +367,7 @@ function chongqing(ns, currentWork, totalMoney) {
     const faction = "Chongqing";
     const description = null;
     const prepWork = [
-        () => {return ns.singularity.travelToCity("Chongqing");},
+        () => {return travelToCity(ns, "Chongqing");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
     const orderedAugs = ["Neuregen Gene Modification", "Speech Processor Implant", "Nuoptimal Nootropic Injector Implant"];
@@ -422,7 +422,7 @@ function tianDiHui(ns, currentWork, totalMoney) {
             const faction = "Tian Di Hui";
     const description = null;
     const prepWork = [
-        () => {return ns.singularity.travelToCity("Ishima");}
+        () => {return travelToCity(ns, "Ishima");}
     ];
     const orderedAugs = ["Neuroreceptor Management Implant", "Nanofiber Weave", "Social Negotiation Assistant (S.N.A)", "ADR-V1 Pheromone Gene", "Speech Enhancement", "Wired Reflexes"];
     const whenToWindDown = [
@@ -439,7 +439,7 @@ function ishima(ns, currentWork, totalMoney) {
     const faction = "Ishima";
     const description = null;
     const prepWork = [
-        () => {return ns.singularity.travelToCity("Ishima");},
+        () => {return travelToCity(ns, "Ishima");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
     const orderedAugs = ["INFRARET Enhancement", "Combat Rib I", "Augmented Targeting I"];
@@ -457,7 +457,7 @@ function newTokyo(ns, currentWork, totalMoney) {
     const faction = "New Tokyo";
     const description = null;
     const prepWork = [
-        () => {return ns.singularity.travelToCity("New Tokyo");},
+        () => {return travelToCity(ns, "New Tokyo");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
     const orderedAugs = ["NutriGen Implant"];
@@ -475,7 +475,7 @@ function volhaven(ns, currentWork, totalMoney) {
     const faction = "Volhaven";
     const description = null;
     const prepWork = [
-        () => {return ns.singularity.travelToCity("Volhaven");},
+        () => {return travelToCity(ns, "Volhaven");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
     const orderedAugs = ["Combat Rib II", "DermaForce Particle Barrier"];
@@ -493,7 +493,7 @@ function aevum(ns, currentWork, totalMoney) {
     const faction = "Aevum";
     const description = null;
     const prepWork = [
-        () => {return ns.singularity.travelToCity("Aevum");},
+        () => {return travelToCity(ns, "Aevum");},
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
     const orderedAugs = ["PCMatrix"];
@@ -651,4 +651,12 @@ function getAugmentPrice(ns, augment) {
 export function hasAugment(ns, augment, includePurchased = false) {
     const installedAugments = ns.singularity.getOwnedAugmentations(includePurchased);
     return installedAugments.indexOf(augment) !== -1
+}
+
+/** @param {NS} ns */
+function travelToCity(ns, city) {
+    ns.print(ns.getPlayer().city);
+    if (ns.getPlayer().city !== city) {
+        ns.singularity.travelToCity(city);
+    }
 }
