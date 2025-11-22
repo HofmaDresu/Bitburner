@@ -139,10 +139,10 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
 function cutShortLosses(ns, symbol) {
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
     if (sharesShort === 0) return;
-    if (getSingleStockSellValue(ns, symbol) < -0.5 * sharesShort * avgShortPrice) return;
+    if (ns.stock.getPrice(symbol) > 1.5 * avgShortPrice) return;
     if (isTrendingDown(ns, symbol)) return;
-    ns.print(`Cutting short losses ${getSingleStockSellValue(ns, symbol)} ${-0.5 * sharesShort * avgShortPrice}`)
-    ns.stock.sellStock(symbol, sharesShort);
+    ns.print(`Cutting short losses`)
+    ns.stock.sellShort(symbol, sharesShort);
 }
 
 /** @param {NS} ns */
