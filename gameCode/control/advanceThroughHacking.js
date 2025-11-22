@@ -633,9 +633,11 @@ function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
     for (const augment of augmentList) {
         if (!hasAugment(ns, augment, true)) {
             totalCost = totalCost + (multiplier * getAugmentPrice(ns, augment));
-            multiplier += 1;
+            multiplier *= 1.9;
         }
     }
+    // Buffer and room for Neuroflux
+    totalCost *= 1.2;
     ns.print(`Required money for augments: \t$${ns.formatNumber(totalCost, 2)}`)
     ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`)
     return totalCost < totalMoney;
