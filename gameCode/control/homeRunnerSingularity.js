@@ -124,7 +124,7 @@ function purchaseThings(ns) {
 function startOrStopScripts(ns, config) {    
     let higherPriorityItemsStarted = true;
     const moneySources = ns.getMoneySources().sinceInstall;
-    const shouldManipulateMarket = canTradeStocks(ns) && iOwnStocks(ns);
+    const shouldManipulateMarket = canTradeStocks(ns) && (iOwnStocks(ns) || ns.getResetInfo().currentNode === 8);
 
     // TODO: restart makeMoneyFromTarget and servers when new best target exists
     // TODO: run something more primitave on n00dles
