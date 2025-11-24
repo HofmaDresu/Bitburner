@@ -52,6 +52,10 @@ export async function main(ns) {
                 const securityThresh = ns.getServerMinSecurityLevel(target);
                 const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
                 if(!ns.hasRootAccess(target)) continue;
+                const player = ns.getPlayer();
+                const server = ns.getServer(target);
+                const actionTime = Math.max(ns.formulas.hacking.growTime(server, player), ns.formulas.hacking.hackTime(server, player), ns.formulas.hacking.weakenTime(server, player)) / 1000;
+                if (actionTime > 60) continue;
                 if (ns.getServerSecurityLevel(target) > securityThresh) {
                     await weaken(ns, hostname, [target]);
                 }
