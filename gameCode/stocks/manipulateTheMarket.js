@@ -68,7 +68,7 @@ export async function main(ns) {
                         ns.print(`Hacking + manipulating ${symbol} because we do not own long stocks`)
                         await hack(ns, hostname, [target, true]);
                     } else {
-                        ns.print(`Just growing ${symbol} because we do not own long stocks and money available is too high`)
+                        ns.print(`Just growing ${symbol} because we do not own long stocks and money available is too low`)
                         await grow(ns, hostname, [target]);
                     }            
                 }
