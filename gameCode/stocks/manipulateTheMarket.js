@@ -87,20 +87,17 @@ export async function main(ns) {
 /** @param {NS} ns */
 async function hack(ns, hostname, args) {   
     const script = "/hacking/hackTarget.js";
-    ns.print("hacking " + args[0]);
     await runScriptAtMaxThreads(ns, script, hostname, args);
 }
 
 /** @param {NS} ns */
 async function grow(ns, hostname, args) {   
     const script = "/growing/growTarget.js";
-    ns.print("growing " + args[0]);
     await runScriptAtMaxThreads(ns, script, hostname, args);
 }
 
 /** @param {NS} ns */
 async function weaken(ns, hostname, args) {   
     const script = "/weakening/weakenTarget.js";
-    ns.print("weakening " + args[0]);
     await runScriptAtMaxThreads(ns, script, hostname, args);
 }
