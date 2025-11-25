@@ -55,7 +55,7 @@ export async function main(ns) {
                 const player = ns.getPlayer();
                 const server = ns.getServer(target);
                 const actionTime = Math.max(ns.formulas.hacking.growTime(server, player), ns.formulas.hacking.hackTime(server, player), ns.formulas.hacking.weakenTime(server, player)) / 1000;
-                if (actionTime > 60) continue;
+                if (actionTime > 120) continue;
                 if (ns.getServerSecurityLevel(target) > securityThresh) {
                     await weaken(ns, hostname, [target]);
                 }
