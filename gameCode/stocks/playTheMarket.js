@@ -9,7 +9,8 @@ export async function main(ns) {
     ns.ui.openTail();
 
     let tickCounter = 0;
-    const ticksToStartLong = 10 * 60;
+    // 20 minutes, but because each tick is 4-6 seconds it's 80-120 in-game minutes
+    const ticksToStartLong = 20 * 60;
     const ticksToStartShort = ticksToStartLong * 3;
     while (!canTradeStocks(ns)) {
         await ns.sleep(6_000);
@@ -21,7 +22,6 @@ export async function main(ns) {
         if (tickCounter < Math.max(ticksToStartLong, ticksToStartShort)) {            
             tickCounter++;
         }
-        // 10 minutes, but because each tick is 4-6 seconds it's 40-60 in-game minutes
         if (!iOwnStocks(ns) && !ns.stock.has4SDataTIXAPI() && tickCounter < ticksToStartLong) {
             ns.print(`Not ready for market, tick is ${tickCounter} / ${ticksToStartLong}`);
             await ns.stock.nextUpdate();
