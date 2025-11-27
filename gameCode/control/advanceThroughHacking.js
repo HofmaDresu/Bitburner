@@ -628,6 +628,11 @@ function installAugments(ns) {
 
 /** @param {NS} ns */
 function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
+    // Once we cross 10 billion, try to get 42 data tix api
+    if (ns.getResetInfo().currentNode === 8 && totalMoney > 10_000_000_000 && !ns.stock.has4SDataTIXAPI()) {
+        return false;
+    }
+
     let multiplier = 1;
     let totalCost = 0;
     for (const augment of augmentList) {

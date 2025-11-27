@@ -1,7 +1,8 @@
-import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_PURCHASE_ITEMS, getBestServerToHack } from "helpers";
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_PURCHASE_ITEMS, getBestServerToHack, moneyHeldIncludingStocks } from "helpers";
 import { canTradeStocks, iOwnStocks } from "stocks/helpers";
 import { crackServers } from "control/helpers";
 import advanceThroughHacking, {hasAugment} from "control/advanceThroughHacking";
+import { sellAll } from "stocks/sellAll";
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -117,6 +118,9 @@ function purchaseThings(ns) {
     ns.stock.purchaseWseAccount();
     ns.stock.purchaseTixApi();
     // ns.stock.purchase4SMarketData();
+    if (ns.getResetInfo().currentNode === 8 && !ns.stock.has4SDataTIXAPI() && moneyHeldIncludingStocks(ns) * .8 > 27_000_000_000) {
+        sellAll(ns);
+    }
     ns.stock.purchase4SMarketDataTixApi();
 }
 
