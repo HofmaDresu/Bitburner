@@ -628,12 +628,6 @@ function installAugments(ns) {
 
 /** @param {NS} ns */
 function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
-    // Once we cross 10 billion, try to get 42 data tix api
-    if (ns.getResetInfo().currentNode === 8 && totalMoney > 10_000_000_000 && !ns.stock.has4SDataTIXAPI()) {
-        ns.print(`Attempting to get $27.00b for 4SDataTIXAPI`);
-        ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`);
-        return false;
-    }
 
     let multiplier = 1;
     let totalCost = 0;
@@ -645,9 +639,16 @@ function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
     }
     // Buffer and room for Neuroflux
     totalCost *= 1.2;
-    ns.print(`Required money for augments: \t$${ns.formatNumber(totalCost, 2)}`);
-    ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`);
-    return totalCost < totalMoney;
+    // Once we cross 10 billion, try to get 42 data tix api
+    if (ns.getResetInfo().currentNode === 8 && totalCost > 10_000_000_000 && !ns.stock.has4SDataTIXAPI()) {
+        ns.print(`Required money for 4SDataTIXAPI: \t$27.00b`);
+        ns.print(`Total money: \t\t\t\t$${ns.formatNumber(totalMoney, 2)}`);
+        return false;
+    } else {
+        ns.print(`Required money for augments: \t$${ns.formatNumber(totalCost, 2)}`);
+        ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`);
+        return totalCost < totalMoney;
+    }
 }
 
 
