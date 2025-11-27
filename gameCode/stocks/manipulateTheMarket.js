@@ -67,14 +67,24 @@ export async function main(ns) {
                         ns.print(`Just hacking ${symbol} because we own ${sharesLong} stocks and money available is too high`)
                         await hack(ns, hostname, [target]);
                     }
-                } else {    
+                } else if (sharesShort) {    
                     if (ns.getServerMoneyAvailable(target) > .5 * ns.getServerMaxMoney(target)) {
-                        ns.print(`Hacking + manipulating ${symbol} because we do not own long stocks`)
+                        ns.print(`Hacking + manipulating ${symbol} because we own short stocks`)
                         await hack(ns, hostname, [target, true]);
                     } else {
-                        ns.print(`Just growing ${symbol} because we do not own long stocks and money available is too low`)
+                        ns.print(`Just growing ${symbol} because we do not own any stocks and money available is too low`)
                         await grow(ns, hostname, [target]);
                     }            
+                } else {
+                    const tryToForceDown = ns.stock.getAskPrice(symbol) > 100;
+                    if (ns.getServerMoneyAvailable(target) > .5 * ns.getServerMaxMoney(target)) {
+                        ns.print(`Hacking${tryToForceDown ? " + manipulating" : ""} ${symbol} because we own don't own any stocks (${ns.stock.getAskPrice(symbol)})`)
+                        await hack(ns, hostname, [target, tryToForceDown]);
+                    } else {
+                        ns.print(`Growing${!tryToForceDown ? " + manipulating" : ""} ${symbol} because we own don't own any stocks (${ns.stock.getAskPrice(symbol)})`)
+                        await grow(ns, hostname, [target, !tryToForceDown]);
+                    }  
+
                 }
             }
         }
