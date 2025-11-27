@@ -62,7 +62,9 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     if (!getConfig(ns)[CONFIG_BUY_STOCKS]) return;
     // Not enough potential profit in spread
     if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit(ns)) return;
-    const askPrice = ns.stock.getAskPrice(symbol)
+    const askPrice = ns.stock.getAskPrice(symbol);
+    // Allow stock to recover if we drove its price down too far
+    if (askPrice < .1 * max) return;
 
     const availableMoney = availableSpendingMoney(ns, .5);
     if (availableMoney < 1_000_000) return;
@@ -139,9 +141,9 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
 function cutShortLosses(ns, symbol) {
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
     if (sharesShort === 0) return;
-    if (ns.stock.getPrice(symbol) > 1.5 * avgShortPrice) return;
+    if (ns.stock.getPrice(symbol) < 1.5 * avgShortPrice) return;
     if (isTrendingDown(ns, symbol)) return;
-    ns.print(`Cutting short losses`)
+    ns.print(`Cutting short losses ${ns.stock.getPrice(symbol)} ${avgShortPrice}`)
     ns.stock.sellShort(symbol, sharesShort);
 }
 
