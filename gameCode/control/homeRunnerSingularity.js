@@ -118,7 +118,7 @@ function purchaseThings(ns) {
     ns.stock.purchaseWseAccount();
     ns.stock.purchaseTixApi();
     // ns.stock.purchase4SMarketData();
-    if (ns.getResetInfo().currentNode === 8 && !ns.stock.has4SDataTIXAPI() && moneyHeldIncludingStocks(ns) * .8 > 27_000_000_000) {
+    if (ns.getResetInfo().currentNode === 8 && !ns.stock.has4SDataTIXAPI() && moneyHeldIncludingStocks(ns) * .8 > 30_000_000_000) {
         sellAll(ns);
     }
     ns.stock.purchase4SMarketDataTixApi();

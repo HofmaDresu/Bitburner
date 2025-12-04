@@ -641,7 +641,7 @@ function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
     totalCost *= 1.2;
     // Once we cross 10 billion, try to get 42 data tix api
     if (ns.getResetInfo().currentNode === 8 && totalCost > 10_000_000_000 && !ns.stock.has4SDataTIXAPI()) {
-        ns.print(`Required money for 4SDataTIXAPI: \t$27.00b`);
+        ns.print(`Required money for 4SDataTIXAPI: \t$30.00b`);
         ns.print(`Total money: \t\t\t\t$${ns.formatNumber(totalMoney, 2)}`);
         return false;
     } else {
