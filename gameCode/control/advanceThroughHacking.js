@@ -9,7 +9,7 @@ export default async function advanceThroughHacking(ns) {
     const moneySinceInstall = ns.getMoneySources().sinceInstall
     // TODO: Eventually add more money sources like gangs, corporations, bladeburner, etc as we get them
     // NOTE: this is total produced money, not actual money
-    const totalMoney =  Math.max(ns.getServerMoneyAvailable("home"), moneySinceInstall.hacking + moneySinceInstall.hacknet + moneySinceInstall.crime + getStockSellValue(ns));
+    const totalMoney =  Math.max(ns.getServerMoneyAvailable("home") + getStockSellValue(ns), moneySinceInstall.hacking + moneySinceInstall.hacknet + moneySinceInstall.crime + getStockSellValue(ns));
 
     // 1 (this probably will never be automated unless I cheat)
     // Save until total produced = $$ of 128 GB
