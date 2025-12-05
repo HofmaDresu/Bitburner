@@ -66,7 +66,7 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     // Allow stock to recover if we drove its price down too far
     if (askPrice < .1 * max || askPrice < 1.1 * min) return;
 
-    const availableMoney = availableSpendingMoney(ns, .5);
+    const availableMoney = availableSpendingMoney(ns, ns.getResetInfo().currentNode === 8 ? 0 : .5);
     if (availableMoney < 1_000_000) return;
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
     const sharesICanBuy = Math.min(Math.floor(availableMoney / askPrice), ns.stock.getMaxShares(symbol) * .40 - sharesLong);
@@ -110,7 +110,7 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit(ns)) return;
     const bidPrice = ns.stock.getBidPrice(symbol)
 
-    const availableMoney = availableSpendingMoney(ns, .5);
+    const availableMoney = availableSpendingMoney(ns, ns.getResetInfo().currentNode === 8 ? 0 : .5);
     if (availableMoney < 1_000_000) return;
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
     const sharesICanBuy = Math.min(Math.floor(availableMoney / bidPrice), ns.stock.getMaxShares(symbol) * .40 - sharesShort);
