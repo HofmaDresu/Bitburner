@@ -135,8 +135,8 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
     if (sharesShort === 0) return;
     // Don't sell if we know it's more likely to decrease than increase
     if (isTrendingDown(ns, symbol)) return;
-    // Don't sell if we haven't made enough profit
-    if (getSingleStockSellValue(ns, symbol) - (sharesShort * avgShortPrice) < Math.max((sharesShort * avgShortPrice) * .2, getStockCommission(ns) * 2)) return;
+    const haveSomeProfit = getSingleStockSellValue(ns, symbol) > (sharesShort * avgShortPrice) && getSingleStockSellValue(ns, symbol) > getStockCommission(ns) * 2 ;
+    if (!haveSomeProfit) return;
     ns.stock.sellShort(symbol, sharesShort);    
 }
 
