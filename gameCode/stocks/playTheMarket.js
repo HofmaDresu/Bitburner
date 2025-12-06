@@ -64,19 +64,21 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
     if ((max - min) * ns.stock.getMaxShares(symbol) < minPotentialProfit(ns)) return;
     const askPrice = ns.stock.getAskPrice(symbol);
     // Allow stock to recover if we drove its price down too far
-    if (askPrice < .1 * max || askPrice < 1.1 * min) return;
+    if (askPrice < 1.1 * min) return;
 
     const availableMoney = availableSpendingMoney(ns, ns.getResetInfo().currentNode === 8 ? .1 : .5);
     if (availableMoney < 1_000_000) return;
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-    const sharesICanBuy = Math.min(Math.floor(availableMoney / askPrice), ns.stock.getMaxShares(symbol) * .40 - sharesLong);
+    const sharesICanAfford = Math.min(Math.floor(availableMoney / askPrice), ns.stock.getMaxShares(symbol) * .40 - sharesLong);
+    const maxSharesICanBuy = Math.floor(getMaxAmountOfNetWorthAllowed(ns) / askPrice);
+    const sharesICanBuy = Math.min(sharesICanAfford, maxSharesICanBuy);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * max * .9) - (sharesICanBuy * askPrice) < minPotentialProfit(ns)) return;
     if (!isTrendingUp(ns, symbol)) return;
     // Don't buy if over half known value or under 1
     if (askPrice > .5 * max || askPrice < 1) return;
     // Don't buy if this would bring my exposure to > 55%
-    if ((sharesICanBuy * askPrice) + (sharesLong * avgLongPrice) > .55 * getNetWorth(ns)) return;
+    if ((sharesICanBuy * askPrice) + (sharesLong * avgLongPrice) > getMaxAmountOfNetWorthAllowed(ns)) return;
     ns.stock.buyStock(symbol, sharesICanBuy);
 }
 
@@ -113,7 +115,9 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     const availableMoney = availableSpendingMoney(ns, ns.getResetInfo().currentNode === 8 ? .1 : .5);
     if (availableMoney < 1_000_000) return;
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
-    const sharesICanBuy = Math.min(Math.floor(availableMoney / bidPrice), ns.stock.getMaxShares(symbol) * .40 - sharesShort);
+    const sharesICanAfford = Math.min(Math.floor(availableMoney / bidPrice), ns.stock.getMaxShares(symbol) * .40 - sharesShort);
+    const maxSharesICanBuy = Math.floor(getMaxAmountOfNetWorthAllowed(ns) / bidPrice);
+    const sharesICanBuy = Math.min(sharesICanAfford, maxSharesICanBuy);
     // Not enough potential profit given current monies
     if ((sharesICanBuy * bidPrice) - (sharesICanBuy * min * 1.1) < minPotentialProfit(ns)) return;
     // Don't buy if we know it's more likely to increase than decrease
@@ -121,7 +125,7 @@ function buyShortIfAppropriate(ns, symbol, min, max) {
     // Don't buy if under half known value
     if (bidPrice < .5 * max) return;
     // TODO: Don't buy if this would bring my exposure to > 55%
-    if ((sharesICanBuy * bidPrice) + (sharesShort * avgShortPrice) > .55 * getNetWorth(ns)) return;
+    if ((sharesICanBuy * bidPrice) + (sharesShort * avgShortPrice) > getMaxAmountOfNetWorthAllowed(ns)) return;
     ns.stock.buyShort(symbol, sharesICanBuy);
 }
 
@@ -176,4 +180,9 @@ function isTrendingDown(ns, symbol) {
 /** @param {NS} ns */
 function getNetWorth(ns) {
     return getStockSellValue(ns) + availableSpendingMoney(ns, 0);
+}
+
+/** @param {NS} ns */
+function getMaxAmountOfNetWorthAllowed(ns) {
+    return .55 * getNetWorth(ns);
 }
