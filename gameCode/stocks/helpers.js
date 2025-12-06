@@ -12,7 +12,7 @@ export function getStockHistory(ns) {
 
 /** @param {NS} ns */
 export function canTradeStocks(ns) {    
-    return ns.stock.hasWSEAccount() && ns.stock.hasTIXAPIAccess();
+    return ns.stock.hasWSEAccount() && ns.stock.hasTIXAPIAccess() && (ns.getResetInfo().currentNode === 8 || ns.stock.has4SDataTIXAPI());
 }
 
 /** @param {NS} ns */
