@@ -406,14 +406,15 @@ function bitRunners2(ns, currentWork, totalMoney) {
     const currentRep = ns.singularity.getFactionRep(faction);
     const haveEnoughRep = currentRep >= highestRepCost;
     const getRequiredDonation = () => {return ns.formulas.reputation.donationForRep(highestRepCost - currentRep, ns.getPlayer())};
+    const orderedAugs = ["Embedded Netburner Module Core V2 Upgrade", "BitRunners Neurolink"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
+        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)},
         () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
     ];
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
     const whenToStartBuying = [];
-    const orderedAugs = ["Embedded Netburner Module Core V2 Upgrade", "BitRunners Neurolink"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -549,14 +550,15 @@ function daedalus2(ns, currentWork, totalMoney) {
     const currentRep = ns.singularity.getFactionRep(faction);
     const haveEnoughRep = currentRep >= highestRepCost;
     const getRequiredDonation = () => {return ns.formulas.reputation.donationForRep(highestRepCost - currentRep, ns.getPlayer())};
+    const orderedAugs = ["Embedded Netburner Module Direct Memory Access Upgrade", "Embedded Netburner Module Core V3 Upgrade", "Embedded Netburner Module Analyze Engine","The Red Pill"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
+        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)},
         () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
     ];
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
     const whenToStartBuying = [];
-    const orderedAugs = ["Embedded Netburner Module Direct Memory Access Upgrade", "Embedded Netburner Module Core V3 Upgrade", "Embedded Netburner Module Analyze Engine","The Red Pill"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -569,14 +571,15 @@ function daedalus3(ns, currentWork, totalMoney) {
     const currentRep = ns.singularity.getFactionRep(faction);
     const haveEnoughRep = currentRep >= highestRepCost;
     const getRequiredDonation = () => {return ns.formulas.reputation.donationForRep(highestRepCost - currentRep, ns.getPlayer())};
+    const orderedAugs = ["NEMEAN Subdermal Weave", "Synthetic Heart"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
+        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)},
         () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
     ];
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
     const whenToStartBuying = [];
-    const orderedAugs = ["NEMEAN Subdermal Weave", "Synthetic Heart"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
