@@ -410,7 +410,7 @@ function bitRunners2(ns, currentWork, totalMoney) {
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
-        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)},
+        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs, getRequiredDonation())},
         () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
     ];
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
@@ -554,7 +554,7 @@ function daedalus2(ns, currentWork, totalMoney) {
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
-        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)},
+        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs, getRequiredDonation())},
         () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
     ];
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
@@ -575,7 +575,7 @@ function daedalus3(ns, currentWork, totalMoney) {
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
-        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)},
+        () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs, getRequiredDonation())},
         () => {return totalMoney > getRequiredDonation() || haveEnoughRep}
     ];
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
@@ -630,7 +630,7 @@ function installAugments(ns) {
 }
 
 /** @param {NS} ns */
-function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
+function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList, additionalCost) {
 
     let multiplier = 1;
     let totalCost = 0;
@@ -639,6 +639,9 @@ function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList) {
             totalCost = totalCost + (multiplier * getAugmentPrice(ns, augment));
             multiplier *= 1.9;
         }
+    }
+    if (additionalCost) {
+        totalCost += additionalCost;
     }
     // Buffer and room for Neuroflux
     totalCost *= 1.2;
