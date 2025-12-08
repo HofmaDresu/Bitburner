@@ -10,6 +10,7 @@ export async function main(ns) {
     ns.disableLog("getServerMaxMoney");
     ns.disableLog("getServerMaxRam");
     ns.disableLog("getServerUsedRam");
+    ns.ui.openTail();
     while (true) {
         const config = getConfig(ns);
 
@@ -47,7 +48,7 @@ async function earlyGameSetUp(ns) {
             ns.singularity.createProgram("BruteSSH.exe", true);
         }
     } else if (hackSkill <= 100) {
-        if(currentWork?.type !== "CLASS") {
+        if(currentWork?.type !== "CRIME") {
             ns.singularity.commitCrime("Rob Store", true);
         }
     } else if (!ns.fileExists("FTPCrack.exe", "home")) {
