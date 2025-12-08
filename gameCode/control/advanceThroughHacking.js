@@ -1,4 +1,4 @@
-import { startScriptOnHomeIfAble, getConfig, CONFIG_NODE_MULTIPLIERS} from "helpers";
+import { startScriptOnHomeIfAble, getConfig, saveConfig, CONFIG_NODE_MULTIPLIERS, CONFIG_BUY_STOCKS} from "helpers";
 import { sellAll } from "stocks/sellAll";
 import { getStockSellValue } from "stocks/helpers";
 
@@ -531,6 +531,7 @@ function daedalus1(ns, currentWork, totalMoney) {
     const prepWork = [];
     const orderedAugs = ["Synfibril Muscle"];
     const whenToWindDown = [
+        () => {return getInvitedToDaedalus(ns, currentWork, totalMoney, orderedAugs, getRequiredDonation())},
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
@@ -552,6 +553,7 @@ function daedalus2(ns, currentWork, totalMoney) {
     const getRequiredDonation = () => {return ns.formulas.reputation.donationForRep(highestRepCost - currentRep, ns.getPlayer())};
     const orderedAugs = ["Embedded Netburner Module Direct Memory Access Upgrade", "Embedded Netburner Module Core V3 Upgrade", "Embedded Netburner Module Analyze Engine","The Red Pill"];
     const whenToWindDown = [
+        () => {return getInvitedToDaedalus(ns, currentWork, totalMoney, orderedAugs, getRequiredDonation())},
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
         () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs, getRequiredDonation())},
@@ -573,6 +575,7 @@ function daedalus3(ns, currentWork, totalMoney) {
     const getRequiredDonation = () => {return ns.formulas.reputation.donationForRep(highestRepCost - currentRep, ns.getPlayer())};
     const orderedAugs = ["NEMEAN Subdermal Weave", "Synthetic Heart"];
     const whenToWindDown = [
+        () => {return getInvitedToDaedalus(ns, currentWork, totalMoney, orderedAugs, getRequiredDonation())},
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return ns.fileExists("Formulas.exe")},
         () => {return ns.getResetInfo().currentNode !== 8 || haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs, getRequiredDonation())},
@@ -581,6 +584,36 @@ function daedalus3(ns, currentWork, totalMoney) {
     const buyRep = () => {return haveEnoughRep || ns.singularity.donateToFaction(faction, getRequiredDonation())};
     const whenToStartBuying = [];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
+}
+
+/** @param {NS} ns */
+function getInvitedToDaedalus(ns, currentWork, totalMoney, orderedAugs, requiredDonation) {
+    // [{"type":"numAugmentations","numAugmentations":30},{"type":"money","money":100000000000},{"type":"someCondition","conditions":[{"type":"skills","skills":{"hacking":2500}},{"type":"skills","skills":{"strength":1500,"defense":1500,"dexterity":1500,"agility":1500}}]}]
+    const faction = "Daedalus";
+    const requirements = ns.singularity.getFactionInviteRequirements(faction);
+    const requiredMoney = requirements[1].money;
+    const rep = ns.singularity.getFactionRep(faction);
+    const config = getConfig(ns);
+
+    if (ns.singularity.checkFactionInvitations().indexOf(faction) > -1) {
+        return true;
+    }
+    else if (rep > 0 || currentWork?.type === "FACTION" && currentWork?.factionName === faction) {
+        config[CONFIG_BUY_STOCKS] = !haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs, requiredDonation, false);
+        saveConfig(ns, config);
+        return true;
+    }
+    else if (totalMoney < requiredMoney) {
+        ns.print(`Required money for Daedelus: \t$${ns.formatNumber(requiredMoney, 2)}`);
+        ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`);
+        return false;
+    } else {
+        ns.print("Selling all to join Daedelus");
+        config[CONFIG_BUY_STOCKS] = false;
+        saveConfig(ns, config);
+        sellAll(ns);
+        return false;
+    }
 }
 
 /** @param {NS} ns */
@@ -630,7 +663,7 @@ function installAugments(ns) {
 }
 
 /** @param {NS} ns */
-function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList, additionalCost) {
+function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList, additionalCost, print = true) {
 
     let multiplier = 1;
     let totalCost = 0;
@@ -647,12 +680,16 @@ function haveEnoughMoneyForAllAugments(ns, totalMoney, augmentList, additionalCo
     totalCost *= 1.2;
     // Once we cross 10 billion, try to get 42 data tix api
     if (ns.getResetInfo().currentNode === 8 && totalCost > 10_000_000_000 && !ns.stock.has4SDataTIXAPI()) {
-        ns.print(`Required money for 4SDataTIXAPI: \t$30.00b`);
-        ns.print(`Total money: \t\t\t\t$${ns.formatNumber(totalMoney, 2)}`);
+        if (print) {
+            ns.print(`Required money for 4SDataTIXAPI: \t$30.00b`);
+            ns.print(`Total money: \t\t\t\t$${ns.formatNumber(totalMoney, 2)}`);
+        }
         return false;
     } else {
-        ns.print(`Required money for augments: \t$${ns.formatNumber(totalCost, 2)}`);
-        ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`);
+        if (print) {
+            ns.print(`Required money for augments: \t$${ns.formatNumber(totalCost, 2)}`);
+            ns.print(`Total money: \t\t\t$${ns.formatNumber(totalMoney, 2)}`);
+        }
         return totalCost < totalMoney;
     }
 }
