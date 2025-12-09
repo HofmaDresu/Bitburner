@@ -22,7 +22,7 @@ export async function main(ns) {
         if (tickCounter < Math.max(ticksToStartLong, ticksToStartShort)) {            
             tickCounter++;
         }
-        if (!iOwnStocks(ns) && (!ns.stock.has4SDataTIXAPI() || ns.getResetInfo().currentNode === 8) && tickCounter < ticksToStartLong) {
+        if (!iOwnStocks(ns) && tickCounter < ticksToStartLong) {
             ns.print(`Not ready for market, tick is ${tickCounter} / ${ticksToStartLong}`);
             await ns.stock.nextUpdate();
             continue;
