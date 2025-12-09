@@ -17,9 +17,10 @@ export default async function advanceThroughHacking(ns) {
     prevFactionIsDone = prevFactionIsDone && cyberSec(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && sector12_1(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && niteSec(ns, currentWork, totalMoney);
+    // TODO: Netburners if doing hacknet
+    prevFactionIsDone = prevFactionIsDone && chongqing(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && theBlackHand1(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && theBlackHand2(ns, currentWork, totalMoney);
-    prevFactionIsDone = prevFactionIsDone && chongqing(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && bitRunners1(ns, currentWork, totalMoney);
     prevFactionIsDone = prevFactionIsDone && bitRunners2(ns, currentWork, totalMoney);
 
