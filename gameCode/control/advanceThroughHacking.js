@@ -11,13 +11,7 @@ export default async function advanceThroughHacking(ns) {
     // NOTE: this is total produced money, not actual money
     const totalMoney =  Math.max(ns.getServerMoneyAvailable("home") + getStockSellValue(ns), moneySinceInstall.hacking + moneySinceInstall.hacknet + moneySinceInstall.crime + getStockSellValue(ns));
 
-    // 1 (this probably will never be automated unless I cheat)
-    // Save until total produced = $$ of 128 GB
-    // Get to 128 GB home
-    // Join CyberSec
-    // Buy max NeuroFlux
-    // install augments
-    if (ns.getServerMaxRam("home") >= 128) {
+    if (ns.getServerMaxRam("home") > 128) {
         prevFactionIsDone = true;
     }
     prevFactionIsDone = prevFactionIsDone && cyberSec(ns, currentWork, totalMoney);

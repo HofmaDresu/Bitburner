@@ -13,7 +13,7 @@ export async function main(ns) {
     // Reset stock values
     ns.write(STOCK_HISTORY_FILE_NAME, JSON.stringify({}), "w");
 
-    if(ns.getServerMaxRam("home") < 128) {
+    if(ns.getServerMaxRam("home") <= 128) {
         ns.spawn("control/homeRunnerLowRamSingularity.js",  {threads: 1, spawnDelay: 500});
     } else {
         if(!startScriptOnHomeIfAble(ns, "control/homeRunnerSingularity.js")) {
