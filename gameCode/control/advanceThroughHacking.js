@@ -378,7 +378,7 @@ function chongqing(ns, currentWork, totalMoney) {
 /** @param {NS} ns */
 function bitRunners1(ns, currentWork, totalMoney) {
     const faction = "BitRunners";
-    const description = null;
+    const description = "Round 1";
     const prepWork = [];
     const orderedAugs = ["Artificial Bio-neural Network Implant", "Cranial Signal Processors - Gen V", "Neural Accelerator"];
     const whenToWindDown = [
