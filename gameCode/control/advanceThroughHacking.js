@@ -526,7 +526,6 @@ function daedalus1(ns, currentWork, totalMoney) {
     const prepWork = [];
     const orderedAugs = ["Synfibril Muscle"];
     const whenToWindDown = [
-        () => {return getInvitedToDaedalus(ns, currentWork, totalMoney, orderedAugs, getRequiredDonation())},
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
         () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
