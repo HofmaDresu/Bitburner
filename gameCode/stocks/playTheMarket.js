@@ -6,6 +6,10 @@ const mostRecentStockValues = {};
 /** @param {NS} ns */
 export async function main(ns) {
     ns.disableLog('getServerMoneyAvailable');
+    ns.disableLog('stock.buyStock');
+    ns.disableLog('stock.buyShort');
+    ns.disableLog('stock.sellStock');
+    ns.disableLog('stock.sellShort');
     ns.ui.openTail();
 
     let tickCounter = 0;
@@ -92,7 +96,7 @@ function sellLongIfAppropriate(ns, symbol, min, max) {
     const profit = getSingleStockSellValue(ns, symbol) - (sharesLong * avgLongPrice) -  getStockCommission(ns);
     const haveEnouhgProfit = profit > (sharesLong * avgLongPrice) * .2;
     if (!haveEnouhgProfit) return;
-    ns.print(`Selling long for profit: ${profit}`);
+    ns.print(`Sellingg ${symbol} long for profit: ${ns.formatNumber(profit, 2)}`);
     ns.stock.sellStock(symbol, sharesLong);
 }
 
@@ -102,7 +106,7 @@ function cutLongLosses(ns, symbol) {
     if (sharesLong === 0) return;
     if (getSingleStockSellValue(ns, symbol) >= (sharesLong * avgLongPrice) / 2) return;
     if (isTrendingUp(ns, symbol)) return;
-    ns.print(`Cutting long losses ${getSingleStockSellValue(ns, symbol)} ${(sharesLong * avgLongPrice) / 2}`)
+    ns.print(`Cuttingg ${symbol} long losses ${ns.formatNumber(getSingleStockSellValue(ns, symbol), 2)}`)
     ns.stock.sellStock(symbol, sharesLong);
 }
 
@@ -141,7 +145,7 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
     const profit = getSingleStockSellValue(ns, symbol) - (sharesShort * avgShortPrice) - getStockCommission(ns);
     const haveEnouhgProfit = profit > (sharesShort * avgShortPrice) * .2;
     if (!haveEnouhgProfit) return;
-    ns.print(`Selling short for profit: ${profit}`);
+    ns.print(`Sellingg ${symbol} short for profit: ${ns.formatNumber(profit, 2)}`);
     ns.stock.sellShort(symbol, sharesShort);    
 }
 
@@ -151,7 +155,7 @@ function cutShortLosses(ns, symbol) {
     if (sharesShort === 0) return;
     if (ns.stock.getPrice(symbol) < 1.5 * avgShortPrice) return;
     if (isTrendingDown(ns, symbol)) return;
-    ns.print(`Cutting short losses ${ns.stock.getPrice(symbol)} ${avgShortPrice}`)
+    ns.print(`Cutting ${symbol} short losses ${ns.formatNumber(getSingleStockSellValue(ns, symbol))}`)
     ns.stock.sellShort(symbol, sharesShort);
 }
 
