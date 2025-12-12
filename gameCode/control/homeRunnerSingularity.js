@@ -39,7 +39,12 @@ export async function main(ns) {
         const allRunnablesStared = startOrStopScripts(ns, config);
 
         if (allRunnablesStared && !config[CONFIG_SHARE_ALL_MEMORY]) {
-            startScriptOnHomeIfAble(ns, "control/makeMoneyFromTarget.js", [getBestServerToHack(ns)]);
+            if (ns.getResetInfo().currentNode !== 8) {
+                startScriptOnHomeIfAble(ns, "control/makeMoneyFromTarget.js", [getBestServerToHack(ns)]);
+            } else {
+                
+                startScriptOnHomeIfAble(ns, "stocks/manipulateTheMarket.js");
+            }
         }
 
 
