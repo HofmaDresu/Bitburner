@@ -113,8 +113,10 @@ function purchaseThings(ns) {
     ns.singularity.purchaseProgram("DeepscanV2.exe");
     ns.singularity.purchaseProgram("AutoLink.exe");
     ns.singularity.purchaseProgram("Formulas.exe");
-    ns.singularity.upgradeHomeRam();
-    ns.singularity.upgradeHomeCores();
+    if (ns.getResetInfo().currentNode !== 8) {
+        ns.singularity.upgradeHomeRam();
+        ns.singularity.upgradeHomeCores();
+    }
     ns.stock.purchaseWseAccount();
     ns.stock.purchaseTixApi();
     // ns.stock.purchase4SMarketData();
