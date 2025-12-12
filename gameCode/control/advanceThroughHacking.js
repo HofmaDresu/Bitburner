@@ -285,13 +285,13 @@ function cyberSec(ns, currentWork, totalMoney) {
     const faction = "CyberSec";
     const description = null;
     const prepWork = [];
+    const orderedAugs = ["Cranial Signal Processors - Gen I", "Cranial Signal Processors - Gen II", "BitWire", "Synaptic Enhancement Implant", "Neurotrainer I"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "Cranial Signal Processors - Gen I")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["Cranial Signal Processors - Gen I", "Cranial Signal Processors - Gen II", "BitWire", "Synaptic Enhancement Implant", "Neurotrainer I"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
@@ -302,13 +302,13 @@ function sector12_1(ns, currentWork, totalMoney) {
     const prepWork = [
         () => {return ns.singularity.getFactionRep(faction) > 0 || ns.singularity.joinFaction(faction);}
     ];
+    const orderedAugs = ["CashRoot Starter Kit"];
     const whenToWindDown = [
         () => {return (currentWork?.type === "FACTION" && currentWork?.factionName === faction) || ns.singularity.workForFaction(faction, "hacking", true)},
-        () => {return totalMoney > getAugmentPrice(ns, "CashRoot Starter Kit")}
+        () => {return haveEnoughMoneyForAllAugments(ns, totalMoney, orderedAugs)}
     ];
     const buyRep = null;
     const whenToStartBuying = [];
-    const orderedAugs = ["CashRoot Starter Kit"];
     return getAugsFromFaction(ns, faction, description, whenToWindDown, whenToStartBuying, orderedAugs, buyRep, prepWork);
 }
 
