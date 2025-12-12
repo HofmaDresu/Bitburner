@@ -84,13 +84,15 @@ function buyLongIfAppropriate(ns, symbol, min, max) {
 
 /** @param {NS} ns */
 function sellLongIfAppropriate(ns, symbol, min, max) {
-    const bidPrice = ns.stock.getBidPrice(symbol);
     const [sharesLong, avgLongPrice, sharesShort, avgShortPrice] = ns.stock.getPosition(symbol);
     if (sharesLong === 0) return;
     // Don't sell if we know it's more likely to increase than decrease
     if (isTrendingUp(ns, symbol)) return;
-    const haveSomeProfit = getSingleStockSellValue(ns, symbol) > (sharesLong * avgLongPrice) && getSingleStockSellValue(ns, symbol) > getStockCommission(ns) * 2 ;
-    if (!haveSomeProfit) return;
+    // Sell value already accounts for the selling commision, but we still need to handle the buying one
+    const profit = getSingleStockSellValue(ns, symbol) - (sharesLong * avgLongPrice) -  getStockCommission(ns);
+    const haveEnouhgProfit = profit > (sharesLong * avgLongPrice) * .2;
+    if (!haveEnouhgProfit) return;
+    ns.print(`Selling long for profit: ${profit}`);
     ns.stock.sellStock(symbol, sharesLong);
 }
 
@@ -135,8 +137,11 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
     if (sharesShort === 0) return;
     // Don't sell if we know it's more likely to decrease than increase
     if (isTrendingDown(ns, symbol)) return;
-    const haveSomeProfit = getSingleStockSellValue(ns, symbol) > (sharesShort * avgShortPrice) && getSingleStockSellValue(ns, symbol) > getStockCommission(ns) * 2 ;
-    if (!haveSomeProfit) return;
+    // Sell value already accounts for the selling commision, but we still need to handle the buying one
+    const profit = getSingleStockSellValue(ns, symbol) - (sharesShort * avgShortPrice) - getStockCommission(ns);
+    const haveEnouhgProfit = profit > (sharesShort * avgShortPrice) * .2;
+    if (!haveEnouhgProfit) return;
+    ns.print(`Selling short for profit: ${profit}`);
     ns.stock.sellShort(symbol, sharesShort);    
 }
 
