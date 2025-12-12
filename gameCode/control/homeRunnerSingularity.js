@@ -1,4 +1,4 @@
-import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_PURCHASE_ITEMS, getBestServerToHack, moneyHeldIncludingStocks } from "helpers";
+import { startScriptOnHomeIfAble, killScriptIfRunningOnHome, getConfig, saveConfig, CONFIG_SPEND_ON_HACKNET, CONFIG_SPEND_ON_SERVERS, CONFIG_SHARE_ALL_MEMORY, CONFIG_PURCHASE_ITEMS, getBestServerToHack, moneyHeldIncludingStocks, availableSpendingMoney } from "helpers";
 import { canTradeStocks, iOwnStocks } from "stocks/helpers";
 import { crackServers } from "control/helpers";
 import advanceThroughHacking, {hasAugment} from "control/advanceThroughHacking";
@@ -104,15 +104,18 @@ function joinNonCityFactions(ns) {
 
 /** @param {NS} ns */
 function purchaseThings(ns) {
-    ns.singularity.purchaseTor();
-    ns.singularity.purchaseProgram("BruteSSH.exe");
-    ns.singularity.purchaseProgram("FTPCrack.exe");
-    ns.singularity.purchaseProgram("relaySMTP.exe");
-    ns.singularity.purchaseProgram("HTTPWorm.exe");
-    ns.singularity.purchaseProgram("SQLInject.exe");
-    ns.singularity.purchaseProgram("DeepscanV2.exe");
-    ns.singularity.purchaseProgram("AutoLink.exe");
-    ns.singularity.purchaseProgram("Formulas.exe");
+    
+    if (ns.getResetInfo().currentNode !== 8 || availableSpendingMoney(ns) > 1_000_000_000) {
+        ns.singularity.purchaseTor();
+        ns.singularity.purchaseProgram("BruteSSH.exe");
+        ns.singularity.purchaseProgram("FTPCrack.exe");
+        ns.singularity.purchaseProgram("relaySMTP.exe");
+        ns.singularity.purchaseProgram("HTTPWorm.exe");
+        ns.singularity.purchaseProgram("SQLInject.exe");
+        ns.singularity.purchaseProgram("DeepscanV2.exe");
+        ns.singularity.purchaseProgram("AutoLink.exe");
+        ns.singularity.purchaseProgram("Formulas.exe");
+    }
     if (ns.getResetInfo().currentNode !== 8) {
         ns.singularity.upgradeHomeRam();
         ns.singularity.upgradeHomeCores();
