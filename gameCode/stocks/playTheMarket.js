@@ -96,7 +96,7 @@ function sellLongIfAppropriate(ns, symbol, min, max) {
     const profit = getSingleStockSellValue(ns, symbol) - (sharesLong * avgLongPrice) -  getStockCommission(ns);
     const haveEnouhgProfit = profit > (sharesLong * avgLongPrice) * .2;
     if (!haveEnouhgProfit) return;
-    ns.print(`Sellingg ${symbol} long for profit: ${ns.formatNumber(profit, 2)}`);
+    ns.print(`Selling ${symbol} long for profit: ${ns.formatNumber(profit, 2)}`);
     ns.stock.sellStock(symbol, sharesLong);
 }
 
@@ -106,7 +106,7 @@ function cutLongLosses(ns, symbol) {
     if (sharesLong === 0) return;
     if (getSingleStockSellValue(ns, symbol) >= (sharesLong * avgLongPrice) / 2) return;
     if (isTrendingUp(ns, symbol)) return;
-    ns.print(`Cuttingg ${symbol} long losses ${ns.formatNumber(getSingleStockSellValue(ns, symbol), 2)}`)
+    ns.print(`Cutting ${symbol} long losses ${ns.formatNumber(getSingleStockSellValue(ns, symbol), 2)}`)
     ns.stock.sellStock(symbol, sharesLong);
 }
 
@@ -145,7 +145,7 @@ function sellShortIfAppropriate(ns, symbol, min, max) {
     const profit = getSingleStockSellValue(ns, symbol) - (sharesShort * avgShortPrice) - getStockCommission(ns);
     const haveEnouhgProfit = profit > (sharesShort * avgShortPrice) * .2;
     if (!haveEnouhgProfit) return;
-    ns.print(`Sellingg ${symbol} short for profit: ${ns.formatNumber(profit, 2)}`);
+    ns.print(`Selling ${symbol} short for profit: ${ns.formatNumber(profit, 2)}`);
     ns.stock.sellShort(symbol, sharesShort);    
 }
 
