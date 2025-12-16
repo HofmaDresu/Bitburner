@@ -27,7 +27,7 @@ function setStartupConfig(ns) {
     const config = getConfig(ns);
     const mulitpliers = ns.getBitNodeMultipliers();
     config[CONFIG_BUY_STOCKS] = true;
-    config[CONFIG_SPEND_ON_HACKNET] = mulitpliers.HacknetNodeMoney >= .5;
+    config[CONFIG_SPEND_ON_HACKNET] = mulitpliers.HacknetNodeMoney > 1 || (mulitpliers.HacknetNodeMoney > 0 && (mulitpliers.ScriptHackMoney < .5 ||  mulitpliers.ScriptHackMoneyGain < .5 || mulitpliers.PurchasedServerLimit === 0 && mulitpliers.ServerMaxMoney === 0));
     config[CONFIG_SPEND_ON_SERVERS] = mulitpliers.ScriptHackMoney > 0 && mulitpliers.ScriptHackMoneyGain > 0 && mulitpliers.PurchasedServerLimit > 0 && mulitpliers.ServerMaxMoney > 0;
     config[CONFIG_SHARE_ALL_MEMORY] = false;
     config[CONFIG_NODE_MULTIPLIERS] = mulitpliers;
