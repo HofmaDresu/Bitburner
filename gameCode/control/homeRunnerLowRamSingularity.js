@@ -29,6 +29,7 @@ export async function main(ns) {
         // TODO: if home ram > 128 run startup.js (and close this)
         if (ns.getServerMaxRam("home") > 128) {
             ns.spawn("startup.js",  {threads: 1, spawnDelay: 500});
+            ns.ui.closeTail();
         }
         await ns.sleep(10_000);
     }
