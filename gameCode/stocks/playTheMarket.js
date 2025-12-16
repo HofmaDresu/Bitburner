@@ -10,7 +10,9 @@ export async function main(ns) {
     ns.disableLog('stock.buyShort');
     ns.disableLog('stock.sellStock');
     ns.disableLog('stock.sellShort');
-    ns.ui.openTail();
+    if (ns.getResetInfo().currentNode === 8) {
+        ns.ui.openTail();
+    }
 
     let tickCounter = 0;
     // 20 minutes, but because each tick is 4-6 seconds it's 80-120 in-game minutes
